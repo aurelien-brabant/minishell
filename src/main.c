@@ -27,5 +27,6 @@ int	main(int argc, char *argv[])
 		minishell_output_usage();
 		return (0);
 	}
-	ft_printf("option -c: %s\n", optargs[OPTION_TYPE_COMMAND]);
+	while (1)
+		prompt_present("minishell-1.0$ ");
 }

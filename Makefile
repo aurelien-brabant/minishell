@@ -23,7 +23,7 @@ TARGET				= minishell
 # SOURCES
 
 
-SRCS				= src/main.c
+SRCS				= $(addprefix src/, main.c parsecl.c)
 
 OBJS				= $(SRCS:%.c=%.o)
 

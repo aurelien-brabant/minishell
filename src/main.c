@@ -17,5 +17,10 @@ int	main(int argc, char *argv[])
 		minishell_output_usage();
 		return (1);
 	}
+	if (options & (1 << OPTION_TYPE_VERSION))
+	{
+		ft_printf("minishell v%s by %s\n", MINISHELL_VERSION, MINISHELL_AUTHOR);
+		return (0);
+	}
 	ft_printf("option -c: %s\n", optargs[OPTION_TYPE_COMMAND]);
 }

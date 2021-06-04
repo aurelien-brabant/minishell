@@ -45,7 +45,7 @@ clean:
 	@$(RM) $(OBJS) 
 
 fclean: clean
-	@$(RM) $(TEST_TARGET) $(PSHSWP_TARGET) $(CHECKER_TARGET)
+	@$(RM) $(TARGET)
 
 re: fclean all
 

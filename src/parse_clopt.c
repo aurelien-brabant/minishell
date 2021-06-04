@@ -40,25 +40,21 @@ static const struct s_option
 		.flag = 1 << OPTION_TYPE_COMMAND,
 		.requires_arg = true,
 		.usage = "<command> Run a single command in a non-interactive mode"
+	},
+	{
+		.long_opt = "help",
+		.short_opt = 'h',
+		.type = OPTION_TYPE_HELP,
+		.flag = 1 << OPTION_TYPE_HELP,
+		.requires_arg = false,
+		.usage = "Output this awesome help message"
 	}
 };
 
-void	minishell_output_usage(void)
-{
-	int	i;
-
-	i = 0;
-	ft_printf("Usage: %s\n", MINISHELL_USAGE);
-	ft_printf("Available options are:\n");
-	while (i < OPTION_TYPE_MAX)
-	{
-		ft_printf("-%c | --%s\t\t%s\n", g_options[i].short_opt,
-			g_options[i].long_opt, g_options[i].usage);
-		++i;
-	}
-}
-
 /*
+** Returns the index in g_options where the corresponding option can be
+** retrieved. -1 is returned if option could not be found.
+**
 ** option_kind: 0 for short, 1 for long
 */
 
@@ -76,13 +72,6 @@ static int	get_option_index(const char *arg, int opt_kind)
 	}
 	return (-1);
 }
-
-/*
-** Parse long options, i.e arguments that start with the "--" prefix.
-** If any argument prefixed by "--" is not in the list of available options,
-** an error message is outputed on STDERR and 1 is returned as an error
-** code.
-*/
 
 static int	parse_long_options(int argc, char *argv[], unsigned int *options,
 				char **optargs)
@@ -138,7 +127,44 @@ static int	parse_short_options(int argc, char *argv[], unsigned int *options,
 	return (0);
 }
 
-int	parsecl(int argc, char *argv[], unsigned int *options, char **optargs)
+/*
+** Output the complete usage of minishell, describing all the available
+** options.
+*/
+
+void	minishell_output_usage(void)
+{
+	int	i;
+
+	i = 0;
+	ft_printf("Usage: %s\n", MINISHELL_USAGE);
+	ft_printf("Available options are:\n");
+	while (i < OPTION_TYPE_MAX)
+	{
+		ft_printf("-%c | --%s\t\t%s\n", g_options[i].short_opt,
+			g_options[i].long_opt, g_options[i].usage);
+		++i;
+	}
+}
+
+/*
+** Parse Command Line Options
+** This function is called to parse command line options ONLY, not positional
+** parameters (which are not accepted by minishell anyway). Short format
+** (e.g: "-d") as well as long format (e.g: "--debug") are accepted.
+**
+** - ARGUMENTS -
+** Up to one argument can be provided for each option; it is assumed to be
+** the next argument directly following the option. These arguments are stored
+** in the optargs string array. The argument corresponding to a given
+** option can therefore be accessed by directly subscripting the array, like
+** so: optargs[OPTION_TYPE_COMMAND].
+**
+** The parse_clopt function ensures that options that need an argument got
+** one. If that's not the case, an error will be thrown.
+*/
+
+int	parse_clopt(int argc, char *argv[], unsigned int *options, char **optargs)
 {
 	size_t	i;
 

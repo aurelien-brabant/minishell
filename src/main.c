@@ -12,7 +12,7 @@ int	main(int argc, char *argv[])
 	char			*optargs[OPTION_TYPE_MAX];
 
 	ft_memset(optargs, 0, sizeof (char *) * OPTION_TYPE_MAX);
-	if (parsecl(argc, argv, &options, optargs) != 0)
+	if (parse_clopt(argc, argv, &options, optargs) != 0)
 	{
 		minishell_output_usage();
 		return (1);
@@ -20,6 +20,11 @@ int	main(int argc, char *argv[])
 	if (options & (1 << OPTION_TYPE_VERSION))
 	{
 		ft_printf("minishell v%s by %s\n", MINISHELL_VERSION, MINISHELL_AUTHOR);
+		return (0);
+	}
+	if (options & (1 << OPTION_TYPE_HELP))
+	{
+		minishell_output_usage();
 		return (0);
 	}
 	ft_printf("option -c: %s\n", optargs[OPTION_TYPE_COMMAND]);

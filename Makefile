@@ -13,7 +13,7 @@
 # PROJECT CONFIG
 
 CC					= clang
-CFLAGS				= -g  -Iinclude -Ilibft/include -Wall -Wextra -Werror -Wpedantic
+CFLAGS				= -g  -Iinclude -Ilibft/include -Wall -Wextra -Werror 
 LD					= clang
 LD_FLAGS			= -g -Llibft -lft
 
@@ -23,7 +23,9 @@ TARGET				= minishell
 # SOURCES
 
 
-SRCS				= $(addprefix src/, main.c parsecl.c)
+SRCS				= $(addprefix src/, main.c parse_clopt.c)
+
+HEADERS				= $(addprefix include/minishell/, minishell.h constants.h)
 
 OBJS				= $(SRCS:%.c=%.o)
 
@@ -35,7 +37,8 @@ libft:
 	git clone https://github.com/aurelien-brabant/libft
 
 $(TARGET): libft libft/libft.a $(HEADERS) $(OBJS) 
-	$(LD) -o $(TARGET) $(OBJS) $(LD_FLAGS)
+	@$(LD) -o $(TARGET) $(OBJS) $(LD_FLAGS)
+	@printf "LD\t$(TARGET)\n"
 
 norm:
 	@norminette src
@@ -58,4 +61,4 @@ libft/libft.a:
 
 %.o:%.c $(HEADERS)
 	@$(CC) $(CFLAGS) -o $@ -c $<
-	@printf "[\033[1;36mminishell\033[0;m] \033[1;37mCC \033[0;32m$<\033[0m\n"
+	@printf "CC\t$<\n"

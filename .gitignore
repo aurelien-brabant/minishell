@@ -2,4 +2,4 @@ libft
 *.o
 *.dSYM
 a.out
-minishell
+/minishell

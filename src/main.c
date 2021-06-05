@@ -5,6 +5,7 @@
 
 #include "minishell/minishell.h"
 #include "minishell/constants.h"
+#include "minishell/lexer.h"
 
 int	main(int argc, char *argv[])
 {
@@ -28,5 +29,14 @@ int	main(int argc, char *argv[])
 		return (0);
 	}
 	while (1)
-		prompt_present("minishell-1.0$ ");
+	{
+		char	*cmdline;
+		char	*tok;
+
+		cmdline = prompt_present("minishell-1.0$ ");
+		while ((tok = get_token(&cmdline)) != NULL)
+		{
+			ft_printf("%s\n", tok);
+		}
+	}
 }

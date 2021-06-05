@@ -1,0 +1,56 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/clang-11",
+      "-g",
+      "-Iinclude",
+      "-Ilibft/include",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "src/main.o",
+      "src/main.c"
+    ],
+    "directory": "/home/abrabant/Prog/42/minishell",
+    "file": "/home/abrabant/Prog/42/minishell/src/main.c",
+    "output": "/home/abrabant/Prog/42/minishell/src/main.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang-11",
+      "-g",
+      "-Iinclude",
+      "-Ilibft/include",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "src/parse_clopt.o",
+      "src/parse_clopt.c"
+    ],
+    "directory": "/home/abrabant/Prog/42/minishell",
+    "file": "/home/abrabant/Prog/42/minishell/src/parse_clopt.c",
+    "output": "/home/abrabant/Prog/42/minishell/src/parse_clopt.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/clang-11",
+      "-g",
+      "-Iinclude",
+      "-Ilibft/include",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-c",
+      "-o",
+      "src/prompt.o",
+      "src/prompt.c"
+    ],
+    "directory": "/home/abrabant/Prog/42/minishell",
+    "file": "/home/abrabant/Prog/42/minishell/src/prompt.c",
+    "output": "/home/abrabant/Prog/42/minishell/src/prompt.o"
+  }
+]

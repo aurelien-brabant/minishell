@@ -6,7 +6,7 @@
 #    By: abrabant <abrabant@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/03 11:30:39 by abrabant          #+#    #+#              #
-#    Updated: 2021/06/04 12:03:35 by abrabant         ###   ########.fr        #
+#    Updated: 2021/06/05 11:16:23 by abrabant         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ TARGET				= minishell
 # SOURCES
 
 
-SRCS				= $(addprefix src/, main.c parse_clopt.c prompt.c)
+SRCS				= $(addprefix src/, main.c parse_clopt.c prompt.c lexer.c)
 
 HEADERS				= $(addprefix include/minishell/, minishell.h constants.h)
 

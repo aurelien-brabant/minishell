@@ -3,3 +3,4 @@ libft
 *.dSYM
 a.out
 /minishell
+.cache

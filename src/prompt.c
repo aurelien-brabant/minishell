@@ -19,6 +19,6 @@ char	*prompt_present(const char *prompt)
 
 	ft_putstr_fd(prompt, STDOUT_FILENO);
 	if (ft_gnl(STDIN_FILENO, &line) > 0)
-		ft_printf("got command: \"%s\"\n", line);
+		;
 	return (line);
 }

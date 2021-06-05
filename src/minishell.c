@@ -3,6 +3,7 @@
 #include "libft/io.h"
 
 #include "minishell/minishell.h"
+#include "minishell/stat.h"
 
 static void	parse_tokens(char *cmd)
 {
@@ -21,13 +22,15 @@ static void	parse_tokens(char *cmd)
 ** Invoke a minishell instance.
 */
 
-int		minishell_invoke(unsigned int opt, char **optstr)
+int		minishell_invoke(unsigned int opt, char **optargs)
 {
 	char	*cmd;
 
+	getstat()->opt = opt;
+	getstat()->optargs = optargs;
 	if (opt & (1 << OPTION_TYPE_COMMAND))
 	{
-		parse_tokens(optstr[OPTION_TYPE_COMMAND]);
+		parse_tokens(optargs[OPTION_TYPE_COMMAND]);
 		return (0);
 	}
 	while (1)

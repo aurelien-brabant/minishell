@@ -1,4 +1,5 @@
 #include <unistd.h>
+#include <stdio.h>
 
 #include "libft/io.h"
 #include "libft/cstring.h"
@@ -28,15 +29,5 @@ int	main(int argc, char *argv[])
 		minishell_output_usage();
 		return (0);
 	}
-	while (1)
-	{
-		char	*cmdline;
-		char	*tok;
-
-		cmdline = prompt_present("minishell-1.0$ ");
-		while ((tok = get_token(&cmdline)) != NULL)
-		{
-			ft_printf("%s\n", tok);
-		}
-	}
+	minishell_invoke(options, optargs);
 }

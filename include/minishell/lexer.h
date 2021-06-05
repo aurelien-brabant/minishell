@@ -31,6 +31,7 @@ typedef enum e_chr_class
 
 t_chr_class		get_chr_class(int c);	
 t_token_type	get_token_type(t_chr_class chr_class);
-char			*get_token(char **str_loc);
+bool			get_chr_class_context(t_token_type toktype,
+					t_chr_class chr_class);
 
 #endif

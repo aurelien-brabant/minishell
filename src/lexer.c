@@ -144,61 +144,7 @@ t_token_type	get_token_type(t_chr_class chr_class)
 	return (g_token_type[chr_class]);
 }
 
-
-
-char		*get_token(char **str_loc)
+bool	get_chr_class_context(t_token_type toktype, t_chr_class chr_class)
 {
-	t_token_type	toktype;
-	t_chr_class		chr_class;
-	char			*tokbeg;
-	bool			in_quotes;
-
-	while (get_chr_class(**str_loc) == CHR_CLASS_BLANK)
-		(*str_loc)++;
-	toktype = get_token_type(get_chr_class(**str_loc));
-	chr_class = get_chr_class(**str_loc);
-	if (chr_class == CHR_CLASS_NULL_BYTE)
-		return (NULL);
-	tokbeg = *str_loc;
-	in_quotes = false;
-	while (1)
-	{
-		chr_class = get_chr_class(**str_loc);
-		if (chr_class == CHR_CLASS_DQUOTE || chr_class == CHR_CLASS_SQUOTE)
-			in_quotes = !in_quotes;
-		if (!g_token_rules[toktype][chr_class]
-				&& !(chr_class == CHR_CLASS_BLANK && in_quotes))
-			break ;
-		(*str_loc)++;
-	}
-	if (chr_class == CHR_CLASS_NULL_BYTE)
-		return (tokbeg);
-	**str_loc = '\0';
-	(*str_loc)++;
-	return (tokbeg);
+	return (g_token_rules[toktype][chr_class]);
 }
-
-/*
-char	*get_token(char **str_loc)
-{
-	
-	t_token_type	toktype;
-	char			*tokbeg;
-
-	tokbeg = *str_loc;
-	if (*tokbeg == '\0')
-		return (NULL);
-	while (**str_loc == ' ' || **str_loc == '\t')
-		(*str_loc)++;
-	tokbeg = *str_loc; 
-	toktype = get_token_type(get_chr_class(**str_loc));
-	(*str_loc)++;
-	while (g_token_rules[toktype][get_chr_class(**str_loc)])
-		(*str_loc)++;
-	if (toktype != TOKEN_WORD)
-		(*str_loc)++;
-	**str_loc = '\0';
-	(*str_loc)++;
-	return (tokbeg);
-}
-*/

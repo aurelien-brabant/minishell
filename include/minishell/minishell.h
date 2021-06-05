@@ -15,4 +15,6 @@ int		parse_clopt(int argc, char *argv[], unsigned int *options,
 void	minishell_output_usage(void);
 char	*prompt_present(const char *prompt);
 
+char	*get_token(char **str_loc);
+
 #endif

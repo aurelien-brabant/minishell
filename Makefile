@@ -23,7 +23,7 @@ TARGET				= minishell
 # SOURCES
 
 
-SRCS				= $(addprefix src/, main.c parse_clopt.c prompt.c lexer.c)
+SRCS				= $(addprefix src/, main.c parse_clopt.c prompt.c lexer.c tokenizer.c)
 
 HEADERS				= $(addprefix include/minishell/, minishell.h constants.h)
 

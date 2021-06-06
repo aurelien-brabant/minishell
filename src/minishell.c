@@ -18,7 +18,7 @@ int		minishell_invoke(unsigned int opt, char **optargs)
 	getstat()->optargs = optargs;
 	if (opt & (1 << OPTION_TYPE_COMMAND))
 	{
-		//parse_tokens(optargs[OPTION_TYPE_COMMAND]);
+		parser_invoke(optargs[OPTION_TYPE_COMMAND]);
 		return (0);
 	}
 	while (1)

@@ -1,8 +1,10 @@
 #include <unistd.h>
+#include <stdlib.h>
 
 #include "libft/io.h"
 
 #include "minishell/minishell.h"
+#include "minishell/stat.h"
 
 /*
 ** Present a shell prompt to the user, ready to accept a new command from
@@ -20,5 +22,5 @@ char	*prompt_present(const char *prompt)
 	ft_putstr_fd(prompt, STDOUT_FILENO);
 	if (ft_gnl(STDIN_FILENO, &line) > 0)
 		;
-	return (line);
+	return (ft_gc_add(getstat()->tmp_gc, line, &free));
 }

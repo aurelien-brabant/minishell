@@ -3,6 +3,7 @@
 #include <stdio.h>
 
 #include "minishell/lexer.h"
+#include "minishell/stat.h"
 
 #include "libft/cstring.h"
 
@@ -20,10 +21,10 @@ t_token	*token_new(char *value, t_token_type toktype)
 
 	if (value == NULL)
 		return (NULL);
-	tok = malloc(sizeof (*tok));
+	tok = ft_gc_add(getstat()->tmp_gc, malloc(sizeof (*tok)), &free);
 	if (tok == NULL)
 		return (NULL);
-	tok->value = value;
+	tok->value = ft_gc_add(getstat()->tmp_gc, value, &free);
 	tok->type = toktype;
 	return (tok);
 }

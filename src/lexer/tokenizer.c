@@ -40,10 +40,8 @@ size_t	get_end_of_token_index(char *str, t_token_type toktype)
 	{
 		if (is_quote(str[i]) && toktype == TOKEN_WORD && !backslash)
 			quoted = (quoted == 0) * get_chr_class(str[i]);
-		if (quoted == CHR_CLASS_DQUOTE && get_chr_class(str[i]) == CHR_CLASS_BACKSLASH)
-			backslash = true;
-		else
-			backslash = false;
+		backslash = (quoted == CHR_CLASS_DQUOTE
+			&& get_chr_class(str[i]) == CHR_CLASS_BACKSLASH);
 		if (!quoted && !get_chr_class_context(toktype,
 					get_chr_class(str[i])))
 			break ;

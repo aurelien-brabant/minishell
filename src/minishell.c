@@ -10,7 +10,7 @@
 ** Invoke a minishell instance.
 */
 
-int		minishell_invoke(unsigned int opt, char **optargs)
+int	minishell_invoke(unsigned int opt, char **optargs)
 {
 	char	*cmd;
 

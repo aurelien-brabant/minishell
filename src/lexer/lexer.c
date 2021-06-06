@@ -4,7 +4,7 @@
 
 #include "minishell/lexer.h"
 
-static const	t_chr_class	g_chr_class[UCHAR_MAX] = {
+static const t_chr_class	g_chr_class[UCHAR_MAX] = {
 	['\0'] = CHR_CLASS_NULL_BYTE,
 
 	/* METACHARACTERS - SEPARATE WORDS */
@@ -130,7 +130,7 @@ static const t_token_type	g_token_type[CHR_CLASS_MAX] = {
 	[CHR_CLASS_SEMICOLON] = TOKEN_OPERATOR,
 };
 
-static const	bool	g_token_rules[TOKEN_MAX][CHR_CLASS_MAX] = {
+static const bool			g_token_rules[TOKEN_MAX][CHR_CLASS_MAX] = {
 	[TOKEN_WORD] = {
 		[CHR_CLASS_WORD] = 1,
 		[CHR_CLASS_DIGIT] = 1,

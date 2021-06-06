@@ -28,32 +28,45 @@ t_token	*token_new(char *value, t_token_type toktype)
 	return (tok);
 }
 
+size_t	get_end_of_token_index(char *str, t_token_type toktype)
+{
+	size_t		i;
+	bool		backslash;
+	t_chr_class	quoted;
+
+	i = 0;
+	quoted = 0;
+	while (str[i] != '\0')
+	{
+		if (is_quote(str[i]) && toktype == TOKEN_WORD && !backslash)
+			quoted = (quoted == 0) * get_chr_class(str[i]);
+		if (quoted == CHR_CLASS_DQUOTE && get_chr_class(str[i]) == CHR_CLASS_BACKSLASH)
+			backslash = true;
+		else
+			backslash = false;
+		if (!quoted && !get_chr_class_context(toktype,
+					get_chr_class(str[i])))
+			break ;
+		++i;
+	}
+	if (quoted)
+		printf("minishell: found unterminated pair of quotes\n");
+	return (i);
+}
+
 t_token	*get_token(char **str_loc)
 {
 	t_token_type	toktype;
 	t_token			*token;
-	bool			in_quotes;
-	size_t			i;
+	size_t			end_of_token_index;
 
 	if (**str_loc == '\0')
 		return (NULL);
 	while (get_chr_class(**str_loc) == CHR_CLASS_BLANK)
 		(*str_loc)++;
 	toktype = get_token_type(get_chr_class(**str_loc));
-	in_quotes = false; 
-	i = 0;
-	while (str_loc[0][i] != '\0')
-	{
-		if (is_quote(str_loc[0][i]) && toktype == TOKEN_WORD)
-			in_quotes = !in_quotes;
-		if (!in_quotes && !get_chr_class_context(toktype,
-					get_chr_class(str_loc[0][i])))
-			break ;
-		++i;
-	}
-	if (in_quotes)
-		printf("minishell: found unterminated pair of quotes\n");
-	token = token_new(ft_substr(*str_loc, 0, i), toktype);
-	*str_loc += i;
+	end_of_token_index = get_end_of_token_index(*str_loc, toktype);	
+	token = token_new(ft_substr(*str_loc, 0, end_of_token_index), toktype);
+	*str_loc += end_of_token_index;
 	return (token);
 }

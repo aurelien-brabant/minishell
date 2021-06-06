@@ -4,19 +4,7 @@
 
 #include "minishell/minishell.h"
 #include "minishell/stat.h"
-
-static void	parse_tokens(char *cmd)
-{
-	char	*tok;
-	
-	ft_printf("token breakdown:\n");
-	tok = get_token(&cmd);
-	while (tok != NULL)
-	{
-		ft_printf("%s\n", tok);
-		tok = get_token(&cmd);
-	}
-}
+#include "minishell/parser.h"
 
 /*
 ** Invoke a minishell instance.
@@ -30,14 +18,13 @@ int		minishell_invoke(unsigned int opt, char **optargs)
 	getstat()->optargs = optargs;
 	if (opt & (1 << OPTION_TYPE_COMMAND))
 	{
-		parse_tokens(optargs[OPTION_TYPE_COMMAND]);
+		//parse_tokens(optargs[OPTION_TYPE_COMMAND]);
 		return (0);
 	}
 	while (1)
 	{
-		cmd = prompt_present("\033[0;34mminishell\033[0m-1.0$ ");
-		parse_tokens(cmd);
-		free(cmd);
+		cmd = prompt_present("minishell> ");
+		parser_invoke(cmd);
 	}
 	return (0);
 }

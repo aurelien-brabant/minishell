@@ -1,5 +1,6 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
+# include "minishell/lexer.h"
 
 typedef enum e_option_type
 {
@@ -10,13 +11,11 @@ typedef enum e_option_type
 	OPTION_TYPE_MAX,
 }	t_option_type;
 
-
 int		parse_clopt(int argc, char *argv[], unsigned int *options,
 			char **optargs);
 void	minishell_output_usage(void);
 char	*prompt_present(const char *prompt);
 
-char	*get_token(char **str_loc);
 
 int		minishell_invoke(unsigned int opt, char **optargs);
 

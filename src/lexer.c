@@ -110,12 +110,11 @@ static const	t_chr_class	g_chr_class[UCHAR_MAX] = {
 };
 
 static const t_token_type	g_token_type[CHR_CLASS_MAX] = {
-	[CHR_CLASS_BLANK] = TOKEN_BLANK,
 	[CHR_CLASS_WORD] = TOKEN_WORD,
 	[CHR_CLASS_DIGIT] = TOKEN_WORD,
 	[CHR_CLASS_DOLLAR] = TOKEN_WORD,
-	[CHR_CLASS_SQUOTE] = TOKEN_SQUOTE,
-	[CHR_CLASS_DQUOTE] = TOKEN_DQUOTE,
+	[CHR_CLASS_SQUOTE] = TOKEN_WORD,
+	[CHR_CLASS_DQUOTE] = TOKEN_WORD,
 	[CHR_CLASS_POUND] = TOKEN_OPERATOR,
 	[CHR_CLASS_LEFT_ARROW] = TOKEN_OPERATOR,
 	[CHR_CLASS_RIGHT_ARROW] = TOKEN_OPERATOR,
@@ -152,44 +151,6 @@ static const	bool	g_token_rules[TOKEN_MAX][CHR_CLASS_MAX] = {
 		[CHR_CLASS_SEMICOLON] = 1,
 		[CHR_CLASS_NULL_BYTE] = 0,
 	},
-	[TOKEN_DQUOTE] = {
-		[CHR_CLASS_WORD] = 1,
-		[CHR_CLASS_DIGIT] = 1,
-		[CHR_CLASS_DOLLAR] = 1,
-		[CHR_CLASS_SQUOTE] = 1,
-		[CHR_CLASS_DQUOTE] = 0,
-		[CHR_CLASS_POUND] = 1,
-		[CHR_CLASS_LEFT_ARROW] = 1,
-		[CHR_CLASS_RIGHT_ARROW] = 1,
-		[CHR_CLASS_PIPE] = 1,
-		[CHR_CLASS_BLANK] = 1,
-		[CHR_CLASS_NULL_BYTE] = 0,
-	},
-	[TOKEN_SQUOTE] = {
-		[CHR_CLASS_WORD] = 1,
-		[CHR_CLASS_DIGIT] = 1,
-		[CHR_CLASS_DOLLAR] = 1,
-		[CHR_CLASS_SQUOTE] = 0,
-		[CHR_CLASS_DQUOTE] = 1,
-		[CHR_CLASS_POUND] = 1,
-		[CHR_CLASS_LEFT_ARROW] = 1,
-		[CHR_CLASS_RIGHT_ARROW] = 1,
-		[CHR_CLASS_PIPE] = 1,
-		[CHR_CLASS_BLANK] = 1,
-		[CHR_CLASS_NULL_BYTE] = 0,
-	},
-	[TOKEN_BLANK] = {
-		[CHR_CLASS_DIGIT] = 0,
-		[CHR_CLASS_DOLLAR] = 0,
-		[CHR_CLASS_SQUOTE] = 0,
-		[CHR_CLASS_DQUOTE] = 0,
-		[CHR_CLASS_POUND] = 0,
-		[CHR_CLASS_LEFT_ARROW] = 0,
-		[CHR_CLASS_RIGHT_ARROW] = 0,
-		[CHR_CLASS_PIPE] = 0,
-		[CHR_CLASS_BLANK] = 0,
-		[CHR_CLASS_NULL_BYTE] = 0,
-	},
 };
 
 t_chr_class	get_chr_class(int c)
@@ -198,6 +159,11 @@ t_chr_class	get_chr_class(int c)
 }
 
 t_token_type	get_token_type(t_chr_class chr_class)
+{
+	return (g_token_type[chr_class]);
+}
+
+t_token_type	get_restricted_token_type(t_chr_class chr_class)
 {
 	return (g_token_type[chr_class]);
 }

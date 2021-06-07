@@ -2,10 +2,25 @@
 # define PARSER_H
 # include "libft/vector.h"
 
+typedef enum e_redirection_type
+{
+	REDIRECTION_NONE,
+	REDIRECTION_IN,
+	REDIRECTION_OUT_APPEND,
+	REDIRECTION_OUT_OVERRIDE,
+}	t_redirection_type;
+
+typedef	struct s_redirection
+{
+	char				*filepath;
+	t_redirection_type	type;	
+}	t_redirection;
+
 typedef struct s_simple_command
 {
-	char		*name;
-	t_vector	tokens;
+	char			*id;
+	t_vector		argv;
+	t_redirection	redirection;	
 }	t_simple_command;
 
 

@@ -21,10 +21,10 @@ t_token	*token_new(char *value, t_token_type toktype)
 
 	if (value == NULL)
 		return (NULL);
-	tok = ft_gc_add(getstat()->tmp_gc, malloc(sizeof (*tok)), &free);
+	tok = malloc(sizeof (*tok));
 	if (tok == NULL)
 		return (NULL);
-	tok->value = ft_gc_add(getstat()->tmp_gc, value, &free);
+	tok->value = value; 
 	tok->type = toktype;
 	return (tok);
 }

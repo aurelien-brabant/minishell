@@ -14,10 +14,7 @@ int	minishell_invoke(unsigned int opt, char **optargs)
 {
 	char	*cmd;
 
-	getstat()->opt = opt;
-	getstat()->optargs = optargs;
-	getstat()->global_gc = ft_gc_new();
-	getstat()->tmp_gc = ft_gc_new();
+	stat_init(opt, optargs);
 	if (opt & (1 << OPTION_TYPE_COMMAND))
 	{
 		parser_invoke(optargs[OPTION_TYPE_COMMAND]);
@@ -25,9 +22,11 @@ int	minishell_invoke(unsigned int opt, char **optargs)
 	}
 	while (1)
 	{
-		cmd = prompt_present("minishell> ");
+		cmd = prompt_present("\033[0;33mminishell\033[0m-1.0$ ");
 		parser_invoke(cmd);
-		ft_gc_wipe(getstat()->tmp_gc);
+		ft_gc_wipe(stat_get()->tmp_gc);
 	}
+	ft_gc_destroy(stat_get()->tmp_gc);
+	stat_destroy();
 	return (0);
 }

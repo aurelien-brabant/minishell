@@ -9,6 +9,7 @@
 #include "minishell/minishell.h"
 #include "minishell/lexer.h"
 #include "minishell/stat.h"
+#include "minishell/error.h"
 
 /*
    static void	token_destroy(t_token *tok)
@@ -55,8 +56,6 @@
    }
    */
 
-static	t_redirection_type	get_redirection_type
-
 static t_simple_command	*simple_command_new(char **input, t_token **tok)
 {
 	t_simple_command	*sc;
@@ -67,10 +66,6 @@ static t_simple_command	*simple_command_new(char **input, t_token **tok)
 	*tok = get_token(input);
 	while (*tok != NULL && *(*tok)->value != '|' && *(*tok)->value != ';')
 	{
-		if ((*tok)->type == TOKEN_OPERATOR)
-		{
-			if ()
-		}
 		ft_vector_append(sc->argv, (*tok)->value);
 		*tok = get_token(input);
 	}
@@ -110,7 +105,7 @@ t_vector	pipeline_new(char **input, t_token **tok)
 			return (pipeline);
 		*tok = get_token(input);
 	}
-	printf("Trailing pipeline!\n");
+	error_print(ERROR_TRAILING_PIPE);
 	return (pipeline);
 }
 

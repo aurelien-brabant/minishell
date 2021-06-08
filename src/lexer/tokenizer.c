@@ -4,6 +4,7 @@
 
 #include "minishell/lexer.h"
 #include "minishell/stat.h"
+#include "minishell/error.h"
 
 #include "libft/cstring.h"
 
@@ -48,8 +49,6 @@ size_t	get_end_of_token_index(char *str, t_token_type toktype)
 			break ;
 		++i;
 	}
-	if (quoted)
-		printf("minishell: found unterminated pair of quotes\n");
 	return (i);
 }
 

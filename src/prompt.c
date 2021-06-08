@@ -22,5 +22,5 @@ char	*prompt_present(const char *prompt)
 	ft_putstr_fd(prompt, STDOUT_FILENO);
 	if (ft_gnl(STDIN_FILENO, &line) > 0)
 		;
-	return (ft_gc_add(getstat()->tmp_gc, line, &free));
+	return (ft_gc_add(stat_get()->tmp_gc, line, &free));
 }

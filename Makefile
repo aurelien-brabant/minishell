@@ -27,12 +27,12 @@ LEXER				= $(addprefix src/lexer/, lexer.c tokenizer.c)
 
 PARSER				= $(addprefix src/parser/, parser.c)
 
-OTHER				= $(addprefix src/, main.c parse_clopt.c prompt.c	\
-					  minishell.c getstat.c)
+OTHER				= $(addprefix src/, main.c parse_clopt.c prompt.c error.c	\
+					  minishell.c stat.c)
 
 SRCS				= $(OTHER) $(LEXER) $(PARSER)
 
-HEADERS				= $(addprefix include/minishell/, minishell.h constants.h)
+HEADERS				= $(addprefix include/minishell/, minishell.h constants.h stat.h error.h parser.h lexer.h)
 
 OBJS				= $(SRCS:%.c=%.o)
 

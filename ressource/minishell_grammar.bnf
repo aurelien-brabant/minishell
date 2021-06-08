@@ -1,0 +1,19 @@
+# Written in Extended Backus-Naur Form
+#
+# <character> is any printable ascii character that is not an operator
+# <digit> is any digit in base 10, from 0 to 9
+
+<operator>				::= > | < | >> | <<
+
+<word>					::= <character><digit>
+                          | '"'<character><digit><operator>'"'
+                          | "'"<character><digit><operator>"'"
+
+<token>					::= <word> | <operator>
+
+<redirection>			::= ( '>' | '<' | '>>' | '<<' )+ <word>
+
+<command identifier>	::= <word>
+<simple command>		::= <command identifier> <word>* <redirection>?
+
+<pipeline>				::= <simple command> <EOL> | <simple command> '|' <pipeline>+

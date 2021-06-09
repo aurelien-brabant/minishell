@@ -80,7 +80,7 @@ int		print_commands(t_simple_command *command)
 	printf("id: %s\n", command->id);
 	printf("args: [");
 	while (i < ft_vector_length(command->argv))
-		printf(" %s,", ft_vector_get(command->argv, i++));
+		printf(" %s,", (char *) ft_vector_get(command->argv, i++));
 	printf(" ]\n");
 	
 	return (0);

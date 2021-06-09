@@ -210,7 +210,7 @@ t_token_type	get_restricted_token_type(t_chr_class chr_class)
 	return (g_token_type[chr_class]);
 }
 
-bool	get_chr_class_context(t_token_type toktype, t_chr_class chr_class)
+bool	is_chr_class_in_context(t_token_type toktype, t_chr_class chr_class)
 {
 	return (g_token_rules[toktype][chr_class]);
 }

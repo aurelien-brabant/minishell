@@ -38,7 +38,7 @@ typedef struct s_token
 t_token_type	get_restricted_token_type(t_chr_class chr_class);
 t_chr_class		get_chr_class(int c);	
 t_token_type	get_token_type(t_chr_class chr_class);
-bool			get_chr_class_context(t_token_type toktype,
+bool			is_chr_class_in_context(t_token_type toktype,
 					t_chr_class chr_class);
 t_token			*get_token(char **input);
 

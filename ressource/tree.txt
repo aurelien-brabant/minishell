@@ -1,0 +1,50 @@
+Example 1 - Single simple command
+------------------------
+
+minishell $> cat file.txt
+ 
+ cat file.txt
+	  |
+
+Example 2 - Simple pipeline
+------------------------
+
+minishell $> ls | cat -e
+
+    PIPE
+     |
+  /     \
+ ls     cat -e
+
+
+Example 3 - Simple command with output redirection
+------------------------
+
+minishell $> echo "Hello, world!" > file.txt
+
+                >> file.txt
+                    |     
+	       /
+echo "Hello, world!"
+
+
+Example 4 - Simple command with input redirection
+------------------------
+
+minishell $> cat < file.txt
+
+            cat
+			|
+		 /
+	 < file.txt
+
+
+Example 5 - Simple pipeline with output redirection
+------------------------
+
+minishell $> ls | cat -e >> output.txt
+
+    PIPE
+     |
+  /     \
+ ls     cat -e

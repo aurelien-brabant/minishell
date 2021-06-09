@@ -1,0 +1,10 @@
+name: learn-github-actions
+on: [push]
+jobs:
+  build-minishell:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: docker build -t build-minishell test/build
+      - run: docker run -v $PWD:/build build-minishell
+

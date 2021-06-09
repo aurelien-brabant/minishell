@@ -1,5 +1,8 @@
-name: learn-github-actions
-on: [push]
+name: build minishell 
+on:
+  push:
+    branches:
+      - master
 jobs:
   build-minishell:
     runs-on: ubuntu-latest

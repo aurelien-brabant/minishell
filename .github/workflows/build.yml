@@ -1,4 +1,4 @@
-name: build minishell 
+name: build
 on:
   push:
     branches:

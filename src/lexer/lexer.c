@@ -231,12 +231,12 @@ t_lexer	*lexer_build(char *input)
 	if (lexer == NULL)
 		return (NULL);
 	in_quotes = false;
-	while (input[i] != '\0')
+	while (chr_get_class(input[i]) != CHR_CLASS_EOL)
 	{
 		while (chr_get_class(input[i]) == CHR_CLASS_BLANK)
-			++i;
-		while (input[i] != '\0'
-				&& (in_quotes || g_token_rules[token_get_type(input)]))
+			++input;
+		while (chr_get_class(input[i]) != CHR_CLASS_EOL
+				&& (in_quotes || g_token_rules[token_get_type(input)][chr_get_class(input[i])]))
 		{
 			if (chr_get_class(input[i++]) == CHR_CLASS_QUOTE)
 				in_quotes = !in_quotes;

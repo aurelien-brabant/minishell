@@ -4,7 +4,7 @@
 CC					= clang
 CFLAGS				= -g  -Iinclude -Ilibft/include -Wall -Wextra -Werror
 LD					= clang
-LD_FLAGS			= -g -Llibft -lft
+LD_FLAGS			= -g -Llibft -lft -lreadline
 
 TARGET				= minishell
 

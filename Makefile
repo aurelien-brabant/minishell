@@ -6,7 +6,7 @@
 #    By: abrabant <abrabant@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/04/03 11:30:39 by abrabant          #+#    #+#              #
-#    Updated: 2021/06/05 11:16:23 by abrabant         ###   ########.fr        #
+#    Updated: 2021/06/10 14:46:57 by abrabant         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,7 +23,7 @@ TARGET				= minishell
 # SOURCES
 
 
-LEXER				= $(addprefix src/lexer/, lexer.c tokenizer.c)
+LEXER				= $(addprefix src/lexer/, lexer.c token.c)
 
 PARSER				= $(addprefix src/parser/, parser.c)
 

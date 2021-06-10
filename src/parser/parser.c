@@ -56,6 +56,7 @@
    }
    */
 
+/*
 static t_simple_command	*simple_command_new(char **input, t_token **tok)
 {
 	t_simple_command	*sc;
@@ -108,21 +109,19 @@ t_vector	pipeline_new(char **input, t_token **tok)
 	error_print(ERROR_TRAILING_PIPE);
 	return (pipeline);
 }
+*/
+
+static int print_token(char *string)
+{
+	puts(string);
+	return (0);
+}
 
 t_vector	parser_invoke(char *input)
 {
-	t_token				*tok;
-	t_vector			set;
+	t_lexer				*lexer;
 
-	set = ft_vector_new(5);
-	while (1)
-	{
-		tok = get_token(&input);
-		if (tok == NULL)
-			break ;
-		if (tok->type == TOKEN_WORD)
-			ft_vector_append(set, pipeline_new(&input, &tok));
-	}
-	ft_vector_foreach(set, &print_pipeline, NULL);
-	return (set);
+	lexer = lexer_build(input);
+	ft_vector_foreach(lexer->tokenv, &print_token, NULL);
+	return (NULL);
 }

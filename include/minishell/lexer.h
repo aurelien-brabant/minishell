@@ -1,5 +1,12 @@
 #ifndef LEXER_H
 # define LEXER_H
+# include "libft/vector.h"
+
+typedef struct	t_lexer
+{
+	t_vector	tokenv;
+	size_t		current_token_index;
+}	t_lexer;
 
 typedef enum e_token_type
 {
@@ -17,8 +24,7 @@ typedef enum e_chr_class
 {
 	CHR_CLASS_EOL = 1,
 	CHR_CLASS_DOLLAR,
-	CHR_CLASS_SQUOTE,
-	CHR_CLASS_DQUOTE,
+	CHR_CLASS_QUOTE,
 	CHR_CLASS_LEFT_ARROW,
 	CHR_CLASS_RIGHT_ARROW,
 	CHR_CLASS_PIPE,
@@ -26,20 +32,14 @@ typedef enum e_chr_class
 	CHR_CLASS_LETTER,
 	CHR_CLASS_SYMBOL,
 	CHR_CLASS_DIGIT,
+	CHR_CLASS_UNDEFINED,
 	CHR_CLASS_MAX,
 }	t_chr_class;
 
-typedef struct s_token
-{
-	char			*value;
-	t_token_type	type;
-}	t_token;
-
-t_token_type	get_restricted_token_type(t_chr_class chr_class);
-t_chr_class		get_chr_class(int c);	
-t_token_type	get_token_type(t_chr_class chr_class);
-bool			is_chr_class_in_context(t_token_type toktype,
-					t_chr_class chr_class);
-t_token			*get_token(char **input);
+t_lexer			*lexer_build(char *input);
+char			*token_get(t_lexer *lexer);
+t_token_type	token_get_type(char *token);
+char			*token_get_next(t_lexer *lexer);
+void			token_consume(t_lexer *lexer);
 
 #endif

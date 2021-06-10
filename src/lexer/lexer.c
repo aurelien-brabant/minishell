@@ -2,7 +2,12 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+#include "libft/vector.h"
+#include "libft/cstring.h"
+#include "libft/gc.h"
+
 #include "minishell/lexer.h"
+#include "minishell/stat.h"
 
 /*
 ** Character classes definition.
@@ -18,7 +23,7 @@
 ** allows to easily write lexer rules (see below).
 */
 
-static const t_chr_class	g_chr_class[UCHAR_MAX] = {
+static const t_chr_class	g_chr_class[CHAR_MAX] = {
 	['\0'] = CHR_CLASS_EOL, /* END OF LINE - may be modified when readline will be used instead of ft_gnl */
 	['\n'] = CHR_CLASS_EOL, /* END OF LINE - may be modified when readline will be used instead of ft_gnl */
 
@@ -35,8 +40,8 @@ static const t_chr_class	g_chr_class[UCHAR_MAX] = {
 	['$'] = CHR_CLASS_DOLLAR,
 
 	/* QUOTES */
-	['"'] = CHR_CLASS_DQUOTE,
-	['\''] = CHR_CLASS_SQUOTE,
+	['"'] = CHR_CLASS_QUOTE,
+	['\''] = CHR_CLASS_QUOTE,
 
 	/* WORD */
 
@@ -136,8 +141,7 @@ static const t_token_type	g_token_type[CHR_CLASS_MAX] = {
 	[CHR_CLASS_DIGIT] = TOKEN_WORD,
 	[CHR_CLASS_SYMBOL] = TOKEN_WORD,
 	[CHR_CLASS_DOLLAR] = TOKEN_WORD,
-	[CHR_CLASS_SQUOTE] = TOKEN_WORD,
-	[CHR_CLASS_DQUOTE] = TOKEN_WORD,
+	[CHR_CLASS_QUOTE] = TOKEN_WORD,
 	[CHR_CLASS_LEFT_ARROW] = TOKEN_OPERATOR,
 	[CHR_CLASS_RIGHT_ARROW] = TOKEN_OPERATOR,
 	[CHR_CLASS_PIPE] = TOKEN_OPERATOR,
@@ -160,57 +164,87 @@ static const bool			g_token_rules[TOKEN_MAX][CHR_CLASS_MAX] = {
 		[CHR_CLASS_DIGIT] = true,
 		[CHR_CLASS_SYMBOL] = true,
 		[CHR_CLASS_DOLLAR] = true,
-		[CHR_CLASS_SQUOTE] = true,
-		[CHR_CLASS_DQUOTE] = true,
+		[CHR_CLASS_QUOTE] = true,
 		[CHR_CLASS_LEFT_ARROW] = false,
 		[CHR_CLASS_RIGHT_ARROW] = false,
 		[CHR_CLASS_PIPE] = false,
 		[CHR_CLASS_BLANK] = false,
 		[CHR_CLASS_EOL] = false,
+		[CHR_CLASS_UNDEFINED] = true,
 	},
 	[TOKEN_OPERATOR] = {
 		[CHR_CLASS_LETTER] = false,
 		[CHR_CLASS_DIGIT] = false,
 		[CHR_CLASS_SYMBOL] = false,
 		[CHR_CLASS_DOLLAR] = false,
-		[CHR_CLASS_SQUOTE] = false,
-		[CHR_CLASS_DQUOTE] = false,
+		[CHR_CLASS_QUOTE] = false,
 		[CHR_CLASS_LEFT_ARROW] = true,
 		[CHR_CLASS_RIGHT_ARROW] = true,
 		[CHR_CLASS_PIPE] = true,
 		[CHR_CLASS_BLANK] = false,
 		[CHR_CLASS_EOL] = false,
+		[CHR_CLASS_UNDEFINED] = false,
 	},
 };
 
-/*
-** NOTE: about the functions defined below
-**
-** These functions are used to retrieve informations that are defined
-** in the global variables defined in this file. As the norm requests,
-** these globals are marked as static const, which means that they are
-** tied to the scope of this file.
-**
-** In order to get these informations from anywhere the functions
-** below are used.
-*/
-
-t_chr_class	get_chr_class(int c)
+t_chr_class		chr_get_class(int c)
 {
+	if (c > CHAR_MAX)
+		return (CHR_CLASS_UNDEFINED);
 	return (g_chr_class[c]);
 }
 
-t_token_type	get_token_type(t_chr_class chr_class)
+t_token_type	token_get_type(char *token)
 {
-	return (g_token_type[chr_class]);
+	return (g_token_type[chr_get_class(*token)]);
 }
 
-t_token_type	get_restricted_token_type(t_chr_class chr_class)
+/*
+** Create and initialize a new lexer object
+*/
+
+static t_lexer	*lexer_new(void)
 {
-	return (g_token_type[chr_class]);
+	t_lexer	*lexer;
+
+	lexer = malloc(sizeof (*lexer));
+	if (lexer == NULL)
+		return (NULL);
+	lexer->tokenv = ft_gc_add(stat_get()->tmp_gc, ft_vector_new(10), &free);
+	if (lexer->tokenv == NULL)
+	{ 
+		free(lexer);
+		return (NULL);
+	}
+	lexer->current_token_index = 0;
+	return (lexer);
 }
 
-bool	is_chr_class_in_context(t_token_type toktype, t_chr_class chr_class)
+t_lexer	*lexer_build(char *input)
 {
-	return (g_token_rules[toktype][chr_class]);
+	t_lexer			*lexer;
+	size_t			i;
+	bool			in_quotes;
+
+	i = 0;
+	lexer = lexer_new();
+	if (lexer == NULL)
+		return (NULL);
+	in_quotes = false;
+	while (input[i] != '\0')
+	{
+		while (chr_get_class(input[i]) == CHR_CLASS_BLANK)
+			++i;
+		while (input[i] != '\0'
+				&& (in_quotes || g_token_rules[token_get_type(input)]))
+		{
+			if (chr_get_class(input[i++]) == CHR_CLASS_QUOTE)
+				in_quotes = !in_quotes;
+		}
+		if (i > 0)
+			ft_vector_append(lexer->tokenv, ft_substr(input, 0, i));
+		input += i;
+		i = 0;
+	}
+	return (lexer);
 }

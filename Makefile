@@ -1,14 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: abrabant <abrabant@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2021/04/03 11:30:39 by abrabant          #+#    #+#              #
-#    Updated: 2021/06/10 15:02:08 by aldubar          ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
 
 # PROJECT CONFIG
 
@@ -23,7 +12,7 @@ TARGET				= minishell
 # SOURCES
 
 
-LEXER				= $(addprefix src/lexer/, lexer.c tokenizer.c)
+LEXER				= $(addprefix src/lexer/, lexer.c token.c)
 
 PARSER				= $(addprefix src/parser/, parser.c)
 

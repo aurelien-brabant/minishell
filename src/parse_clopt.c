@@ -8,7 +8,7 @@
 #include "minishell/minishell.h"
 #include "minishell/constants.h"
 
-static const struct s_option
+static const struct
 {
 	char			*long_opt;
 	char			short_opt;

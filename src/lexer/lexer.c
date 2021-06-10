@@ -23,7 +23,7 @@
 ** allows to easily write lexer rules (see below).
 */
 
-static const t_chr_class	g_chr_class[UCHAR_MAX] = {
+static const t_chr_class	g_chr_class[CHAR_MAX] = {
 	['\0'] = CHR_CLASS_EOL, /* END OF LINE - may be modified when readline will be used instead of ft_gnl */
 	['\n'] = CHR_CLASS_EOL, /* END OF LINE - may be modified when readline will be used instead of ft_gnl */
 
@@ -170,6 +170,7 @@ static const bool			g_token_rules[TOKEN_MAX][CHR_CLASS_MAX] = {
 		[CHR_CLASS_PIPE] = false,
 		[CHR_CLASS_BLANK] = false,
 		[CHR_CLASS_EOL] = false,
+		[CHR_CLASS_UNDEFINED] = true,
 	},
 	[TOKEN_OPERATOR] = {
 		[CHR_CLASS_LETTER] = false,
@@ -182,12 +183,20 @@ static const bool			g_token_rules[TOKEN_MAX][CHR_CLASS_MAX] = {
 		[CHR_CLASS_PIPE] = true,
 		[CHR_CLASS_BLANK] = false,
 		[CHR_CLASS_EOL] = false,
+		[CHR_CLASS_UNDEFINED] = false,
 	},
 };
 
+t_chr_class		chr_get_class(int c)
+{
+	if (c > CHAR_MAX)
+		return (CHR_CLASS_UNDEFINED);
+	return (g_chr_class[c]);
+}
+
 t_token_type	token_get_type(char *token)
 {
-	return (g_token_type[g_chr_class[(size_t)*token]]);
+	return (g_token_type[chr_get_class(*token)]);
 }
 
 /*
@@ -224,12 +233,12 @@ t_lexer	*lexer_build(char *input)
 	in_quotes = false;
 	while (input[i] != '\0')
 	{
-		while (g_chr_class[(size_t)input[i]] == CHR_CLASS_BLANK)
+		while (chr_get_class(input[i]) == CHR_CLASS_BLANK)
 			++i;
 		while (input[i] != '\0'
 				&& (in_quotes || g_token_rules[token_get_type(input)]))
 		{
-			if (g_chr_class[(size_t)input[i++]] == CHR_CLASS_QUOTE)
+			if (chr_get_class(input[i++]) == CHR_CLASS_QUOTE)
 				in_quotes = !in_quotes;
 		}
 		if (i > 0)

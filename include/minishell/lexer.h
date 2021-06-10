@@ -32,6 +32,7 @@ typedef enum e_chr_class
 	CHR_CLASS_LETTER,
 	CHR_CLASS_SYMBOL,
 	CHR_CLASS_DIGIT,
+	CHR_CLASS_UNDEFINED,
 	CHR_CLASS_MAX,
 }	t_chr_class;
 

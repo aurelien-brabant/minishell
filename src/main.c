@@ -8,7 +8,7 @@
 #include "minishell/constants.h"
 #include "minishell/lexer.h"
 
-int	main(int argc, char *argv[])
+int	main(int argc, char *argv[], char **envp)
 {
 	unsigned int	options;
 	char			*optargs[OPTION_TYPE_MAX];
@@ -29,5 +29,5 @@ int	main(int argc, char *argv[])
 		minishell_output_usage();
 		return (0);
 	}
-	minishell_invoke(options, optargs);
+	minishell_invoke(options, optargs, envp);
 }

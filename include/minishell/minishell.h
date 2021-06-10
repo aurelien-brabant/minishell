@@ -1,6 +1,7 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # include "minishell/lexer.h"
+# include "minishell/exec.h"
 
 typedef enum e_option_type
 {
@@ -17,6 +18,6 @@ void	minishell_output_usage(void);
 char	*prompt_present(const char *prompt);
 
 
-int		minishell_invoke(unsigned int opt, char **optargs);
+int		minishell_invoke(unsigned int opt, char **optargs, char **envp);
 
 #endif

@@ -1,14 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: abrabant <abrabant@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2021/04/03 11:30:39 by abrabant          #+#    #+#              #
-#    Updated: 2021/06/10 14:46:57 by abrabant         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
 
 # PROJECT CONFIG
 
@@ -27,12 +16,14 @@ LEXER				= $(addprefix src/lexer/, lexer.c token.c)
 
 PARSER				= $(addprefix src/parser/, parser.c)
 
+EXEC				= $(addprefix src/exec/, exec.c)
+
 OTHER				= $(addprefix src/, main.c parse_clopt.c prompt.c error.c	\
 					  minishell.c stat.c)
 
-SRCS				= $(OTHER) $(LEXER) $(PARSER)
+SRCS				= $(OTHER) $(LEXER) $(PARSER) $(EXEC)
 
-HEADERS				= $(addprefix include/minishell/, minishell.h constants.h stat.h error.h parser.h lexer.h)
+HEADERS				= $(addprefix include/minishell/, minishell.h constants.h stat.h error.h parser.h lexer.h exec.h)
 
 OBJS				= $(SRCS:%.c=%.o)
 

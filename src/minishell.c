@@ -10,7 +10,7 @@
 ** Invoke a minishell instance.
 */
 
-int	minishell_invoke(unsigned int opt, char **optargs)
+int	minishell_invoke(unsigned int opt, char **optargs, char **envp)
 {
 	char	*cmd;
 
@@ -24,6 +24,7 @@ int	minishell_invoke(unsigned int opt, char **optargs)
 	{
 		cmd = prompt_present("\033[0;33mminishell\033[0m-1.0$ ");
 		parser_invoke(cmd);
+		exec(cmd, envp);
 		ft_gc_wipe(stat_get()->tmp_gc);
 	}
 	ft_gc_destroy(stat_get()->tmp_gc);

@@ -1,26 +1,38 @@
 #include <unistd.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 
 #include "libft/io.h"
+#include "libft/ctype.h"
 
 #include "minishell/minishell.h"
 #include "minishell/stat.h"
 
+static bool	is_line_blank(const char *line)
+{
+	while (*line != '\0')
+	{
+		if (!ft_isspace(*line++))
+			return (false);
+	}
+	return (true);
+}
+
 /*
 ** Present a shell prompt to the user, ready to accept a new command from
 ** STDIN.
-** When the command (i.e a string of characters ending with a '\n')
-** has been typed by the user, the prompt is then released and the
-** prompt_present function returns the string holding the command, without
-** the terminating newline character.
+** The readline GNU library is used to display a bash-like prompt with
+** built-in support for history, path auto-completion, and so on.
 */
 
 char	*prompt_present(const char *prompt)
 {
 	char	*line;
 
-	ft_putstr_fd(prompt, STDOUT_FILENO);
-	if (ft_gnl(STDIN_FILENO, &line) > 0)
-		;
-	return (ft_gc_add(stat_get()->tmp_gc, line, &free));
+	line = readline(prompt);
+	if (!is_line_blank(line))
+		add_history(line);
+	return (line);
 }

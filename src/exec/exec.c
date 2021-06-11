@@ -1,41 +1,12 @@
 #include "minishell/exec.h"
+#include "minishell/stat.h"
 #include "libft/cstring.h"
+#include "libft/io.h"
 //#include <signal.h>
 #include <sys/wait.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include "libft/io.h"
-#include "minishell/stat.h"
-/*
-static void	print_tab(char **tab)
-{
-	int		i;
-
-	i = 0;
-	while (tab[i])
-	{
-		printf("%s\n", tab[i]);
-		i++;
-	}
-
-}
-*/
-
-void	free_tab(char **tab)
-{
-	int		i;
-
-	i = 0;
-	while (tab[i])
-	{
-		free(tab[i]);
-		tab[i] = NULL;
-		i++;
-	}
-	free(tab);
-	tab = NULL;
-}
 
 static char	*find_env_path(char **env)
 {
@@ -47,7 +18,8 @@ static char	*find_env_path(char **env)
 	{
 		if (!ft_strncmp("PATH=", env[i], 5))
 		{
-			path = ft_gc_add(stat_get()->tmp_gc, ft_strdup(env[i] + 5), &free);
+	//		path = ft_gc_add(stat_get()->tmp_gc, ft_strdup(env[i] + 5), &free);
+			path = ft_strdup(env[i] + 5);
 			return (path);
 		}
 		i++;
@@ -59,6 +31,7 @@ static char	**get_path(char *cmd, char **env)
 {
 	char	**paths;
 	char	*path;
+	char	*tmp;
 	int		i;
 
 	(void)cmd;
@@ -67,20 +40,27 @@ static char	**get_path(char *cmd, char **env)
 		return (NULL);
 	paths = ft_gc_add(stat_get()->tmp_gc, ft_split(path, ':'), &free_tab);
 	if (!paths)
+	{
+		free(path);
 		return (NULL);
+	}
 	i = 0;
 	while (paths[i])
 	{
-		paths[i] = ft_strjoin(paths[i], "/");
-		paths[i] = ft_strjoin(paths[i], cmd);
+		tmp = ft_strjoin(paths[i], "/");
+		//paths[i] = ft_gc_add(stat_get()->tmp_gc, ft_strjoin(tmp, cmd), &free);
+		free(paths[i]);
+		paths[i] = ft_strjoin(tmp, cmd);
+		free(tmp);
 		i++;
 	}
+	free(path);
 	return (paths);
 }
 
-static void	fn_exec(char *cmd, char **envp)
+static void	fn_exec(char *cmd, char **env)
 {
-	char	**env;
+//	char	**env;
 	char	**path;
 	int		ret;
 	int		i;
@@ -92,9 +72,9 @@ static void	fn_exec(char *cmd, char **envp)
 	args[0] = ft_strdup(cmd);
 	args[1] = NULL;
 	/* à la place d'args on aura les arguments donnés après la commande lors du parsing */
-	env = get_env(envp);
-	if (!env)
-		return ;
+//	env = get_env(envp);
+//	if (!env)
+//		return ;
 	path = get_path(cmd, env);
 	if (!path)
 		return ;
@@ -110,23 +90,32 @@ static void	fn_exec(char *cmd, char **envp)
 			break ;
 	}
 	if (WEXITSTATUS(ret) == 255)
-		printf("minishell: %s: command not found\n", cmd);
-	
+		ft_dprintf(2, "minishell: %s: command not found\n", cmd);
+//	free_tab(env);
 }
 
 void	exec(char *cmd, char **envp)
 {
-	//int	sig;
-	//int	pid;
+	char	**env;
 
-	//pid = waitpid(-1, &sig, 0);
-	if (!ft_strcmp(cmd, "env"))
-		fn_env(envp);
-	else if (!ft_strncmp(cmd, "echo", 4))
+	env = get_env(envp);
+	if (!env)
+		return ;
+	if (!ft_strncmp(cmd, "echo", 4))
 		fn_echo(cmd + 5);
+	else if (!ft_strcmp(cmd, "cd"))
+		fn_cd(env);
+	else if (!ft_strcmp(cmd, "pwd"))
+		fn_pwd(env);
+	else if (!ft_strcmp(cmd, "export"))
+		fn_export(env);
+	else if (!ft_strcmp(cmd, "unset"))
+		fn_unset(env);
+	else if (!ft_strcmp(cmd, "env"))
+		print_tab(env);
 	else if (!ft_strcmp(cmd, "exit"))
 		fn_exit();
 	else
-		fn_exec(cmd, envp);
-	//printf("sig [%d]\npid [%d]\n", sig, pid);
+		fn_exec(cmd, env);
+	free_tab(env);
 }

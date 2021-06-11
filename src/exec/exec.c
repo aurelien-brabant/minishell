@@ -103,14 +103,14 @@ void	exec(char *cmd, char **envp)
 		return ;
 	if (!ft_strncmp(cmd, "echo", 4))
 		fn_echo(cmd + 5);
-	else if (!ft_strcmp(cmd, "cd"))
+	else if (!ft_strncmp(cmd, "cd", 2))
 		fn_cd(env);
 	else if (!ft_strcmp(cmd, "pwd"))
 		fn_pwd(env);
-	else if (!ft_strcmp(cmd, "export"))
+	else if (!ft_strncmp(cmd, "export", 6))
 		fn_export(env);
-	else if (!ft_strcmp(cmd, "unset"))
-		fn_unset(env);
+	else if (!ft_strncmp(cmd, "unset", 5))
+		fn_unset(cmd, env);
 	else if (!ft_strcmp(cmd, "env"))
 		print_tab(env);
 	else if (!ft_strcmp(cmd, "exit"))

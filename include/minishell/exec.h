@@ -7,7 +7,7 @@ void	fn_echo(char *s);
 void	fn_cd(char **env);
 void	fn_pwd(char **env);
 void	fn_export(char **env);
-void	fn_unset(char **env);
+void	fn_unset(char *cmd, char **env);
 void	fn_exit(void);
 
 /* UTILS */

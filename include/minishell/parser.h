@@ -4,10 +4,12 @@
 
 typedef enum e_redirection_type
 {
-	REDIRECTION_NONE,
+	REDIRECTION_NONE = -1,
 	REDIRECTION_IN,
+	REDIRECTION_DOUBLE_IN,
 	REDIRECTION_OUT_APPEND,
 	REDIRECTION_OUT_OVERRIDE,
+	REDIRECTION_MAX,
 }	t_redirection_type;
 
 typedef	struct s_redirection

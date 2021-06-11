@@ -128,6 +128,7 @@ static const t_chr_class	g_chr_class[CHAR_MAX] = {
 	['_'] = CHR_CLASS_SYMBOL,
 	['+'] = CHR_CLASS_SYMBOL,
 	['#'] = CHR_CLASS_SYMBOL,
+	['='] = CHR_CLASS_SYMBOL,
 };
 
 /*
@@ -142,9 +143,9 @@ static const t_token_type	g_token_type[CHR_CLASS_MAX] = {
 	[CHR_CLASS_SYMBOL] = TOKEN_WORD,
 	[CHR_CLASS_DOLLAR] = TOKEN_WORD,
 	[CHR_CLASS_QUOTE] = TOKEN_WORD,
-	[CHR_CLASS_LEFT_ARROW] = TOKEN_OPERATOR,
-	[CHR_CLASS_RIGHT_ARROW] = TOKEN_OPERATOR,
-	[CHR_CLASS_PIPE] = TOKEN_OPERATOR,
+	[CHR_CLASS_LEFT_ARROW] = TOKEN_REDIRECTION,
+	[CHR_CLASS_RIGHT_ARROW] = TOKEN_REDIRECTION,
+	[CHR_CLASS_PIPE] = TOKEN_OR,
 };
 
 /*
@@ -172,13 +173,26 @@ static const bool			g_token_rules[TOKEN_MAX][CHR_CLASS_MAX] = {
 		[CHR_CLASS_EOL] = false,
 		[CHR_CLASS_UNDEFINED] = true,
 	},
-	[TOKEN_OPERATOR] = {
+	[TOKEN_REDIRECTION] = {
 		[CHR_CLASS_LETTER] = false,
 		[CHR_CLASS_DIGIT] = false,
 		[CHR_CLASS_SYMBOL] = false,
 		[CHR_CLASS_DOLLAR] = false,
 		[CHR_CLASS_QUOTE] = false,
 		[CHR_CLASS_LEFT_ARROW] = true,
+		[CHR_CLASS_RIGHT_ARROW] = true,
+		[CHR_CLASS_PIPE] = false,
+		[CHR_CLASS_BLANK] = false,
+		[CHR_CLASS_EOL] = false,
+		[CHR_CLASS_UNDEFINED] = false,
+	},
+	[TOKEN_OR] = {
+		[CHR_CLASS_LETTER] = false,
+		[CHR_CLASS_DIGIT] = false,
+		[CHR_CLASS_SYMBOL] = false,
+		[CHR_CLASS_DOLLAR] = false,
+		[CHR_CLASS_QUOTE] = false,
+		[CHR_CLASS_LEFT_ARROW] = false,
 		[CHR_CLASS_RIGHT_ARROW] = true,
 		[CHR_CLASS_PIPE] = true,
 		[CHR_CLASS_BLANK] = false,

@@ -13,7 +13,6 @@ static void	print_tab(char **tab)
 		printf("%s\n", tab[i]);
 		i++;
 	}
-
 }
 
 char	**get_env(char **envp)

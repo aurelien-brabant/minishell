@@ -12,7 +12,8 @@ typedef enum e_token_type
 {
 	TOKEN_ERROR = 0,
 	TOKEN_WORD,
-	TOKEN_OPERATOR,
+	TOKEN_REDIRECTION,
+	TOKEN_OR,
 	TOKEN_MAX,
 }	t_token_type;
 
@@ -37,9 +38,9 @@ typedef enum e_chr_class
 }	t_chr_class;
 
 t_lexer			*lexer_build(char *input);
-char			*token_get(t_lexer *lexer);
 t_token_type	token_get_type(char *token);
-char			*token_get_next(t_lexer *lexer);
+t_token_type	token_get(t_lexer *lexer, char **token);
+t_token_type	token_get_next(t_lexer *lexer, char **token);
 void			token_consume(t_lexer *lexer);
 
 #endif

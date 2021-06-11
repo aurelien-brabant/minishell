@@ -8,18 +8,20 @@
 
 #include "libft/cstring.h"
 
-char	*token_get(t_lexer *lexer)
+t_token_type	token_get(t_lexer *lexer, char **token)
 {
 	if (lexer->current_token_index >= ft_vector_length(lexer->tokenv))
-		return (NULL);
-	return (ft_vector_get(lexer->tokenv, lexer->current_token_index));	
+		return (TOKEN_ERROR);
+	*token = ft_vector_get(lexer->tokenv, lexer->current_token_index);
+	return (token_get_type(*token));
 }
 
-char	*token_get_next(t_lexer *lexer)
+t_token_type	token_get_next(t_lexer *lexer, char **token)
 {
 	if (lexer->current_token_index + 1 >= ft_vector_length(lexer->tokenv))
-		return (NULL);
-	return (ft_vector_get(lexer->tokenv, lexer->current_token_index + 1));
+		return (TOKEN_ERROR);
+	*token = ft_vector_get(lexer->tokenv, lexer->current_token_index + 1);
+	return (token_get_type(*token));
 }
 
 void	token_consume(t_lexer *lexer)

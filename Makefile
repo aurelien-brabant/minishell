@@ -16,7 +16,7 @@ LEXER				= $(addprefix src/lexer/, lexer.c token.c)
 
 PARSER				= $(addprefix src/parser/, parser.c)
 
-EXEC				= $(addprefix src/exec/, exec.c)
+EXEC				= $(addprefix src/exec/, exec.c env.c echo.c exit.c)
 
 OTHER				= $(addprefix src/, main.c parse_clopt.c prompt.c error.c	\
 					  minishell.c stat.c)

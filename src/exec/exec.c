@@ -1,5 +1,5 @@
 #include "minishell/exec.h"
-#include "minishell/stat.h"
+//#include "minishell/stat.h"
 #include "libft/cstring.h"
 #include "libft/io.h"
 //#include <signal.h>
@@ -38,7 +38,8 @@ static char	**get_path(char *cmd, char **env)
 	path = find_env_path(env);
 	if (!path)
 		return (NULL);
-	paths = ft_gc_add(stat_get()->tmp_gc, ft_split(path, ':'), &free_tab);
+//	paths = ft_gc_add(stat_get()->tmp_gc, ft_split(path, ':'), &free_tab);
+	paths = ft_split(path, ':');
 	if (!paths)
 	{
 		free(path);
@@ -58,9 +59,8 @@ static char	**get_path(char *cmd, char **env)
 	return (paths);
 }
 
-static void	fn_exec(char *cmd, t_data *data)
+static void	fn_exec(char *cmd, char ***env)
 {
-//	char	**env;
 	char	**path;
 	int		ret;
 	int		i;
@@ -72,10 +72,7 @@ static void	fn_exec(char *cmd, t_data *data)
 	args[0] = ft_strdup(cmd);
 	args[1] = NULL;
 	/* à la place d'args on aura les arguments donnés après la commande lors du parsing */
-//	env = get_env(envp);
-//	if (!env)
-//		return ;
-	path = get_path(cmd, data->env);
+	path = get_path(cmd, *env);
 	if (!path)
 		return ;
 	i = -1;
@@ -84,38 +81,31 @@ static void	fn_exec(char *cmd, t_data *data)
 	{
 		pid = fork();
 		if (pid == 0)
-			exit(execve(path[i], args, data->env));
+			exit(execve(path[i], args, *env));
 		waitpid(pid, &ret, 0);
 		if (WEXITSTATUS(ret) != 255)
 			break ;
 	}
 	if (WEXITSTATUS(ret) == 255)
 		ft_dprintf(2, "minishell: %s: command not found\n", cmd);
-//	free_tab(env);
 }
 
-void	exec(char *cmd, t_data *data)
+void	exec(char *cmd, char ***env)
 {
-//	char	**env;
-
-//	env = get_env(envp);
-//	if (!env)
-//		return ;
 	if (!ft_strncmp(cmd, "echo", 4))
 		fn_echo(cmd + 5);
 	else if (!ft_strncmp(cmd, "cd", 2))
-		fn_cd(data->env);
+		fn_cd(*env);
 	else if (!ft_strcmp(cmd, "pwd"))
-		fn_pwd(data->env);
+		fn_pwd(*env);
 	else if (!ft_strncmp(cmd, "export", 6))
-		fn_export(cmd, data->env);
+		fn_export(cmd, env);
 	else if (!ft_strncmp(cmd, "unset", 5))
-		fn_unset(cmd, data->env);
+		fn_unset(cmd, env);
 	else if (!ft_strcmp(cmd, "env"))
-		print_tab(data->env);
+		print_tab(*env);
 	else if (!ft_strcmp(cmd, "exit"))
 		fn_exit();
 	else
-		fn_exec(cmd, data);
-	//free_tab(data->env);
+		fn_exec(cmd, env);
 }

@@ -128,6 +128,7 @@ static const t_chr_class	g_chr_class[CHAR_MAX] = {
 	['_'] = CHR_CLASS_SYMBOL,
 	['+'] = CHR_CLASS_SYMBOL,
 	['#'] = CHR_CLASS_SYMBOL,
+	['='] = CHR_CLASS_SYMBOL,
 };
 
 /*

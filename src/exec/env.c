@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void	print_tab(char **tab)
+static void	print_tab(char **tab)
 {
 	int		i;
 

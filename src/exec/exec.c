@@ -5,30 +5,33 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
-
-char	*concatenate_path(char **envp, char *cmd)
+/*
+static void	print_tab(char **tab)
 {
-	char	*path;
+	int		i;
 
-	(void)envp;
-	path = "/bin/";
-	path = ft_strjoin(path, cmd);
-	return (path);
+	i = 0;
+	while (tab[i])
+	{
+		printf("%s\n", tab[i]);
+		i++;
+	}
+
 }
+*/
 
-char	*find_path(char **envp)
+static char	*find_env_path(char **env)
 {
 	int	i;
 	char	*path;
 
 	i = 0;
-	while (envp[i])
+	while (env[i])
 	{
-		if (!ft_strcmp("PATH=", envp[i]))
+		if (!ft_strncmp("PATH=", env[i], 5))
 		{
-			path = (char *)malloc(sizeof(char) * (ft_strlen(envp[i] + 5) + 1));
-			path = ft_strdup(envp[i] + 5);
-			printf("%s\n", path);
+			path = (char *)malloc(sizeof(char) * (ft_strlen(env[i] + 5) + 1));
+			path = ft_strdup(env[i] + 5);
 			return (path);
 		}
 		i++;
@@ -36,21 +39,42 @@ char	*find_path(char **envp)
 	return (NULL);
 }
 
-char	*get_path(char *cmd, char **env)
+static char	**get_path(char *cmd, char **env)
 {
+	char	**paths;
 	char	*path;
-	char	*paths;
+	int		i;
 
-	paths = find_path(env);
-	path = ft_strjoin(paths, cmd);
-	return (path);
+	(void)cmd;
+	path = find_env_path(env);
+	if (!path)
+		return (NULL);
+	paths = ft_split(path, ':');
+	if (!paths)
+		return (NULL);
+	i = 0;
+	while (paths[i])
+	{
+		paths[i] = ft_strjoin(paths[i], "/");
+		paths[i] = ft_strjoin(paths[i], cmd);
+		i++;
+	}
+	return (paths);
 }
 
-void	fn_exec(char *cmd, char **envp)
+static void	fn_exec(char *cmd, char **envp)
 {
-	char **env;
-	char *path;
-	//int		ret;
+	char	**env;
+	char	**path;
+	int		ret;
+	int		i;
+	char	**args;
+
+	/* juste pour tester car on n'a pas fini le parsing... */
+	args = malloc(sizeof(char *) * 2);
+	args[0] = ft_strdup(cmd);
+	args[1] = NULL;
+	/* à la place d'args on aura les arguments donnés après la commande lors du parsing */
 
 	env = get_env(envp);
 	if (!env)
@@ -58,9 +82,12 @@ void	fn_exec(char *cmd, char **envp)
 	path = get_path(cmd, env);
 	if (!path)
 		return ;
-	printf("path [%s]\n", path);
-	//ret = execve(cmd, path, env);
-	//printf("ret_execve [%d]\n", ret);
+	i = -1;
+	ret = 0;
+	while (path[i++] || ret != -1)
+		ret = execve(path[i], args, env);
+	printf("minishell: %s: command not found\n", cmd);
+	
 }
 
 void	exec(char *cmd, char **envp)
@@ -77,7 +104,5 @@ void	exec(char *cmd, char **envp)
 		fn_exit();
 	else
 		fn_exec(cmd, envp);
-	//else
-	//	printf("minishell: %s: command not found\n", cmd);
 	//printf("sig [%d]\npid [%d]\n", sig, pid);
 }

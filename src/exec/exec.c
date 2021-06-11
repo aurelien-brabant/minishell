@@ -1,10 +1,12 @@
 #include "minishell/exec.h"
 #include "libft/cstring.h"
 //#include <signal.h>
-//#include <sys/wait.h>
+#include <sys/wait.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "libft/io.h"
+#include "minishell/stat.h"
 /*
 static void	print_tab(char **tab)
 {
@@ -20,9 +22,24 @@ static void	print_tab(char **tab)
 }
 */
 
+void	free_tab(char **tab)
+{
+	int		i;
+
+	i = 0;
+	while (tab[i])
+	{
+		free(tab[i]);
+		tab[i] = NULL;
+		i++;
+	}
+	free(tab);
+	tab = NULL;
+}
+
 static char	*find_env_path(char **env)
 {
-	int	i;
+	int		i;
 	char	*path;
 
 	i = 0;
@@ -30,8 +47,7 @@ static char	*find_env_path(char **env)
 	{
 		if (!ft_strncmp("PATH=", env[i], 5))
 		{
-			path = (char *)malloc(sizeof(char) * (ft_strlen(env[i] + 5) + 1));
-			path = ft_strdup(env[i] + 5);
+			path = ft_gc_add(stat_get()->tmp_gc, ft_strdup(env[i] + 5), &free);
 			return (path);
 		}
 		i++;
@@ -49,7 +65,7 @@ static char	**get_path(char *cmd, char **env)
 	path = find_env_path(env);
 	if (!path)
 		return (NULL);
-	paths = ft_split(path, ':');
+	paths = ft_gc_add(stat_get()->tmp_gc, ft_split(path, ':'), &free_tab);
 	if (!paths)
 		return (NULL);
 	i = 0;
@@ -69,13 +85,13 @@ static void	fn_exec(char *cmd, char **envp)
 	int		ret;
 	int		i;
 	char	**args;
+	int		pid;
 
 	/* juste pour tester car on n'a pas fini le parsing... */
 	args = malloc(sizeof(char *) * 2);
 	args[0] = ft_strdup(cmd);
 	args[1] = NULL;
 	/* à la place d'args on aura les arguments donnés après la commande lors du parsing */
-
 	env = get_env(envp);
 	if (!env)
 		return ;
@@ -84,9 +100,17 @@ static void	fn_exec(char *cmd, char **envp)
 		return ;
 	i = -1;
 	ret = 0;
-	while (path[i++] || ret != -1)
-		ret = execve(path[i], args, env);
-	printf("minishell: %s: command not found\n", cmd);
+	while (path[i++])
+	{
+		pid = fork();
+		if (pid == 0)
+			exit(execve(path[i], args, env));
+		waitpid(pid, &ret, 0);
+		if (WEXITSTATUS(ret) != 255)
+			break ;
+	}
+	if (WEXITSTATUS(ret) == 255)
+		printf("minishell: %s: command not found\n", cmd);
 	
 }
 

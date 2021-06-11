@@ -58,7 +58,7 @@ static char	**get_path(char *cmd, char **env)
 	return (paths);
 }
 
-static void	fn_exec(char *cmd, char **env)
+static void	fn_exec(char *cmd, t_data *data)
 {
 //	char	**env;
 	char	**path;
@@ -75,7 +75,7 @@ static void	fn_exec(char *cmd, char **env)
 //	env = get_env(envp);
 //	if (!env)
 //		return ;
-	path = get_path(cmd, env);
+	path = get_path(cmd, data->env);
 	if (!path)
 		return ;
 	i = -1;
@@ -84,7 +84,7 @@ static void	fn_exec(char *cmd, char **env)
 	{
 		pid = fork();
 		if (pid == 0)
-			exit(execve(path[i], args, env));
+			exit(execve(path[i], args, data->env));
 		waitpid(pid, &ret, 0);
 		if (WEXITSTATUS(ret) != 255)
 			break ;
@@ -94,28 +94,28 @@ static void	fn_exec(char *cmd, char **env)
 //	free_tab(env);
 }
 
-void	exec(char *cmd, char **envp)
+void	exec(char *cmd, t_data *data)
 {
-	char	**env;
+//	char	**env;
 
-	env = get_env(envp);
-	if (!env)
-		return ;
+//	env = get_env(envp);
+//	if (!env)
+//		return ;
 	if (!ft_strncmp(cmd, "echo", 4))
 		fn_echo(cmd + 5);
 	else if (!ft_strncmp(cmd, "cd", 2))
-		fn_cd(env);
+		fn_cd(data->env);
 	else if (!ft_strcmp(cmd, "pwd"))
-		fn_pwd(env);
+		fn_pwd(data->env);
 	else if (!ft_strncmp(cmd, "export", 6))
-		fn_export(env);
+		fn_export(cmd, data->env);
 	else if (!ft_strncmp(cmd, "unset", 5))
-		fn_unset(cmd, env);
+		fn_unset(cmd, data->env);
 	else if (!ft_strcmp(cmd, "env"))
-		print_tab(env);
+		print_tab(data->env);
 	else if (!ft_strcmp(cmd, "exit"))
 		fn_exit();
 	else
-		fn_exec(cmd, env);
-	free_tab(env);
+		fn_exec(cmd, data);
+	//free_tab(data->env);
 }

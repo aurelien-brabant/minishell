@@ -1,24 +1,13 @@
 #include "minishell/minishell.h"
 #include "libft/cstring.h"
 #include <stdlib.h>
-#include <stdio.h>
 
-static size_t	tab_len(char **env)
-{
-	size_t	i;
-
-	i = 0;
-	while (env[i])
-		i++;
-	return (i);
-}
-
-static char	**create_new_env(int to_del, char **env)
+static char	**create_unset_env(int to_del, char **env)
 {
 	int		i;
 	int		j;
 	char	**new_env;
-	size_t	size;
+	int		size;
 	
 	i = 0;
 	j = 0;
@@ -39,7 +28,7 @@ static char	**create_new_env(int to_del, char **env)
 	return (new_env);
 }
 
-char	**unset_var(char *var, char **env)
+static char	**unset_var(char *var, char **env)
 {
 	int		i;
 	int		to_del;
@@ -56,7 +45,7 @@ char	**unset_var(char *var, char **env)
 		i++;
 	}
 	if (to_del)
-		return (create_new_env(to_del, env));
+		return (create_unset_env(to_del, env));
 	return (env);
 }
 

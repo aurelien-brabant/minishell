@@ -4,7 +4,7 @@
 void	exec(char *cmd, char ***env);
 char	**get_env(char **envp);
 void	fn_echo(char *s);
-void	fn_cd(char **env);
+void	fn_cd(char *cmd, char ***env);
 void	fn_pwd(char **env);
 void	fn_export(char *cmd, char ***env);
 void	fn_unset(char *cmd, char ***env);

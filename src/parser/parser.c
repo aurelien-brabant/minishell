@@ -23,7 +23,7 @@ static void	parse(t_lexer *lexer, t_ast_node **root)
 	{
 		if (type == TOKEN_WORD)
 		{
-			ast_node_insert(root, ast_node_new(TOKEN_WORD, token));
+			ast_node_insert(root, ast_node_new(NODE_WORD, token));
 			token_consume(lexer);
 		}
 		else if (type == TOKEN_OR)
@@ -33,7 +33,7 @@ static void	parse(t_lexer *lexer, t_ast_node **root)
 				ft_dprintf(STDERR_FILENO, "minishell: %s: unknown operator\n", token);
 				return ;
 			}
-			ast_node_insert(root, ast_node_new(TOKEN_OR, NULL));
+			ast_node_insert(root, ast_node_new(NODE_PIPE, NULL));
 			token_consume(lexer);
 		}
 		else if (type == TOKEN_REDIRECTION_OUT)
@@ -49,7 +49,7 @@ static void	parse(t_lexer *lexer, t_ast_node **root)
 				return ;
 			}
 			token_get(lexer, &token);
-			ast_node_insert(root, ast_node_new(TOKEN_REDIRECTION_OUT, token));
+			ast_node_insert(root, ast_node_new(NODE_REDIR_OUT, token));
 			token_consume(lexer);
 		}
 		else if (type == TOKEN_REDIRECTION_IN)
@@ -65,7 +65,7 @@ static void	parse(t_lexer *lexer, t_ast_node **root)
 				return ;
 			}
 			token_get(lexer, &token);
-			ast_node_insert(root, ast_node_new(TOKEN_REDIRECTION_IN, token));
+			ast_node_insert(root, ast_node_new(NODE_REDIR_IN, token));
 			token_consume(lexer);
 		}
 		type = token_get(lexer, &token);
@@ -80,5 +80,6 @@ t_ast_node	*parser_invoke(char *input)
 	root = NULL;
 	lexer = lexer_build(input);
 	parse(lexer, &root);
+	ast_print(root);
 	return (root);
 }

@@ -4,7 +4,30 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
-void	update_pwd(char *old_pwd, char ***env)
+
+static char	*get_home_value(char *var, char **env)
+{
+	char	*value;
+	int		i;
+	int		size;
+
+	i = 0;
+	size = 0;
+	while (env[i])
+	{
+		if (!ft_strncmp(var, env[i], 5))
+			break ;
+		i++;
+	}
+	size = ft_strlen(env[i]) - 5;
+	value = (char *)malloc(sizeof(char) * (size + 1));
+	if (!value)
+		return (NULL);
+	value = ft_strdup(env[i] + 5);
+	return (value);
+}
+
+static void	update_pwd(char *old_pwd, char ***env)
 {
 	char	*new_pwd;
 	char	*tmp;
@@ -28,9 +51,14 @@ void	fn_cd(char *cmd, char ***env)
 	int		ret;
 
 	old_pwd = ft_strdup(get_pwd());
-	goto_path = ft_strdup(cmd + 3);
+	if (cmd[2])
+		goto_path = ft_strdup(cmd + 3);
+	else
+		goto_path = ft_strdup(get_home_value("HOME=", *env));
+	if (!goto_path)
+		return ;
 	ret = chdir(goto_path);
-	printf("ret_cd [%d]\n", ret);
+	//printf("ret_cd [%d]\n", ret);
 	if (!ret)
 		update_pwd(old_pwd, env);
 	else

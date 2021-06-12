@@ -59,8 +59,30 @@ static char	**get_path(char *cmd, char **env)
 	return (paths);
 }
 
+static char	**add_cmd_to_path(char *cmd, char **path)
+{
+	char	**final_path;
+	int		size;
+	int		i;
+
+	size = tab_len(path);
+	final_path = (char **)malloc(sizeof(char *) * (size + 2));
+	if (!final_path)
+		return (NULL);
+	i = 0;
+	while (path[i])
+	{
+		final_path[i] = ft_strdup(path[i]);
+		i++;
+	}
+	final_path[i] = ft_strdup(cmd);
+	final_path[i + 1] = NULL;
+	return (final_path);
+}
+
 static void	fn_exec(char *cmd, char ***env)
 {
+	char	**tmp;
 	char	**path;
 	int		ret;
 	int		i;
@@ -72,7 +94,11 @@ static void	fn_exec(char *cmd, char ***env)
 	args[0] = ft_strdup(cmd);
 	args[1] = NULL;
 	/* à la place d'args on aura les arguments donnés après la commande lors du parsing */
-	path = get_path(cmd, *env);
+	tmp = get_path(cmd, *env);
+	if (!tmp)
+		return ;
+	path = add_cmd_to_path(cmd, tmp);
+	free_tab(tmp);
 	if (!path)
 		return ;
 	i = -1;
@@ -88,6 +114,7 @@ static void	fn_exec(char *cmd, char ***env)
 	}
 	if (WEXITSTATUS(ret) == 255)
 		ft_dprintf(2, "minishell: %s: command not found\n", cmd);
+	free_tab(path);
 }
 
 void	exec(char *cmd, char ***env)

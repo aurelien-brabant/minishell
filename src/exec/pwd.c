@@ -1,6 +1,7 @@
 #include "minishell/minishell.h"
 #include "libft/cstring.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <limits.h>
 
@@ -19,4 +20,5 @@ void	fn_pwd(void)
 	if (!pwd)
 		return ;
 	printf("%s\n", pwd);
+	free(pwd);
 }

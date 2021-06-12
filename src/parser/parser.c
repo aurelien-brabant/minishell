@@ -13,91 +13,73 @@
 #include "minishell/stat.h"
 #include "minishell/error.h"
 
-/*
-static int print_token(char *string)
-{
-	puts(string);
-	return (0);
-}
-*/
-
-static t_redirection_type	get_redirection_type(char *token)
-{
-	static char	*redirections[REDIRECTION_MAX] = {
-		[REDIRECTION_IN] = "<",
-		[REDIRECTION_DOUBLE_IN] = "<<",
-		[REDIRECTION_OUT_OVERRIDE] = ">",
-		[REDIRECTION_OUT_APPEND] = ">>",
-	};
-	size_t		i;
-
-	i = 0;
-	while (i < REDIRECTION_MAX)
-	{
-		if (ft_strcmp(redirections[i], token) == 0)
-			return (i);
-		++i;
-	}
-	return (REDIRECTION_NONE);
-}
-
-static void	parse(t_lexer *lexer)
+static void	parse(t_lexer *lexer, t_ast_node **root)
 {
 	char				*token;
 	t_token_type		type;
-	t_redirection_type	redirection_type;
 
 	type = token_get(lexer, &token);
-	if (type == TOKEN_ERROR)
-		return ;
-	if (type == TOKEN_WORD)
+	while (type != TOKEN_ERROR)
 	{
-		printf("Command ID: %s\n", token);
-		token_consume(lexer);
-		while ((token_get(lexer, &token)) == TOKEN_WORD)
+		if (type == TOKEN_WORD)
 		{
-			printf("ARG: \"%s\"\n", token);
+			ast_node_insert(root, ast_node_new(NODE_WORD, token));
 			token_consume(lexer);
 		}
-	}
-	else if (type == TOKEN_OR)
-	{
-		if (ft_strlen(token) > 1)
+		else if (type == TOKEN_OR)
 		{
-			ft_dprintf(STDERR_FILENO, "minishell: %s: unknown operator\n", token);
-			return ;
+			if (ft_strlen(token) > 1)
+			{
+				ft_dprintf(STDERR_FILENO, "minishell: %s: unknown operator\n", token);
+				return ;
+			}
+			ast_node_insert(root, ast_node_new(NODE_PIPE, NULL));
+			token_consume(lexer);
 		}
-		printf("PIPE\n");
-		token_consume(lexer);
-	}
-	else if (type == TOKEN_REDIRECTION)
-	{
-		redirection_type = get_redirection_type(token);
-		if (redirection_type == REDIRECTION_NONE)
+		else if (type == TOKEN_REDIRECTION_OUT)
 		{
-			ft_dprintf(STDERR_FILENO, "minishell: %s: unknown operator\n", token);
-			return ;
+			if (ft_strcmp(token, ">") != 0 && ft_strcmp(token, ">>") != 0)
+			{
+				ft_dprintf(STDERR_FILENO, "minishell: %s: invalid output redirection\n", token);
+				return ;
+			}
+			if (token_get_next(lexer, &token) != TOKEN_WORD)
+			{
+				ft_dprintf(STDERR_FILENO, "Output redirection \"%s\" expects a file as an argument\n", token);
+				return ;
+			}
+			token_get(lexer, &token);
+			ast_node_insert(root, ast_node_new(NODE_REDIR_OUT, token));
+			token_consume(lexer);
 		}
-		printf("REDIRECTION: %s\n", token);
-		if (token_get_next(lexer, &token) != TOKEN_WORD)
+		else if (type == TOKEN_REDIRECTION_IN)
 		{
-			ft_dprintf(STDERR_FILENO, "Redirection operator \"%s\" expects a valid argument\n", token);
-			return ;
+			if (ft_strcmp(token, "<") != 0 && ft_strcmp(token, "<<") != 0)
+			{
+				ft_dprintf(STDERR_FILENO, "minishell: %s: invalid input redirection\n", token);
+				return ;
+			}
+			if (token_get_next(lexer, &token) != TOKEN_WORD)
+			{
+				ft_dprintf(STDERR_FILENO, "Input redirection \"%s\" expects an argument\n", token);
+				return ;
+			}
+			token_get(lexer, &token);
+			ast_node_insert(root, ast_node_new(NODE_REDIR_IN, token));
+			token_consume(lexer);
 		}
-		token_consume(lexer);
-		printf("REDIRECTION ARG: %s\n", token);
-		token_consume(lexer);
-		token_consume(lexer);
+		type = token_get(lexer, &token);
 	}
-	parse(lexer);
 }
 
-t_vector	parser_invoke(char *input)
+t_ast_node	*parser_invoke(char *input)
 {
 	t_lexer				*lexer;
+	t_ast_node			*root;
 
+	root = NULL;
 	lexer = lexer_build(input);
-	parse(lexer);
-	//ft_vector_foreach(lexer->tokenv, &print_token, NULL);
-	return (NULL);
+	parse(lexer, &root);
+	ast_print(root);
+	return (root);
 }

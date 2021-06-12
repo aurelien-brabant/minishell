@@ -97,7 +97,7 @@ void	exec(char *cmd, char ***env)
 	else if (!ft_strncmp(cmd, "cd", 2))
 		fn_cd(cmd, env);
 	else if (!ft_strcmp(cmd, "pwd"))
-		fn_pwd(*env);
+		fn_pwd();
 	else if (!ft_strncmp(cmd, "export", 6))
 		fn_export(cmd, env);
 	else if (!ft_strncmp(cmd, "unset", 5))

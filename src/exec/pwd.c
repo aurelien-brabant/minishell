@@ -1,17 +1,22 @@
 #include "minishell/minishell.h"
 #include "libft/cstring.h"
 #include <stdio.h>
+#include <unistd.h>
+#include <limits.h>
 
-void	fn_pwd(char **env)
+char	*get_pwd(void)
 {
-	int		i;
+	char	buf[PATH_MAX];
 
-	i = 0;
-	while (env[i])
-	{
-		if (!ft_strncmp(env[i], "PWD=", 4))
-			printf("%s\n", env[i] + 4);
-		i++;
-	}
-	return ;
+	return (getcwd(buf, PATH_MAX));
+}
+
+void	fn_pwd(void)
+{
+	char	*pwd;
+
+	pwd = ft_strdup(get_pwd());
+	if (!pwd)
+		return ;
+	printf("%s\n", pwd);
 }

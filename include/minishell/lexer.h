@@ -12,7 +12,8 @@ typedef enum e_token_type
 {
 	TOKEN_ERROR = 0,
 	TOKEN_WORD,
-	TOKEN_REDIRECTION,
+	TOKEN_REDIRECTION_OUT,
+	TOKEN_REDIRECTION_IN,
 	TOKEN_OR,
 	TOKEN_MAX,
 }	t_token_type;

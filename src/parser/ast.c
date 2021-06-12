@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "minishell/lexer.h"
 #include "minishell/parser.h"
 
 t_ast_node	*ast_node_new(t_token_type type, void *info)
@@ -16,12 +17,55 @@ t_ast_node	*ast_node_new(t_token_type type, void *info)
 	node->right = NULL;
 	node->parent = NULL;
 	return (node);
+
+}
+
+static void	insert_output_redirection(t_ast_node **root, t_ast_node *node)
+{		
+	t_redirection	*redirection;
+	t_ast_node		*tmp;
+
+	redirection = (t_redirection *)node->info;
+	if ((*root)->type == TOKEN_OR)
+			ast_node_insert(&(*root)->right, node);
+	if ((*root)->type == TOKEN_WORD || (*root)->type == TOKEN_REDIRECTION_OUT)
+	{
+		tmp = *root;
+		*root = node;
+		node->left = tmp;
+		node->parent = tmp->parent;
+		tmp->parent = *root;
+	}
+}
+
+static void		insert_pipe(t_ast_node **root, t_ast_node *node)
+{
+	t_ast_node	*tmp;
+
+	tmp = *root;
+	*root = node;
+	node->left = tmp;
+	node->parent = NULL;
+	tmp->parent = *root;
+}
+
+static void		insert_word(t_ast_node **root, t_ast_node *node)
+{
+	if ((*root)->type == TOKEN_REDIRECTION_OUT)
+	{
+		if ((*root)->right != NULL)
+			ast_node_insert(&(*root)->left, node);
+		else
+			ast_node_insert(&(*root)->right, node);
+	}
+	else if ((*root)->type == TOKEN_OR)
+		ast_node_insert(&(*root)->right, node);
+	else
+		ast_node_insert(&(*root)->left, node);
 }
 
 void		ast_node_insert(t_ast_node **root, t_ast_node *node)
 {
-	t_ast_node	*tmp;
-
 	if (*root != NULL)
 		node->parent = *root;
 	if (*root == NULL)
@@ -29,30 +73,12 @@ void		ast_node_insert(t_ast_node **root, t_ast_node *node)
 	else
 	{
 		if (node->type == TOKEN_WORD)
-		{
-			if ((*root)->type == TOKEN_OR)
-				ast_node_insert(&(*root)->right, node);
-			else
-				ast_node_insert(&(*root)->left, node);
-		}
+			insert_word(root, node);
 		else if (node->type == TOKEN_OR)
-		{
-			tmp = *root;
-			*root = node;
-			(*root)->left = tmp;
-			tmp->parent = *root;
-			(*root)->parent = NULL;
-		}
+			insert_pipe(root, node);
+		else if (node->type == TOKEN_REDIRECTION_OUT)
+			insert_output_redirection(root, node);
 	}
-}
-
-void	ast_make_parents(t_ast_node *root)
-{
-	if (root->left != NULL)
-		ast_print(root->left);
-
-	if (root->right != NULL)
-		ast_print(root->right);
 }
 
 static void	print(t_ast_node *node)
@@ -67,6 +93,8 @@ static void	print(t_ast_node *node)
 			printf("PIPE\n");
 		if (node->parent->type == TOKEN_WORD)
 			printf("WORD: %s\n", (char *)node->parent->info);
+		if (node->parent->type == TOKEN_REDIRECTION_OUT)
+			printf("REDIRECTION\n");
 		printf("\n");
 	}
 	else
@@ -76,6 +104,8 @@ static void	print(t_ast_node *node)
 		printf("PIPE\n");
 	if (node->type == TOKEN_WORD)
 		printf("WORD: %s\n", (char *)node->info);
+	if (node->type == TOKEN_REDIRECTION_OUT)
+		printf("REDIRECTION\n");
 
 	printf("-------------------------------------\n");
 }

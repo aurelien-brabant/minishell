@@ -21,6 +21,7 @@ static int print_token(char *string)
 }
 */
 
+/*
 static t_redirection_type	get_redirection_type(char *token)
 {
 	static char	*redirections[REDIRECTION_MAX] = {
@@ -40,12 +41,12 @@ static t_redirection_type	get_redirection_type(char *token)
 	}
 	return (REDIRECTION_NONE);
 }
+*/
 
 static void	parse(t_lexer *lexer, t_ast_node **root)
 {
 	char				*token;
 	t_token_type		type;
-	t_redirection_type	redirection_type;
 
 	type = token_get(lexer, &token);
 	if (type == TOKEN_ERROR)
@@ -65,21 +66,19 @@ static void	parse(t_lexer *lexer, t_ast_node **root)
 		ast_node_insert(root, ast_node_new(TOKEN_OR, NULL));
 		token_consume(lexer);
 	}
-	else if (type == TOKEN_REDIRECTION)
+	else if (type == TOKEN_REDIRECTION_OUT)
 	{
-		redirection_type = get_redirection_type(token);
-		if (redirection_type == REDIRECTION_NONE)
+		if (ft_strcmp(token, ">") != 0 && ft_strcmp(token, ">>") != 0)
 		{
-			ft_dprintf(STDERR_FILENO, "minishell: %s: unknown operator\n", token);
+			ft_dprintf(STDERR_FILENO, "minishell: %s: invalid output redirection\n", token);
 			return ;
 		}
-		ast_node_insert(root, ast_node_new(TOKEN_REDIRECTION, NULL));
 		if (token_get_next(lexer, &token) != TOKEN_WORD)
 		{
-			ft_dprintf(STDERR_FILENO, "Redirection operator \"%s\" expects a valid argument\n", token);
+			ft_dprintf(STDERR_FILENO, "Output redirection \"%s\" expects a file as an argument\n", token);
 			return ;
 		}
-		token_consume(lexer);
+		ast_node_insert(root, ast_node_new(TOKEN_REDIRECTION_OUT, token));
 		token_consume(lexer);
 	}
 	parse(lexer, root);

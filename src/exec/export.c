@@ -78,7 +78,7 @@ static char	**export_env(char *var, char **env)
 	index = existing_var(var, env);
 	if (!index)
 		return (create_export_env(var, env));
-	free(env[index]);
+//	free(env[index]);
 	env[index] = ft_strdup(var);
 	return (env);
 }

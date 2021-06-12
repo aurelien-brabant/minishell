@@ -41,7 +41,7 @@ static t_redirection_type	get_redirection_type(char *token)
 	return (REDIRECTION_NONE);
 }
 
-static void	parse(t_lexer *lexer)
+static void	parse(t_lexer *lexer, t_ast_node **root)
 {
 	char				*token;
 	t_token_type		type;
@@ -52,13 +52,8 @@ static void	parse(t_lexer *lexer)
 		return ;
 	if (type == TOKEN_WORD)
 	{
-		printf("Command ID: %s\n", token);
+		ast_node_insert(root, ast_node_new(TOKEN_WORD, token));
 		token_consume(lexer);
-		while ((token_get(lexer, &token)) == TOKEN_WORD)
-		{
-			printf("ARG: \"%s\"\n", token);
-			token_consume(lexer);
-		}
 	}
 	else if (type == TOKEN_OR)
 	{
@@ -67,7 +62,7 @@ static void	parse(t_lexer *lexer)
 			ft_dprintf(STDERR_FILENO, "minishell: %s: unknown operator\n", token);
 			return ;
 		}
-		printf("PIPE\n");
+		ast_node_insert(root, ast_node_new(TOKEN_OR, NULL));
 		token_consume(lexer);
 	}
 	else if (type == TOKEN_REDIRECTION)
@@ -78,26 +73,27 @@ static void	parse(t_lexer *lexer)
 			ft_dprintf(STDERR_FILENO, "minishell: %s: unknown operator\n", token);
 			return ;
 		}
-		printf("REDIRECTION: %s\n", token);
+		ast_node_insert(root, ast_node_new(TOKEN_REDIRECTION, NULL));
 		if (token_get_next(lexer, &token) != TOKEN_WORD)
 		{
 			ft_dprintf(STDERR_FILENO, "Redirection operator \"%s\" expects a valid argument\n", token);
 			return ;
 		}
 		token_consume(lexer);
-		printf("REDIRECTION ARG: %s\n", token);
-		token_consume(lexer);
 		token_consume(lexer);
 	}
-	parse(lexer);
+	parse(lexer, root);
 }
 
 t_vector	parser_invoke(char *input)
 {
 	t_lexer				*lexer;
+	t_ast_node			*root;
 
+	root = NULL;
 	lexer = lexer_build(input);
-	parse(lexer);
+	parse(lexer, &root);
+	ast_print(root);
 	//ft_vector_foreach(lexer->tokenv, &print_token, NULL);
 	return (NULL);
 }

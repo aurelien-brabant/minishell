@@ -78,7 +78,24 @@ static void	parse(t_lexer *lexer, t_ast_node **root)
 			ft_dprintf(STDERR_FILENO, "Output redirection \"%s\" expects a file as an argument\n", token);
 			return ;
 		}
+		token_get(lexer, &token);
 		ast_node_insert(root, ast_node_new(TOKEN_REDIRECTION_OUT, token));
+		token_consume(lexer);
+	}
+	else if (type == TOKEN_REDIRECTION_IN)
+	{
+		if (ft_strcmp(token, "<") != 0 && ft_strcmp(token, "<<") != 0)
+		{
+			ft_dprintf(STDERR_FILENO, "minishell: %s: invalid input redirection\n", token);
+			return ;
+		}
+		if (token_get_next(lexer, &token) != TOKEN_WORD)
+		{
+			ft_dprintf(STDERR_FILENO, "Input redirection \"%s\" expects an argument\n", token);
+			return ;
+		}
+		token_get(lexer, &token);
+		ast_node_insert(root, ast_node_new(TOKEN_REDIRECTION_IN, token));
 		token_consume(lexer);
 	}
 	parse(lexer, root);
@@ -92,7 +109,6 @@ t_vector	parser_invoke(char *input)
 	root = NULL;
 	lexer = lexer_build(input);
 	parse(lexer, &root);
-	ast_print(root);
 	//ft_vector_foreach(lexer->tokenv, &print_token, NULL);
 	return (NULL);
 }

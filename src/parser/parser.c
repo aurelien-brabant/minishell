@@ -4,6 +4,7 @@
 #include <unistd.h>
 
 #include "libft/vector.h"
+#include "libft/core.h"
 #include "libft/cstring.h"
 #include "libft/io.h"
 
@@ -13,7 +14,7 @@
 #include "minishell/stat.h"
 #include "minishell/error.h"
 
-static void	parse(t_lexer *lexer, t_ast_node **root)
+static void	parse(t_lexer *lexer, t_vector pipeline)
 {
 	char				*token;
 	t_token_type		type;
@@ -21,65 +22,47 @@ static void	parse(t_lexer *lexer, t_ast_node **root)
 	type = token_get(lexer, &token);
 	while (type != TOKEN_ERROR)
 	{
+		if (ft_vector_length(pipeline) == 0)
+			ft_vector_append(pipeline, command_new());
 		if (type == TOKEN_WORD)
-		{
-			ast_node_insert(root, ast_node_new(NODE_WORD, token));
-			token_consume(lexer);
-		}
+			parse_word(pipeline, token);
 		else if (type == TOKEN_OR)
-		{
-			if (ft_strlen(token) > 1)
-			{
-				ft_dprintf(STDERR_FILENO, "minishell: %s: unknown operator\n", token);
-				return ;
-			}
-			ast_node_insert(root, ast_node_new(NODE_PIPE, NULL));
-			token_consume(lexer);
-		}
+			parse_pipe(pipeline, lexer, token);
 		else if (type == TOKEN_REDIRECTION_OUT)
-		{
-			if (ft_strcmp(token, ">") != 0 && ft_strcmp(token, ">>") != 0)
-			{
-				ft_dprintf(STDERR_FILENO, "minishell: %s: invalid output redirection\n", token);
-				return ;
-			}
-			if (token_get_next(lexer, &token) != TOKEN_WORD)
-			{
-				ft_dprintf(STDERR_FILENO, "Output redirection \"%s\" expects a file as an argument\n", token);
-				return ;
-			}
-			token_get(lexer, &token);
-			ast_node_insert(root, ast_node_new(NODE_REDIR_OUT, token));
-			token_consume(lexer);
-		}
+			parse_output_redirection(pipeline, lexer, token);
 		else if (type == TOKEN_REDIRECTION_IN)
-		{
-			if (ft_strcmp(token, "<") != 0 && ft_strcmp(token, "<<") != 0)
-			{
-				ft_dprintf(STDERR_FILENO, "minishell: %s: invalid input redirection\n", token);
-				return ;
-			}
-			if (token_get_next(lexer, &token) != TOKEN_WORD)
-			{
-				ft_dprintf(STDERR_FILENO, "Input redirection \"%s\" expects an argument\n", token);
-				return ;
-			}
-			token_get(lexer, &token);
-			ast_node_insert(root, ast_node_new(NODE_REDIR_IN, token));
-			token_consume(lexer);
-		}
+			parse_input_redirection(pipeline, lexer, token);
+		token_consume(lexer);
 		type = token_get(lexer, &token);
 	}
 }
 
-t_ast_node	*parser_invoke(char *input)
+static int	print_command(t_command *cmd, int index)
+{
+	printf("COMMAND %d\n", index);
+	printf("ID: %s\n", cmd->id);
+	for (size_t i = 0; i < cmd->argv->length; ++i) {
+		printf("ARG %s\n", cmd->argv->args[i]);
+	}
+	if (cmd->redir_in != NULL)
+		printf("Redirection IN:\nType: %d\nARG=%s\n", cmd->redir_in->type, cmd->redir_in->arg);
+	for (size_t i = 0; i < ft_vector_length(cmd->redir_out); ++i) {
+		t_redirection *redir = ft_vector_get(cmd->redir_out, i);
+		printf("Redirection OUT:\nType: %d\nARG=%s\n", redir->type, redir->arg);
+	}
+	return (0);
+}
+
+t_vector	*parser_invoke(char *input)
 {
 	t_lexer				*lexer;
-	t_ast_node			*root;
+	t_vector			pipeline;
 
-	root = NULL;
 	lexer = lexer_build(input);
-	parse(lexer, &root);
-	ast_print(root);
-	return (root);
+	pipeline = ft_vector_new(5);
+	if (pipeline == NULL)
+		return (NULL);
+	parse(lexer, pipeline);
+	ft_vector_foreach(pipeline, &print_command, NULL);
+	return (pipeline);
 }

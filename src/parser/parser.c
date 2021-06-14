@@ -25,10 +25,7 @@ static void	parse(t_lexer *lexer, t_vector pipeline)
 		if (ft_vector_length(pipeline) == 0)
 			ft_vector_append(pipeline, command_new());
 		if (type == TOKEN_WORD)
-		{
-			expand(token);
-			parse_word(pipeline, token);
-		}
+			expand(pipeline, token);
 		else if (type == TOKEN_OR)
 			parse_pipe(pipeline, lexer, token);
 		else if (type == TOKEN_REDIRECTION_OUT)

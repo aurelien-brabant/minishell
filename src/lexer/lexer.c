@@ -251,22 +251,28 @@ t_lexer	*lexer_build(char *input)
 {
 	t_lexer			*lexer;
 	size_t			i;
-	bool			in_quotes;
+	unsigned char	quote;
 
 	i = 0;
 	lexer = lexer_new();
 	if (lexer == NULL)
 		return (NULL);
-	in_quotes = false;
+	quote = 0;
 	while (chr_get_class(input[i]) != CHR_CLASS_EOL)
 	{
 		while (chr_get_class(input[i]) == CHR_CLASS_BLANK)
 			++input;
 		while (chr_get_class(input[i]) != CHR_CLASS_EOL
-				&& (in_quotes || g_token_rules[token_get_type(input)][chr_get_class(input[i])]))
+				&& (quote || g_token_rules[token_get_type(input)][chr_get_class(input[i])]))
 		{
-			if (chr_get_class(input[i++]) == CHR_CLASS_QUOTE)
-				in_quotes = !in_quotes;
+			if (chr_get_class(input[i]) == CHR_CLASS_QUOTE)
+			{
+				if (quote == input[i])
+					quote = 0;
+				else if (!quote)
+					quote = input[i];
+			}
+			++i;
 		}
 		if (i > 0)
 			ft_vector_append(lexer->tokenv, ft_substr(input, 0, i));

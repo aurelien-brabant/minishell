@@ -40,7 +40,6 @@ static void	parse(t_lexer *lexer, t_vector pipeline)
 static int	print_command(t_command *cmd, int index)
 {
 	printf("COMMAND %d\n", index);
-	printf("ID: %s\n", cmd->id);
 	for (size_t i = 0; i < cmd->argv->length; ++i) {
 		printf("ARG %s\n", cmd->argv->args[i]);
 	}

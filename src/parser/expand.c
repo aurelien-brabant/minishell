@@ -40,7 +40,8 @@ static void	tokenize_var(t_vector pipeline, t_string *expanded, char *var)
 		tmp = ft_strtok(NULL, " \t");
 		if (tmp == NULL)
 		{
-			*expanded = ft_string_new(10);
+			if (token != var)
+				*expanded = ft_string_new(10);
 			ft_string_append_cstr(*expanded, token);
 		}
 		else if (token == var)
@@ -50,7 +51,6 @@ static void	tokenize_var(t_vector pipeline, t_string *expanded, char *var)
 		}
 		else
 			parse_word(pipeline, ft_strdup(token));
-		
 		token = tmp;
 	}
 }

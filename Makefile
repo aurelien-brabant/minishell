@@ -18,7 +18,7 @@ PARSER				= $(addprefix src/parser/, parser.c word.c redirection.c	\
 					  command.c pipe.c)
 
 EXEC				= $(addprefix src/exec/, exec.c echo.c cd.c pwd.c export.c	\
-				  	unset.c env.c utils.c exit.c)
+				  	unset.c env.c utils.c exit.c fn_exec.c)
 
 OTHER				= $(addprefix src/, main.c parse_clopt.c prompt.c error.c	\
 				  	minishell.c stat.c argv.c)

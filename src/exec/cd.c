@@ -5,23 +5,21 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-static char	*get_home_value(char *var, char **env)
+char	*get_env_value(const char *var, char **env)
 {
 	char	*value;
 	int		i;
-	int		size;
+	size_t	size;
 
 	i = 0;
-	size = 0;
+	size = ft_strlen(var);
 	while (env[i])
 	{
-		if (!ft_strncmp(var, env[i], 5))
+		if (!ft_strncmp(var, env[i], size))
 		{
-			size = ft_strlen(env[i]) - 5;
-			value = (char *)malloc(sizeof(char) * (size + 1));
+			value = ft_strdup(env[i] + size);
 			if (!value)
 				return (NULL);
-			value = ft_strdup(env[i] + 5);
 			return (value);
 		}
 		i++;
@@ -42,7 +40,6 @@ static void	update_pwd(char *old_pwd, char ***env, size_t len)
 	new_pwd[1] = ft_strjoin("PWD=", tmp);
 	new_pwd[2] = NULL;
 	fn_export(new_pwd, env, len);
-	print_tab(new_pwd);
 	free(tmp);
 	free(new_pwd[1]);
 	new_pwd[1] = ft_strjoin("OLDPWD=", old_pwd);
@@ -63,13 +60,14 @@ void	fn_cd(char **ag, char ***env, size_t len)
 		goto_path = ag[1];
 	else
 	{
-		goto_path = get_home_value("HOME=", *env);
+		goto_path = get_env_value("HOME=", *env);
 		if (!goto_path)
 			ft_dprintf(2, "cd: HOME not set\n");
 	}
 	if (!goto_path)
 		return ;
 	ret = chdir(goto_path);
+	printf("ret{%d]\n", ret);
 	if (!ret)
 		update_pwd(old_pwd, env, len);
 	else

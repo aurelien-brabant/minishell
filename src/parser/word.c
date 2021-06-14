@@ -45,8 +45,6 @@ void	parse_word(t_vector pipeline, char *token)
 		cmd->redir_in->arg = token;
 	else if (last_out_redir && last_out_redir->arg == NULL)
 		last_out_redir->arg = token;
-	else if (cmd->id == NULL)
-		cmd->id = token;
 	else
 		argv_append(cmd->argv, token);
 }

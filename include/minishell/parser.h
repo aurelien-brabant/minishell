@@ -22,7 +22,6 @@ typedef struct s_redirection
 
 typedef struct s_command
 {
-	char			*id;
 	t_argv			*argv;
 	t_redirection	*redir_in;
 	t_vector		redir_out;

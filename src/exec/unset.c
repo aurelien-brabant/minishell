@@ -49,15 +49,18 @@ static char	**unset_var(char *var, char **env)
 	return (env);
 }
 
-void	fn_unset(char *cmd, char ***env)
+void	fn_unset(char **ag, char ***env, size_t len)
 {
 	char	**new_env;
 	char	*var;
 
-	var = ft_strdup(cmd + 6);
-	new_env = unset_var(var, *env);
-	free(var);
-	if (!new_env)
-		return ;
-	*env = new_env;
+	if (len == 2)
+	{
+		var = ft_strdup(ag[1]);
+		new_env = unset_var(var, *env);
+		free(var);
+		if (!new_env)
+			return ;
+		*env = new_env;
+	}
 }

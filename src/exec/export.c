@@ -83,17 +83,20 @@ static char	**export_env(char *var, char **env)
 	return (env);
 }
 
-void	fn_export(char *cmd, char ***env)
+void	fn_export(char **ag, char ***env, size_t len)
 {
 	char	*var;
 	char	**new_env;
 
-	var = ft_strdup(cmd + 7);
-	if (!var)
-		return ;
-	new_env = export_env(var, *env);
-	free(var);
-	if (!new_env)
-		return ;
-	*env = new_env;
+	if (len == 2)
+	{
+		var = ft_strdup(ag[1]);
+		if (!var)
+			return ;
+		new_env = export_env(var, *env);
+		free(var);
+		if (!new_env)
+			return ;
+		*env = new_env;
+	}
 }

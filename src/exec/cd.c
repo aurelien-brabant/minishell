@@ -16,15 +16,17 @@ static char	*get_home_value(char *var, char **env)
 	while (env[i])
 	{
 		if (!ft_strncmp(var, env[i], 5))
-			break ;
+		{
+			size = ft_strlen(env[i]) - 5;
+			value = (char *)malloc(sizeof(char) * (size + 1));
+			if (!value)
+				return (NULL);
+			value = ft_strdup(env[i] + 5);
+			return (value);
+		}
 		i++;
 	}
-	size = ft_strlen(env[i]) - 5;
-	value = (char *)malloc(sizeof(char) * (size + 1));
-	if (!value)
-		return (NULL);
-	value = ft_strdup(env[i] + 5);
-	return (value);
+	return (NULL);
 }
 
 static void	update_pwd(char *old_pwd, char ***env)
@@ -54,7 +56,11 @@ void	fn_cd(char *cmd, char ***env)
 	if (cmd[2])
 		goto_path = ft_strdup(cmd + 3);
 	else
-		goto_path = ft_strdup(get_home_value("HOME=", *env));
+	{
+		goto_path = get_home_value("HOME=", *env);
+		if (!goto_path)
+			ft_dprintf(2, "cd: HOME not set\n");
+	}
 	if (!goto_path)
 		return ;
 	ret = chdir(goto_path);

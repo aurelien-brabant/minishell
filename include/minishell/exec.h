@@ -1,14 +1,16 @@
 #ifndef EXEC_H
 # define EXEC_H
 
-void	exec(char *cmd, char ***env);
+# include "parser.h"
+
+void	exec(t_vector parsed, char ***env);
 char	**get_env(char **envp);
-void	fn_echo(char *s);
-void	fn_cd(char *cmd, char ***env);
+void	fn_echo(char **ag, size_t len);
+void	fn_cd(char **ag, char ***env, size_t len);
 void	fn_pwd(void);
 char	*get_pwd(void);
-void	fn_export(char *cmd, char ***env);
-void	fn_unset(char *cmd, char ***env);
+void	fn_export(char **ag, char ***env, size_t len);
+void	fn_unset(char **ag, char ***env, size_t len);
 void	fn_exit(void);
 
 /* UTILS */

@@ -2,6 +2,7 @@
 //#include "minishell/stat.h"
 #include "libft/cstring.h"
 #include "libft/io.h"
+#include "libft/vector.h"
 //#include <signal.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -80,20 +81,33 @@ static char	**add_cmd_to_path(char *cmd, char **path)
 	return (final_path);
 }
 
-static void	fn_exec(char *cmd, char ***env)
+static void	run_exec(char **path, char **ag, char ***env)
+{
+	int		ret;
+	int		pid;
+	int		i;
+
+	ret = 0;
+	i = 0;
+	while (path[i])
+	{
+		pid = fork();
+		if (pid == 0)
+			exit(execve(path[i], ag, *env));
+		waitpid(pid, &ret, 0);
+		if (WEXITSTATUS(ret) != 255)
+			break ;
+		i++;
+	}
+	if (WEXITSTATUS(ret) == 255)
+		ft_dprintf(2, "minishell: %s: command not found\n", ag[0]);
+}
+
+static void	fn_exec(char *cmd, char **ag, char ***env)
 {
 	char	**tmp;
 	char	**path;
-	int		ret;
-	int		i;
-	char	**args;
-	int		pid;
 
-	/* juste pour tester car on n'a pas fini le parsing... */
-	args = malloc(sizeof(char *) * 2);
-	args[0] = ft_strdup(cmd);
-	args[1] = NULL;
-	/* à la place d'args on aura les arguments donnés après la commande lors du parsing */
 	tmp = get_path(cmd, *env);
 	if (!tmp)
 		return ;
@@ -101,38 +115,43 @@ static void	fn_exec(char *cmd, char ***env)
 	free_tab(tmp);
 	if (!path)
 		return ;
-	i = -1;
-	ret = 0;
-	while (path[i++])
-	{
-		pid = fork();
-		if (pid == 0)
-			exit(execve(path[i], args, *env));
-		waitpid(pid, &ret, 0);
-		if (WEXITSTATUS(ret) != 255)
-			break ;
-	}
-	if (WEXITSTATUS(ret) == 255)
-		ft_dprintf(2, "minishell: %s: command not found\n", cmd);
+	run_exec(path, ag, env);
 	free_tab(path);
 }
 
-void	exec(char *cmd, char ***env)
+void	exec(t_vector parsed, char ***env)
 {
-	if (!ft_strncmp(cmd, "echo", 4))
-		fn_echo(cmd + 5);
-	else if (!ft_strncmp(cmd, "cd", 2))
-		fn_cd(cmd, env);
-	else if (!ft_strcmp(cmd, "pwd"))
-		fn_pwd();
-	else if (!ft_strncmp(cmd, "export", 6))
-		fn_export(cmd, env);
-	else if (!ft_strncmp(cmd, "unset", 5))
-		fn_unset(cmd, env);
-	else if (!ft_strcmp(cmd, "env"))
-		print_tab(*env);
-	else if (!ft_strcmp(cmd, "exit"))
-		fn_exit();
-	else
-		fn_exec(cmd, env);
+	t_command	*argvs;
+	char	*cmd;
+	char	**ag;
+	size_t	len;
+	//size_t	length;
+	size_t	i;
+
+	//length = ft_vector_length(parsed);
+	i = 0;
+//	while (i < length)
+//	{
+		argvs = ft_vector_get(parsed, i);
+		ag = (char **)argvs->argv->args;
+		cmd = ag[0];
+		len = argvs->argv->length;
+		if (!ft_strcmp(cmd, "echo"))
+			fn_echo(ag, len);
+		else if (!ft_strcmp(cmd, "cd"))
+			fn_cd(ag, env, len);
+		else if (!ft_strcmp(cmd, "pwd"))
+			fn_pwd();
+		else if (!ft_strcmp(cmd, "export"))
+			fn_export(ag, env, len);
+		else if (!ft_strcmp(cmd, "unset"))
+			fn_unset(ag, env, len);
+		else if (!ft_strcmp(cmd, "env"))
+			print_tab(*env);
+		else if (!ft_strcmp(cmd, "exit"))
+			fn_exit();
+		else
+			fn_exec(cmd, ag, env);
+//		i++;
+//	}
 }

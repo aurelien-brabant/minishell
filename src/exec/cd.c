@@ -29,32 +29,38 @@ static char	*get_home_value(char *var, char **env)
 	return (NULL);
 }
 
-static void	update_pwd(char *old_pwd, char ***env)
+static void	update_pwd(char *old_pwd, char ***env, size_t len)
 {
-	char	*new_pwd;
 	char	*tmp;
+	char	**new_pwd;
 
+	new_pwd = (char **)malloc(sizeof(char *) * 3);
+	if (!new_pwd)
+		return ;
 	tmp = ft_strdup(get_pwd());
-	new_pwd = ft_strjoin("export PWD=", tmp);
+	new_pwd[0] = ft_strdup("export");
+	new_pwd[1] = ft_strjoin("PWD=", tmp);
+	new_pwd[2] = NULL;
+	fn_export(new_pwd, env, len);
+	print_tab(new_pwd);
 	free(tmp);
-	fn_export(new_pwd, env);
-	free(new_pwd);
-	tmp = ft_strjoin("export OLDPWD=", old_pwd);
-	fn_export(tmp, env);
-	free(tmp);
+	free(new_pwd[1]);
+	new_pwd[1] = ft_strjoin("OLDPWD=", old_pwd);
+	fn_export(new_pwd, env, len);
+	free_tab(new_pwd);
 }
 
 /* Modifier ret pour checker si un dossier n'existe pas ou si c'est un nom de fichier qui existe par exemple... */
 
-void	fn_cd(char *cmd, char ***env)
+void	fn_cd(char **ag, char ***env, size_t len)
 {
 	char	*goto_path;
 	char	*old_pwd;
 	int		ret;
 
 	old_pwd = ft_strdup(get_pwd());
-	if (cmd[2])
-		goto_path = ft_strdup(cmd + 3);
+	if (ag[1])
+		goto_path = ag[1];
 	else
 	{
 		goto_path = get_home_value("HOME=", *env);
@@ -64,11 +70,9 @@ void	fn_cd(char *cmd, char ***env)
 	if (!goto_path)
 		return ;
 	ret = chdir(goto_path);
-	//printf("ret_cd [%d]\n", ret);
 	if (!ret)
-		update_pwd(old_pwd, env);
+		update_pwd(old_pwd, env, len);
 	else
 		ft_dprintf(2, "cd: aucun fichier ou dossier de ce type: %s\n", goto_path);
-	free(goto_path);
 	free(old_pwd);
 }

@@ -48,6 +48,31 @@ typedef struct s_command
 
 t_vector	*parser_invoke(char *input);
 
+/*
+** REDIRECTION
+*/
+void	parse_output_redirection(t_vector pipeline, t_lexer *lexer,
+			char *token);
+void	parse_input_redirection(t_vector pipeline, t_lexer *lexer, char *token);
+
+/*
+** COMMAND
+*/
+
+t_command	*command_new(void);
+
+/*
+** PIPE
+*/
+
+void		parse_pipe(t_vector pipeline, t_lexer *lexer, char *token);
+
+/*
+** WORD
+*/
+
+void		parse_word(t_vector pipeline, t_lexer *lexer, char *token);
+
 t_ast_node	*ast_node_new(t_node_type type, void *info);
 void		ast_node_insert(t_ast_node **root, t_ast_node *node);
 void		ast_print(t_ast_node *root);

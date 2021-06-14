@@ -14,109 +14,7 @@
 #include "minishell/stat.h"
 #include "minishell/error.h"
 
-//TODO: calloc protection
 
-static t_command	*command_new(void)
-{
-	t_command	*cmd;
-
-	cmd = ft_calloc(1, sizeof (*cmd));
-	cmd->argv = argv_new(5);
-	cmd->redir_out = ft_vector_new(2);
-	return (cmd);
-}
-
-static t_redirecton_type	redirection_get_type(char *token)
-{
-	static char	*strs[] = {
-		[REDIRECTION_IN] = "<",
-		[REDIRECTION_DIN] = "<<",
-		[REDIRECTION_OUT] = ">",
-		[REDIRECTION_DOUT] = ">>",
-	};
-	size_t		i;
-
-	i = 0;
-	while (i < REDIRECTION_MAX)
-	{
-		if (ft_strcmp(token, strs[i]) == 0)
-			return (i);
-		++i;
-	}
-	return (REDIRECTION_NONE);
-}
-
-static t_redirection	*redirection_new(void)
-{
-	t_redirection	*redirection;
-	
-	redirection = ft_calloc(1, sizeof (*redirection));
-	return (redirection);
-}
-
-static void	parse_word(t_vector pipeline, t_lexer *lexer, char *token)
-{
-	t_command		*cmd;
-	t_redirection	*last_out_redir;
-
-	last_out_redir = NULL;
-	cmd = ft_vector_get(pipeline, ft_vector_length(pipeline) - 1);
-	if (ft_vector_length(cmd->redir_out) > 0)
-		last_out_redir = ft_vector_get(cmd->redir_out, ft_vector_length(cmd->redir_out) - 1);
-	if (cmd->redir_in && cmd->redir_in->arg == NULL)
-		cmd->redir_in->arg = token;
-	else if (last_out_redir && last_out_redir->arg == NULL)
-		last_out_redir->arg = token;
-	else if (cmd->id == NULL)
-		cmd->id = token;
-	else
-		argv_append(cmd->argv, token);
-	token_consume(lexer);
-}
-
-static void	parse_or(t_vector pipeline, t_lexer *lexer, char *token)
-{
-	if (ft_strlen(token) > 1)
-	{
-		ft_dprintf(STDERR_FILENO, "minishell: %s: unknown operator\n", token);
-		return ;
-	}
-	ft_vector_append(pipeline, command_new());
-	token_consume(lexer);
-}
-
-static void	parse_input_redirection(t_vector pipeline, t_lexer *lexer, char *token)
-{
-	t_command	*cmd;
-
-	cmd = ft_vector_get(pipeline, ft_vector_length(pipeline) - 1);
-	if (ft_strcmp(token, "<") != 0 && ft_strcmp(token, "<<") != 0)
-	{
-		ft_dprintf(STDERR_FILENO, "minishell: %s: invalid input redirection\n", token);
-		return ;
-	}
-	if (cmd->redir_in == NULL)
-		cmd->redir_in = redirection_new();
-	cmd->redir_in->type = redirection_get_type(token);
-	token_consume(lexer);
-}
-
-static void	parse_output_redirection(t_vector pipeline, t_lexer *lexer, char *token)
-{
-	t_command		*cmd;
-	t_redirection	*redir;
-
-	cmd = ft_vector_get(pipeline, ft_vector_length(pipeline) - 1);
-	if (ft_strcmp(token, ">") != 0 && ft_strcmp(token, ">>") != 0)
-	{
-		ft_dprintf(STDERR_FILENO, "minishell: %s: invalid output redirection\n", token);
-		return ;
-	}
-	redir = redirection_new();
-	redir->type = redirection_get_type(token);
-	ft_vector_append(cmd->redir_out, redir);
-	token_consume(lexer);
-}
 
 static void	parse(t_lexer *lexer, t_vector pipeline)
 {
@@ -131,7 +29,7 @@ static void	parse(t_lexer *lexer, t_vector pipeline)
 		if (type == TOKEN_WORD)
 			parse_word(pipeline, lexer, token);
 		else if (type == TOKEN_OR)
-			parse_or(pipeline, lexer, token);
+			parse_pipe(pipeline, lexer, token);
 		else if (type == TOKEN_REDIRECTION_OUT)
 			parse_output_redirection(pipeline, lexer, token);
 		else if (type == TOKEN_REDIRECTION_IN)

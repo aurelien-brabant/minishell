@@ -3,29 +3,7 @@
 #include "libft/io.h"
 #include <unistd.h>
 #include <stdlib.h>
-#include <stdio.h>
-
-char	*get_env_value(const char *var, char **env)
-{
-	char	*value;
-	int		i;
-	size_t	size;
-
-	i = 0;
-	size = ft_strlen(var);
-	while (env[i])
-	{
-		if (!ft_strncmp(var, env[i], size))
-		{
-			value = ft_strdup(env[i] + size);
-			if (!value)
-				return (NULL);
-			return (value);
-		}
-		i++;
-	}
-	return (NULL);
-}
+//#include <stdio.h>
 
 static void	update_pwd(char *old_pwd, char ***env, size_t len)
 {
@@ -67,7 +45,7 @@ void	fn_cd(char **ag, char ***env, size_t len)
 	if (!goto_path)
 		return ;
 	ret = chdir(goto_path);
-	printf("ret{%d]\n", ret);
+	//printf("ret[%d]\n", ret);
 	if (!ret)
 		update_pwd(old_pwd, env, len);
 	else

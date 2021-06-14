@@ -1,10 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "libft/cstring.h"
+#include "libft/string.h"
 #include "libft/ctype.h"
 
-void	expand_var_in_quotes(char **expanded_ptr, char **word_loc)
+void	expand_var_in_quotes(t_string expanded, char **word_loc)
 {
 	char	*word;
 	char	*var;
@@ -17,16 +19,15 @@ void	expand_var_in_quotes(char **expanded_ptr, char **word_loc)
 		++i;
 	tmp = ft_substr(word, 1, i - 1);
 	var = getenv(tmp);
-	if (var == NULL)
-		return ;
-	tmp = *expanded_ptr;
-	*expanded_ptr = ft_strjoin(*expanded_ptr, var);
+	free(tmp);
+	if (var != NULL)
+		ft_string_append_cstr(expanded, var);
+	*word_loc += i;
 }
 
 void	expand(char *word)
 {
-	char			*expanded;
-	char			*expanded_ptr;
+	t_string		expanded;
 	unsigned char	quote;
 	size_t			i;
 	size_t			j;
@@ -34,8 +35,7 @@ void	expand(char *word)
 	i = 0;
 	j = 0;
 	quote = 0;
-	expanded = "";
-	expanded_ptr = expanded;
+	expanded = ft_string_new(ft_strlen(word) * 2);
 	while (*word != '\0')
 	{
 		if (*word == quote)
@@ -45,10 +45,9 @@ void	expand(char *word)
 		if (*word == '$' && *word != '\'')
 		{
 			if (quote == '"')
-				expand_var_in_quotes(&expanded_ptr, &word);
-			break ;
+				expand_var_in_quotes(expanded, &word);
 		}
-		++word;
+		ft_string_append_char(expanded, *word++);
 	}
-	printf("Expanded to => %s\n", expanded_ptr);
+	ft_string_output(expanded, STDOUT_FILENO);
 }

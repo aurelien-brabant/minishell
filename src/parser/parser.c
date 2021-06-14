@@ -14,8 +14,6 @@
 #include "minishell/stat.h"
 #include "minishell/error.h"
 
-
-
 static void	parse(t_lexer *lexer, t_vector pipeline)
 {
 	char				*token;
@@ -27,13 +25,14 @@ static void	parse(t_lexer *lexer, t_vector pipeline)
 		if (ft_vector_length(pipeline) == 0)
 			ft_vector_append(pipeline, command_new());
 		if (type == TOKEN_WORD)
-			parse_word(pipeline, lexer, token);
+			parse_word(pipeline, token);
 		else if (type == TOKEN_OR)
 			parse_pipe(pipeline, lexer, token);
 		else if (type == TOKEN_REDIRECTION_OUT)
 			parse_output_redirection(pipeline, lexer, token);
 		else if (type == TOKEN_REDIRECTION_IN)
 			parse_input_redirection(pipeline, lexer, token);
+		token_consume(lexer);
 		type = token_get(lexer, &token);
 	}
 }

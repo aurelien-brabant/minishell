@@ -35,6 +35,6 @@ void		parse_output_redirection(t_vector pipeline, t_lexer *lexer,
 void		parse_input_redirection(t_vector pipeline, t_lexer *lexer, char *token);
 t_command	*command_new(void);
 void		parse_pipe(t_vector pipeline, t_lexer *lexer, char *token);
-void		parse_word(t_vector pipeline, t_lexer *lexer, char *token);
+void		parse_word(t_vector pipeline, char *token);
 
 #endif

@@ -21,7 +21,6 @@ void	stat_init(unsigned int opt, char **optargs, char **envp)
 	stat_get()->env = argv_new(70);
 	while (*envp != NULL)
 		argv_append(stat_get()->env, *envp++);
-	argv_append(stat_get()->env, NULL);
 }
 
 void	stat_destroy(void)

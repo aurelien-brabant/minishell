@@ -79,8 +79,7 @@ void minishell_setenv(char *var_name, char *value)
 		}
 		++i;
 	}
-	env->args[i] = entry;
-	argv_append(env, NULL);
+	argv_append(env, entry);
 }
 
 /*

@@ -24,6 +24,38 @@
 */
 
 static const t_chr_class	g_chr_class[CHAR_MAX] = {
+	/* other unprintable */
+
+	[1] = CHR_CLASS_SYMBOL,
+	[2] = CHR_CLASS_SYMBOL,
+	[3] = CHR_CLASS_SYMBOL,
+	[4] = CHR_CLASS_SYMBOL,
+	[5] = CHR_CLASS_SYMBOL,
+	[6] = CHR_CLASS_SYMBOL,
+	[7] = CHR_CLASS_SYMBOL,
+	[8] = CHR_CLASS_SYMBOL,
+	[11] = CHR_CLASS_SYMBOL,
+	[12] = CHR_CLASS_SYMBOL,
+	[13] = CHR_CLASS_SYMBOL,
+	[14] = CHR_CLASS_SYMBOL,
+	[15] = CHR_CLASS_SYMBOL,
+	[16] = CHR_CLASS_SYMBOL,
+	[17] = CHR_CLASS_SYMBOL,
+	[18] = CHR_CLASS_SYMBOL,
+	[19] = CHR_CLASS_SYMBOL,
+	[20] = CHR_CLASS_SYMBOL,
+	[21] = CHR_CLASS_SYMBOL,
+	[22] = CHR_CLASS_SYMBOL,
+	[23] = CHR_CLASS_SYMBOL,
+	[24] = CHR_CLASS_SYMBOL,
+	[25] = CHR_CLASS_SYMBOL,
+	[26] = CHR_CLASS_SYMBOL,
+	[27] = CHR_CLASS_SYMBOL,
+	[28] = CHR_CLASS_SYMBOL,
+	[29] = CHR_CLASS_SYMBOL,
+	[30] = CHR_CLASS_SYMBOL,
+	[31] = CHR_CLASS_SYMBOL,
+
 	['\0'] = CHR_CLASS_EOL, /* END OF LINE - may be modified when readline will be used instead of ft_gnl */
 	['\n'] = CHR_CLASS_EOL, /* END OF LINE - may be modified when readline will be used instead of ft_gnl */
 
@@ -129,6 +161,12 @@ static const t_chr_class	g_chr_class[CHAR_MAX] = {
 	['+'] = CHR_CLASS_SYMBOL,
 	['#'] = CHR_CLASS_SYMBOL,
 	['='] = CHR_CLASS_SYMBOL,
+	[','] = CHR_CLASS_SYMBOL,
+	[';'] = CHR_CLASS_SYMBOL,
+	[':'] = CHR_CLASS_SYMBOL,
+	['!'] = CHR_CLASS_SYMBOL,
+	['?'] = CHR_CLASS_SYMBOL,
+	['`'] = CHR_CLASS_SYMBOL,
 };
 
 /*
@@ -214,7 +252,7 @@ static const bool			g_token_rules[TOKEN_MAX][CHR_CLASS_MAX] = {
 	},
 };
 
-t_chr_class		chr_get_class(int c)
+t_chr_class		chr_get_class(unsigned char c)
 {
 	if (c > CHAR_MAX)
 		return (CHR_CLASS_UNDEFINED);
@@ -223,6 +261,8 @@ t_chr_class		chr_get_class(int c)
 
 t_token_type	token_get_type(char *token)
 {
+	if (chr_get_class(*token) == CHR_CLASS_UNDEFINED)
+		return (TOKEN_WORD);
 	return (g_token_type[chr_get_class(*token)]);
 }
 

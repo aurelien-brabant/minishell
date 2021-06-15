@@ -45,5 +45,4 @@ void	fn_cd(char **ag)
 		update_pwd(old_pwd);
 	else
 		ft_dprintf(2, "cd: aucun fichier ou dossier de ce type: %s\n", goto_path);
-	free(old_pwd);
 }

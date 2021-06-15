@@ -42,8 +42,12 @@ void	argv_remove(t_argv *argv, size_t index)
 	size_t	i;
 
 	i = index;
-	while (i < --argv->length)
+	argv->length--;
+	while (i < argv->length)
+	{
 		argv->args[i] = argv->args[i + 1];
+		++i;
+	}
 }
 
 void	argv_destroy(t_argv *argv, void (*fn)(char *arg))

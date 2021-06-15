@@ -16,7 +16,7 @@ int	minishell_invoke(unsigned int opt, char **optargs, char **envp)
 	char	**env;
 	t_vector	parsed;
 
-	stat_init(opt, optargs);
+	stat_init(opt, optargs, envp);
 	env = get_env(envp);
 	if (!env)
 		return (1);

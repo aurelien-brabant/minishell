@@ -14,9 +14,9 @@ char	*get_env_value(const char *var, char **env)
 	size = ft_strlen(var);
 	while (env[i])
 	{
-		if (!ft_strncmp(var, env[i], size))
+		if (ft_strncmp(var, env[i], size) == 0)
 		{
-			value = ft_strdup(env[i] + size);
+			value = ft_strdup(env[i] + size + 1);
 			if (!value)
 				return (NULL);
 			return (value);

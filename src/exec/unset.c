@@ -1,7 +1,25 @@
 #include "minishell/minishell.h"
+#include "minishell/env.h"
 #include "libft/cstring.h"
 #include <stdlib.h>
 
+void	fn_unset(char **ag, size_t len)
+{
+	char	*s;
+	char	*sep;
+
+	if (len == 2)
+	{
+		s = ft_strdup(ag[1]);
+		sep = ft_strchr(s, '=');
+		if (sep != NULL)
+			*sep = '\0';
+		minishell_unsetenv(s);
+		free(s);
+	}
+}
+
+/*
 static char	**create_unset_env(int to_del, char **env)
 {
 	int		i;
@@ -49,7 +67,7 @@ static char	**unset_var(char *var, char **env)
 	return (env);
 }
 
-void	fn_unset(char **ag, char ***env, size_t len)
+void	fn_unset(char **ag, size_t len)
 {
 	char	**new_env;
 	char	*var;
@@ -64,3 +82,4 @@ void	fn_unset(char **ag, char ***env, size_t len)
 		*env = new_env;
 	}
 }
+*/

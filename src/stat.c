@@ -11,13 +11,17 @@ t_stat	*stat_get(void)
 	return (&stat);
 }
 
-void	stat_init(unsigned int opt, char **optargs)
+void	stat_init(unsigned int opt, char **optargs, char **envp)
 {
 	stat_get()->opt = opt;
 	stat_get()->optargs = optargs;
 	stat_get()->global_gc = ft_gc_new();
 	stat_get()->tmp_gc = ft_gc_new();
 	stat_get()->error = false;
+	stat_get()->env = argv_new(70);
+	while (*envp != NULL)
+		argv_append(stat_get()->env, *envp++);
+	argv_append(stat_get()->env, NULL);
 }
 
 void	stat_destroy(void)

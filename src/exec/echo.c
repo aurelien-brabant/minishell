@@ -11,7 +11,7 @@ void	fn_echo(char **ag, size_t len)
 	if (!ft_strcmp("-n", ag[1]))
 		flag++;
 	i = 1;
-	while (ag[i])
+	while (i < len)
 	{
 		if ((flag && i > 1) || !flag)
 		{

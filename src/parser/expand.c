@@ -3,6 +3,7 @@
 #include <unistd.h>
 
 #include "minishell/parser.h"
+#include "minishell/env.h"
 
 #include "libft/cstring.h"
 #include "libft/string.h"
@@ -20,7 +21,7 @@ void	expand_var_in_quotes(t_string expanded, char **word_loc)
 	while (ft_isalnum(word[i]))
 		++i;
 	tmp = ft_substr(word, 1, i - 1);
-	var = getenv(tmp);
+	var = minishell_getenv(tmp);
 	free(tmp);
 	if (var != NULL)
 		ft_string_append_cstr(expanded, var);
@@ -67,7 +68,7 @@ void	expand_unquoted_var(t_vector pipeline, t_string *expanded, char **word_loc)
 	while (ft_isalnum(word[i]) && !ft_isspace(word[i]))
 		++i;
 	tmp = ft_substr(word, 1, i - 1);
-	var = getenv(tmp);
+	var = minishell_getenv(tmp);
 	free(tmp);
 	*word_loc += i;
 	if (var != NULL)
@@ -91,7 +92,7 @@ void	expand(t_vector pipeline, char *word)
 			quote = 0;
 		else if (!quote && (*word == '\'' || *word == '"'))
 			quote = *word;
-		if (*word == '$' && *word != '\'')
+		if (*word == '$' && quote != '\'')
 		{
 			if (quote == '"')
 				expand_var_in_quotes(expanded, &word);

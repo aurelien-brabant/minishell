@@ -1,7 +1,26 @@
 #include "minishell/minishell.h"
+#include "minishell/env.h"
 #include "libft/cstring.h"
 #include <stdlib.h>
 
+void	fn_export(char **ag, size_t len)
+{
+	char	*var_name;
+	char	*s;
+	
+	if (len == 2)
+	{
+		s = ft_strdup(ag[1]);
+		var_name = s;
+		while (*s != '=')
+			++s;
+		*s++ = '\0';
+		minishell_setenv(var_name, s);
+		free(var_name);
+	}
+}
+
+/*
 static char	**create_export_env(char *var, char **env)
 {
 	char	**new_env;
@@ -22,7 +41,6 @@ static char	**create_export_env(char *var, char **env)
 	new_env[i + 1] = NULL;
 	return (new_env);
 }
-/*
 static char	*get_env_value(char *var)
 {
 	char	*value;
@@ -46,7 +64,6 @@ static char	*get_env_value(char *var)
 	value = ft_strdup(var + i);
 	return (value);
 }
-*/
 
 static int	existing_var(char *var, char **env)
 {
@@ -100,3 +117,5 @@ void	fn_export(char **ag, char ***env, size_t len)
 		*env = new_env;
 	}
 }
+*/
+

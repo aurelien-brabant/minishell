@@ -1,4 +1,6 @@
 #include "minishell/exec.h"
+#include "minishell/env.h"
+#include "minishell/stat.h"
 //#include "minishell/stat.h"
 #include "libft/cstring.h"
 #include "libft/io.h"
@@ -9,16 +11,19 @@
 #include <stdlib.h>
 //#include <stdio.h>
 
-static char	**get_path(char *cmd, char **env)
+static char	**get_path(char *cmd)
 {
 	char	**paths;
 	char	*path;
 	char	*tmp;
 	int		i;
 
-	path = get_env_value("PATH=", env);
-	if (!path)
+	path = minishell_getenv("PATH");
+	if (path == NULL)
+	{
+		ft_dprintf(STDERR_FILENO, "WTF, path not set?");
 		return (NULL);
+	}
 //	paths = ft_gc_add(stat_get()->tmp_gc, ft_split(path, ':'), &free_tab);
 	paths = ft_split(path, ':');
 	if (!paths)
@@ -36,7 +41,6 @@ static char	**get_path(char *cmd, char **env)
 		free(tmp);
 		i++;
 	}
-	free(path);
 	return (paths);
 }
 
@@ -61,7 +65,7 @@ static char	**add_cmd_to_path(char *cmd, char **path)
 	return (final_path);
 }
 
-static void	run_exec(char **path, char **ag, char ***env)
+static void	run_exec(char **path, char **ag)
 {
 	int		ret;
 	int		pid;
@@ -73,7 +77,7 @@ static void	run_exec(char **path, char **ag, char ***env)
 	{
 		pid = fork();
 		if (pid == 0)
-			exit(execve(path[i], ag, *env));
+			exit(execve(path[i], ag, stat_get()->env->args));
 		waitpid(pid, &ret, 0);
 		if (WEXITSTATUS(ret) != 255)
 			break ;
@@ -83,18 +87,18 @@ static void	run_exec(char **path, char **ag, char ***env)
 		ft_dprintf(2, "minishell: %s: command not found\n", ag[0]);
 }
 
-void	fn_exec(char *cmd, char **ag, char ***env)
+void	fn_exec(char *cmd, char **ag)
 {
 	char	**tmp;
 	char	**path;
 
-	tmp = get_path(cmd, *env);
+	tmp = get_path(cmd);
 	if (!tmp)
 		return ;
 	path = add_cmd_to_path(cmd, tmp);
 	free_tab(tmp);
 	if (!path)
 		return ;
-	run_exec(path, ag, env);
+	run_exec(path, ag);
 	free_tab(path);
 }

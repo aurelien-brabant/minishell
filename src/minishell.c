@@ -12,14 +12,10 @@
 
 int	minishell_invoke(unsigned int opt, char **optargs, char **envp)
 {
-	char	*cmd;
-	char	**env;
+	char		*cmd;
 	t_vector	parsed;
 
 	stat_init(opt, optargs, envp);
-	env = get_env(envp);
-	if (!env)
-		return (1);
 	if (opt & (1 << OPTION_TYPE_COMMAND))
 	{
 		parser_invoke(optargs[OPTION_TYPE_COMMAND]);
@@ -29,7 +25,7 @@ int	minishell_invoke(unsigned int opt, char **optargs, char **envp)
 	{
 		cmd = prompt_present("\033[0;33mminishell\033[0m-1.0$ ");
 		parsed = parser_invoke(cmd);
-		exec(parsed, &env);
+		exec(parsed);
 		ft_gc_wipe(stat_get()->tmp_gc);
 	}
 	ft_gc_destroy(stat_get()->tmp_gc);

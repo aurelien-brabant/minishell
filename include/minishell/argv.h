@@ -14,6 +14,7 @@ typedef struct s_argv
 }	t_argv;
 
 t_argv	*argv_new(size_t size);
+void	argv_remove(t_argv *argv, size_t index);
 void	argv_append(t_argv *argv, char *arg);
 void	argv_destroy(t_argv *argv, void (*fn)(char *arg));
 

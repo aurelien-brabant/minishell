@@ -36,7 +36,8 @@ all: $(TARGET)
 libft:
 	git clone https://github.com/aurelien-brabant/libft
 
-$(TARGET): libft libft/libft.a $(HEADERS) $(OBJS) 
+$(TARGET): libft $(HEADERS) $(OBJS) 
+	make -C libft
 	@$(LD) -o $(TARGET) $(OBJS) $(LD_FLAGS)
 	@printf "LD\t$(TARGET)\n"
 
@@ -53,9 +54,6 @@ fclean: clean
 re: fclean all
 
 # Compile libft
-
-libft/libft.a:
-	make -C libft
 
 .PHONY: clean fclean re
 

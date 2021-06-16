@@ -68,12 +68,14 @@ void	expand_unquoted_var(t_vector pipeline, t_string *expanded, char **word_loc)
 	
 	word = *word_loc;
 	i = 1;
-	while (ft_isalnum(word[i]) && !ft_isspace(word[i]))
+	while (ft_isalnum(word[i]))
 		++i;
+	*word_loc += i;
+	if (i == 1)
+		return ;
 	tmp = assert_ptr(ft_substr(word, 1, i - 1));
 	var = minishell_getenv(tmp);
 	free(tmp);
-	*word_loc += i;
 	if (var != NULL)
 		tokenize_var(pipeline, expanded, var);
 }
@@ -100,7 +102,7 @@ void	expand(t_vector pipeline, char *word)
 		{
 			if (quote == '"')
 				expand_var_in_quotes(expanded, &word);
-			if (!quote)
+			else if (!quote)
 				expand_unquoted_var(pipeline, &expanded, &word);
 		}
 		else if (*word != '\0')

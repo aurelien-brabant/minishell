@@ -5,7 +5,7 @@
 
 #include "minishell/parser.h"
 
-static char	*word_strip_quotes(char *word)
+char	*word_strip_quotes(char *word)
 {
 	unsigned char	quote;
 	char			*stripped;
@@ -27,7 +27,6 @@ static char	*word_strip_quotes(char *word)
 		++j;
 	}
 	stripped[i] = '\0';
-	free(word);
 	return (stripped);
 }
 

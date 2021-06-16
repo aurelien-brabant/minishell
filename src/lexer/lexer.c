@@ -306,7 +306,7 @@ size_t	collect_token(char *input, size_t i, unsigned char *quote)
 		{
 			if (*quote == input[i])
 				*quote = 0;
-			else if (!quote)
+			else if (!*quote)
 				*quote = input[i];
 		}
 		++i;
@@ -330,10 +330,12 @@ t_lexer	*lexer_build(char *input)
 		while (chr_get_class(input[i]) == CHR_CLASS_BLANK)
 			++input;
 		i = collect_token(input, i, &quote);
-		token = assert_ptr(ft_substr(input, 0, i));
 		if (i > 0)
+		{
+			token = assert_ptr(ft_substr(input, 0, i));
 			ft_vector_append(lexer->tokenv,
 					ft_gc_add(stat_get()->tmp_gc, token, &free));
+		}
 		input += i;
 		i = 0;
 	}

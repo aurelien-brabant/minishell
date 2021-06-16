@@ -12,6 +12,7 @@ typedef struct s_stat
 	unsigned int	opt;
 	char			**optargs;
 	bool			error;
+	unsigned char	last_status_code;
 	t_argv			*env;
 }	t_stat;
 

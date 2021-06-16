@@ -19,6 +19,7 @@ void	stat_init(unsigned int opt, char **optargs, char **envp)
 	stat_get()->tmp_gc = ft_gc_new();
 	stat_get()->error = false;
 	stat_get()->env = argv_new(70);
+	stat_get()->last_status_code = 0;
 	while (*envp != NULL)
 		argv_append(stat_get()->env, *envp++);
 }

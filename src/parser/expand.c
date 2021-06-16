@@ -9,6 +9,7 @@
 
 #include "libft/cstring.h"
 #include "libft/gc.h"
+#include "libft/io.h"
 #include "libft/string.h"
 #include "libft/ctype.h"
 
@@ -80,6 +81,24 @@ void	expand_unquoted_var(t_vector pipeline, t_string *expanded, char **word_loc)
 		tokenize_var(pipeline, expanded, var);
 }
 
+void	expand_env_variable(t_vector pipeline, t_string *expanded,
+		char **word_loc, unsigned char quote)
+{
+	char	status[4];
+
+	if ((*word_loc)[1] == '?')
+	{
+		ft_snprintf(status, sizeof (status), "%hhu",
+				stat_get()->last_status_code);
+		ft_string_append_cstr(*expanded, status);
+		*word_loc += 2;
+	}
+	else if (quote == '"')
+		expand_var_in_quotes(expanded, word_loc);
+	else if (!quote)
+		expand_unquoted_var(pipeline, expanded, word_loc);
+}
+
 void	expand(t_vector pipeline, char *word)
 {
 	t_string		expanded;
@@ -99,14 +118,10 @@ void	expand(t_vector pipeline, char *word)
 		else if (!quote && (*word == '\'' || *word == '"'))
 			quote = *word;
 		if (quote != '\'' && word[0] == '$' && word[1] != '\0')
-		{
-			if (quote == '"')
-				expand_var_in_quotes(expanded, &word);
-			else if (!quote)
-				expand_unquoted_var(pipeline, &expanded, &word);
-		}
+			expand_env_variable(pipeline, &expanded, &word, quote);
 		else if (*word != '\0')
 			ft_string_append_char(expanded, *word++);
 	}
-	parse_word(pipeline, assert_ptr(ft_string_tocstring(expanded)));
+	if (ft_string_length(expanded) > 0)
+		parse_word(pipeline, assert_ptr(ft_string_tocstring(expanded)));
 }

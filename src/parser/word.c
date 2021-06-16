@@ -30,7 +30,7 @@ char	*word_strip_quotes(char *word)
 	return (stripped);
 }
 
-void	parse_word(t_vector pipeline, char *token)
+int	parse_word(t_vector pipeline, char *token)
 {
 	t_command		*cmd;
 	t_redirection	*last_out_redir;
@@ -46,4 +46,5 @@ void	parse_word(t_vector pipeline, char *token)
 		last_out_redir->arg = token;
 	else
 		argv_append(cmd->argv, token);
+	return (0);
 }

@@ -28,7 +28,8 @@ int	minishell_invoke(unsigned int opt, char **optargs, char **envp)
 		if (cmd == NULL)
 			continue ;
 		parsed = parser_invoke(cmd);
-		exec(parsed);
+		if (parsed != NULL)
+			exec(parsed);
 		ft_gc_wipe(stat_get()->tmp_gc);
 	}
 	minishell_exit(EXIT_SUCCESS);

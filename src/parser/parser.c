@@ -14,29 +14,33 @@
 #include "minishell/stat.h"
 #include "minishell/error.h"
 
-static void	parse(t_lexer *lexer, t_vector pipeline)
+static int	parse(t_lexer *lexer, t_vector pipeline)
 {
 	char				*token;
 	t_token_type		type;
+	int					ret;
 
 	type = token_get(lexer, &token);
-	while (type != TOKEN_ERROR)
+	ret = 0;
+	while (ret == 0 && type != TOKEN_ERROR)
 	{
 		if (ft_vector_length(pipeline) == 0)
 			ft_vector_append(pipeline, assert_ptr(command_new()));
 		if (type == TOKEN_WORD)
 			expand(pipeline, token);
 		else if (type == TOKEN_OR)
-			parse_pipe(pipeline, lexer, token);
+			ret = parse_pipe(pipeline, lexer, token);
 		else if (type == TOKEN_REDIRECTION_OUT)
-			parse_output_redirection(pipeline, lexer, token);
+			ret = parse_output_redirection(pipeline, lexer, token);
 		else if (type == TOKEN_REDIRECTION_IN)
-			parse_input_redirection(pipeline, lexer, token);
+			ret = parse_input_redirection(pipeline, lexer, token);
 		token_consume(lexer);
 		type = token_get(lexer, &token);
 	}
+	return (ret);
 }
 
+/*
 static int	print_command(t_command *cmd, int index)
 {
 	printf("COMMAND %d\n", index);
@@ -51,6 +55,7 @@ static int	print_command(t_command *cmd, int index)
 	}
 	return (0);
 }
+*/
 
 static void	destroy_pipeline(t_vector pipeline)
 {
@@ -65,7 +70,8 @@ t_vector	*parser_invoke(char *input)
 	lexer = lexer_build(input);
 	pipeline = ft_gc_add(stat_get()->tmp_gc,
 			assert_ptr(ft_vector_new(5)), &destroy_pipeline);
-	parse(lexer, pipeline);
-	ft_vector_foreach(pipeline, &print_command, NULL);
+	if (parse(lexer, pipeline) != 0)
+		return (NULL);
+	//ft_vector_foreach(pipeline, &print_command, NULL);
 	return (pipeline);
 }

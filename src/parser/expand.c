@@ -4,8 +4,10 @@
 
 #include "minishell/parser.h"
 #include "minishell/env.h"
+#include "minishell/stat.h"
 
 #include "libft/cstring.h"
+#include "libft/gc.h"
 #include "libft/string.h"
 #include "libft/ctype.h"
 
@@ -85,14 +87,15 @@ void	expand(t_vector pipeline, char *word)
 	i = 0;
 	j = 0;
 	quote = 0;
-	expanded = ft_string_new(ft_strlen(word) * 2);
+	expanded = ft_gc_add(stat_get()->tmp_gc, ft_string_new(ft_strlen(word) * 2),
+			(void *)(void *)&ft_string_destroy);
 	while (*word != '\0')
 	{
 		if (*word == quote)
 			quote = 0;
 		else if (!quote && (*word == '\'' || *word == '"'))
 			quote = *word;
-		if (*word == '$' && quote != '\'')
+		if (quote != '\'' && word[0] == '$' && word[1] != '\0')
 		{
 			if (quote == '"')
 				expand_var_in_quotes(expanded, &word);

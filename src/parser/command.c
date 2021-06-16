@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #include "libft/core.h"
 
 #include "minishell/parser.h"
@@ -10,4 +12,12 @@ t_command	*command_new(void)
 	cmd->argv = argv_new(5);
 	cmd->redir_out = ft_vector_new(2);
 	return (cmd);
+}
+
+void	command_destroy(t_command *cmd)
+{
+	ft_vector_destroy(cmd->redir_out, &free);
+	free(cmd->redir_in);
+	argv_destroy(cmd->argv, (void *)(char *)&free);
+	free(cmd);
 }

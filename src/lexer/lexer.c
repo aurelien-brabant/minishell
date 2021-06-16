@@ -270,6 +270,12 @@ t_token_type	token_get_type(char *token)
 ** Create and initialize a new lexer object
 */
 
+static void		lexer_destroy(t_lexer *lexer)
+{
+	ft_vector_destroy(lexer->tokenv, NULL);
+	free(lexer);
+}
+
 static t_lexer	*lexer_new(void)
 {
 	t_lexer	*lexer;
@@ -277,7 +283,7 @@ static t_lexer	*lexer_new(void)
 	lexer = malloc(sizeof (*lexer));
 	if (lexer == NULL)
 		return (NULL);
-	lexer->tokenv = ft_gc_add(stat_get()->tmp_gc, ft_vector_new(10), &free);
+	lexer->tokenv = ft_vector_new(10);
 	if (lexer->tokenv == NULL)
 	{ 
 		free(lexer);
@@ -294,7 +300,7 @@ t_lexer	*lexer_build(char *input)
 	unsigned char	quote;
 
 	i = 0;
-	lexer = lexer_new();
+	lexer = ft_gc_add(stat_get()->tmp_gc, lexer_new(), &lexer_destroy);
 	if (lexer == NULL)
 		return (NULL);
 	quote = 0;
@@ -315,7 +321,7 @@ t_lexer	*lexer_build(char *input)
 			++i;
 		}
 		if (i > 0)
-			ft_vector_append(lexer->tokenv, ft_substr(input, 0, i));
+			ft_vector_append(lexer->tokenv, ft_gc_add(stat_get()->tmp_gc, ft_substr(input, 0, i), &free));
 		input += i;
 		i = 0;
 	}

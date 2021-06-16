@@ -37,6 +37,7 @@ static void	parse(t_lexer *lexer, t_vector pipeline)
 	}
 }
 
+/*
 static int	print_command(t_command *cmd, int index)
 {
 	printf("COMMAND %d\n", index);
@@ -51,6 +52,12 @@ static int	print_command(t_command *cmd, int index)
 	}
 	return (0);
 }
+*/
+
+static void	destroy_pipeline(t_vector pipeline)
+{
+	ft_vector_destroy(pipeline, (void *)(void *)&command_destroy);
+}
 
 t_vector	*parser_invoke(char *input)
 {
@@ -58,10 +65,10 @@ t_vector	*parser_invoke(char *input)
 	t_vector			pipeline;
 
 	lexer = lexer_build(input);
-	pipeline = ft_vector_new(5);
+	pipeline = ft_gc_add(stat_get()->tmp_gc, ft_vector_new(5), &destroy_pipeline);
 	if (pipeline == NULL)
 		return (NULL);
 	parse(lexer, pipeline);
-	ft_vector_foreach(pipeline, &print_command, NULL);
+	//ft_vector_foreach(pipeline, &print_command, NULL);
 	return (pipeline);
 }

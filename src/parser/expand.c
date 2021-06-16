@@ -5,6 +5,7 @@
 #include "minishell/parser.h"
 #include "minishell/env.h"
 #include "minishell/stat.h"
+#include "minishell/error.h"
 
 #include "libft/cstring.h"
 #include "libft/gc.h"
@@ -22,7 +23,7 @@ void	expand_var_in_quotes(t_string expanded, char **word_loc)
 	i = 1;
 	while (ft_isalnum(word[i]))
 		++i;
-	tmp = ft_substr(word, 1, i - 1);
+	tmp = assert_ptr(ft_substr(word, 1, i - 1));
 	var = minishell_getenv(tmp);
 	free(tmp);
 	if (var != NULL)
@@ -35,7 +36,7 @@ static void	tokenize_var(t_vector pipeline, t_string *expanded, char *var)
 	char	*token;
 	char	*tmp;
 
-	var = ft_strdup(var);
+	var = assert_ptr(ft_strdup(var));
 	token = ft_strtok(var, " \t");
 	tmp = token;
 	while (token != NULL)
@@ -44,16 +45,16 @@ static void	tokenize_var(t_vector pipeline, t_string *expanded, char *var)
 		if (tmp == NULL)
 		{
 			if (token != var)
-				*expanded = ft_string_new(10);
+				ft_string_set_length(*expanded, 0);
 			ft_string_append_cstr(*expanded, token);
 		}
 		else if (token == var)
 		{
 			ft_string_append_cstr(*expanded, token);
-			parse_word(pipeline, ft_string_tocstring(*expanded));
+			parse_word(pipeline, assert_ptr(ft_string_tocstring(*expanded)));
 		}
 		else
-			parse_word(pipeline, ft_strdup(token));
+			parse_word(pipeline, assert_ptr(ft_strdup(token)));
 		token = tmp;
 	}
 }
@@ -69,7 +70,7 @@ void	expand_unquoted_var(t_vector pipeline, t_string *expanded, char **word_loc)
 	i = 1;
 	while (ft_isalnum(word[i]) && !ft_isspace(word[i]))
 		++i;
-	tmp = ft_substr(word, 1, i - 1);
+	tmp = assert_ptr(ft_substr(word, 1, i - 1));
 	var = minishell_getenv(tmp);
 	free(tmp);
 	*word_loc += i;
@@ -87,8 +88,8 @@ void	expand(t_vector pipeline, char *word)
 	i = 0;
 	j = 0;
 	quote = 0;
-	expanded = ft_gc_add(stat_get()->tmp_gc, ft_string_new(ft_strlen(word) * 2),
-			(void *)(void *)&ft_string_destroy);
+	expanded = ft_gc_add(stat_get()->tmp_gc, assert_ptr(ft_string_new
+				(ft_strlen(word) * 2)), (void *)(void *)&ft_string_destroy);
 	while (*word != '\0')
 	{
 		if (*word == quote)
@@ -105,5 +106,5 @@ void	expand(t_vector pipeline, char *word)
 		else if (*word != '\0')
 			ft_string_append_char(expanded, *word++);
 	}
-	parse_word(pipeline, ft_string_tocstring(expanded));
+	parse_word(pipeline, assert_ptr(ft_string_tocstring(expanded)));
 }

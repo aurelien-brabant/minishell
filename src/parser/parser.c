@@ -23,7 +23,7 @@ static void	parse(t_lexer *lexer, t_vector pipeline)
 	while (type != TOKEN_ERROR)
 	{
 		if (ft_vector_length(pipeline) == 0)
-			ft_vector_append(pipeline, command_new());
+			ft_vector_append(pipeline, assert_ptr(command_new()));
 		if (type == TOKEN_WORD)
 			expand(pipeline, token);
 		else if (type == TOKEN_OR)
@@ -65,9 +65,8 @@ t_vector	*parser_invoke(char *input)
 	t_vector			pipeline;
 
 	lexer = lexer_build(input);
-	pipeline = ft_gc_add(stat_get()->tmp_gc, ft_vector_new(5), &destroy_pipeline);
-	if (pipeline == NULL)
-		return (NULL);
+	pipeline = ft_gc_add(stat_get()->tmp_gc,
+			assert_ptr(ft_vector_new(5)), &destroy_pipeline);
 	parse(lexer, pipeline);
 	//ft_vector_foreach(pipeline, &print_command, NULL);
 	return (pipeline);

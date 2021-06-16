@@ -33,3 +33,10 @@ void	error_fatal(t_error error)
 {
 	minishell_exit(error_print(error));
 }
+
+void	*assert_ptr(void *p)
+{
+	if (p == NULL)
+		error_fatal(ERROR_BADALLOC);
+	return (p);
+}

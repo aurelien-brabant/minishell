@@ -5,6 +5,7 @@
 #include "libft/io.h"
 
 #include "minishell/parser.h"
+#include "minishell/error.h"
 
 static t_redirecton_type	redirection_get_type(char *token)
 {
@@ -45,7 +46,7 @@ void	parse_output_redirection(t_vector pipeline, t_lexer *lexer, char *token)
 		ft_dprintf(STDERR_FILENO, "minishell: %s: invalid output redirection\n", token);
 		return ;
 	}
-	redir = redirection_new();
+	redir = assert_ptr(redirection_new());
 	redir->type = redirection_get_type(token);
 	ft_vector_append(cmd->redir_out, redir);
 	if (token_get_next(lexer, &token) != TOKEN_WORD)
@@ -66,7 +67,7 @@ void	parse_input_redirection(t_vector pipeline, t_lexer *lexer, char *token)
 		return ;
 	}
 	if (cmd->redir_in == NULL)
-		cmd->redir_in = redirection_new();
+		cmd->redir_in = assert_ptr(redirection_new());
 	cmd->redir_in->type = redirection_get_type(token);
 	if (token_get_next(lexer, &token) != TOKEN_WORD)
 	{

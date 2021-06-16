@@ -2,6 +2,7 @@
 
 #include "minishell/minishell.h"
 #include "minishell/stat.h"
+#include "minishell/error.h"
 //#include "minishell/stat.h"
 #include "libft/io.h"
 #include "libft/cstring.h"

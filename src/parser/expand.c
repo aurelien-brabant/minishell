@@ -13,23 +13,22 @@
 #include "libft/string.h"
 #include "libft/ctype.h"
 
-void	expand_var_in_quotes(t_string expanded, char **word_loc)
+static char	*parse_var(char **word_loc)
 {
-	char	*word;
 	char	*var;
 	char	*tmp;
+	char	*word;
 	size_t	i;
-	
+
+	i = 0;
 	word = *word_loc;
-	i = 1;
 	while (ft_isalnum(word[i]))
 		++i;
-	tmp = assert_ptr(ft_substr(word, 1, i - 1));
+	tmp = assert_ptr(ft_substr(word, 0, i));
 	var = minishell_getenv(tmp);
 	free(tmp);
-	if (var != NULL)
-		ft_string_append_cstr(expanded, var);
 	*word_loc += i;
+	return (var);
 }
 
 static void	tokenize_var(t_vector pipeline, t_string *expanded, char *var)
@@ -60,54 +59,35 @@ static void	tokenize_var(t_vector pipeline, t_string *expanded, char *var)
 	}
 }
 
-void	expand_unquoted_var(t_vector pipeline, t_string *expanded, char **word_loc)
-{
-	char	*word;
-	char	*var;
-	char	*tmp;
-	size_t	i;
-	
-	word = *word_loc;
-	i = 1;
-	while (ft_isalnum(word[i]))
-		++i;
-	*word_loc += i;
-	if (i == 1)
-		return ;
-	tmp = assert_ptr(ft_substr(word, 1, i - 1));
-	var = minishell_getenv(tmp);
-	free(tmp);
-	if (var != NULL)
-		tokenize_var(pipeline, expanded, var);
-}
-
-void	expand_env_variable(t_vector pipeline, t_string *expanded,
+static void	expand_env_variable(t_vector pipeline, t_string *expanded,
 		char **word_loc, unsigned char quote)
 {
-	char	status[4];
+	char		status[4];
+	char		*var;
 
-	if ((*word_loc)[1] == '?')
+	(*word_loc)++;
+	if (**word_loc == '?')
 	{
 		ft_snprintf(status, sizeof (status), "%hhu",
 				stat_get()->last_status_code);
 		ft_string_append_cstr(*expanded, status);
-		*word_loc += 2;
+		(*word_loc)++;
+		return ;
 	}
-	else if (quote == '"')
-		expand_var_in_quotes(expanded, word_loc);
+	var = parse_var(word_loc);
+	if (var == NULL)
+		return ;
+	if (quote == '"')
+		ft_string_append_cstr(*expanded, var);
 	else if (!quote)
-		expand_unquoted_var(pipeline, expanded, word_loc);
+		tokenize_var(pipeline, expanded, var);
 }
 
 void	expand(t_vector pipeline, char *word)
 {
 	t_string		expanded;
 	unsigned char	quote;
-	size_t			i;
-	size_t			j;
 
-	i = 0;
-	j = 0;
 	quote = 0;
 	expanded = ft_gc_add(stat_get()->tmp_gc, assert_ptr(ft_string_new
 				(ft_strlen(word) * 2)), (void *)(void *)&ft_string_destroy);

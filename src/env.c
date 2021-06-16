@@ -14,7 +14,8 @@
 ** Check if name is a valid environment variable name. 
 ** A valid variable name is any name composed of letters from the portable 
 ** character set, digits, and underscores ('_').
-** - Lowercase and uppercase letters can be mixed up, even if it is not advisable.
+** - Lowercase and uppercase letters can be mixed up, even if it is not
+** advisable.
 ** - The name CAN contain digits but CAN'T start with one.
 **
 ** REFERENCE: https://pubs.opengroup.org/onlinepubs/9699919799/
@@ -53,7 +54,7 @@ bool	is_valid_env_var_name(const char *name)
 ** Example: minishell_getenv("HOME") => /home/abrabant
 */
 
-char *minishell_getenv(const char *name)
+char	*minishell_getenv(const char *name)
 {
 	t_argv	*env;
 	size_t	i;
@@ -67,7 +68,7 @@ char *minishell_getenv(const char *name)
 	while (env->args[i] != NULL)
 	{
 		if (ft_strncmp(env->args[i], name, name_len) == 0
-				&& *(env->args[i] + name_len) == '=')
+			&& *(env->args[i] + name_len) == '=')
 		{
 			return (env->args[i] + name_len + 1);
 		}
@@ -83,7 +84,7 @@ char *minishell_getenv(const char *name)
 ** Otherwise, the new variable is appended to the environment.
 */
 
-void minishell_setenv(const char *name, char *value)
+void	minishell_setenv(const char *name, char *value)
 {
 	t_argv	*env;
 	char	*entry;
@@ -91,8 +92,6 @@ void minishell_setenv(const char *name, char *value)
 	size_t	name_len;
 	size_t	value_len;
 
-	if (!is_valid_env_var_name(name))
-		return ;
 	i = 0;
 	env = stat_get()->env;
 	name_len = ft_strlen(name);
@@ -106,8 +105,8 @@ void minishell_setenv(const char *name, char *value)
 	{
 		if (ft_strncmp(env->args[i], name, name_len) == 0)
 		{
-				env->args[i] = entry;
-				return ;
+			env->args[i] = entry;
+			return ;
 		}
 		++i;
 	}
@@ -154,55 +153,3 @@ void	minishell_printenv(void)
 		ft_putchar_fd('\n', STDOUT_FILENO);
 	}
 }
-
-/* LEGACY CODE */
-
-/*
-char	*get_env_value(const char *var, char **env)
-{
-	char	*value;
-	int		i;
-	size_t	size;
-
-	i = 0;
-	size = ft_strlen(var);
-	while (env[i])
-	{
-		if (ft_strncmp(var, env[i], size) == 0)
-		{
-			value = ft_strdup(env[i] + size + 1);
-			if (!value)
-				return (NULL);
-			return (value);
-		}
-		i++;
-	}
-	return (NULL);
-}
-
-char	**get_env(char **envp)
-{
-	char	**env;
-	int		i;
-
-	i = 0;
-	while (envp[i])
-		i++;
-//	env = ft_gc_add(stat_get()->tmp_gc, malloc(sizeof(char *) * (i + 1)), &free_tab);
-	env = (char **)malloc(sizeof(char *) * (i + 1));
-	if (!env)
-		return (NULL);
-	i = 0;
-	while (envp[i])
-	{
-//		env[i] = ft_gc_add(stat_get()->tmp_gc, ft_strdup(envp[i]), &free);
-		env[i] = ft_strdup(envp[i]);
-		if (!env[i])
-			return (NULL);
-		i++;
-	}
-	env[i] = NULL;
-	return (env);
-}
-*/
-

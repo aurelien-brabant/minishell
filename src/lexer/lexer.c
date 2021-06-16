@@ -1,10 +1,12 @@
 #include <limits.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "libft/vector.h"
 #include "libft/cstring.h"
 #include "libft/gc.h"
+#include "libft/io.h"
 
 #include "minishell/lexer.h"
 #include "minishell/stat.h"
@@ -311,6 +313,8 @@ size_t	collect_token(char *input, size_t i, unsigned char *quote)
 		}
 		++i;
 	}
+	if (*quote)
+		ft_dprintf(STDERR_FILENO, "minishell: warning: unclosed quote\n");
 	return (i);
 }
 

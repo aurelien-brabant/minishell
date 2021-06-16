@@ -314,7 +314,8 @@ size_t	collect_token(char *input, size_t i, unsigned char *quote)
 		++i;
 	}
 	if (*quote)
-		ft_dprintf(STDERR_FILENO, "minishell: warning: unclosed quote\n");
+		ft_dprintf(STDERR_FILENO, "minishell: warning: unclosed quote will lead"
+				" to undefined behaviour\n");
 	return (i);
 }
 

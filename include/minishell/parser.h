@@ -29,12 +29,14 @@ typedef struct s_command
 
 t_vector	*parser_invoke(char *input);
 
-void		parse_output_redirection(t_vector pipeline, t_lexer *lexer,
+int			parse_output_redirection(t_vector pipeline, t_lexer *lexer,
 				char *token);
-void		parse_input_redirection(t_vector pipeline, t_lexer *lexer, char *token);
+int			parse_input_redirection(t_vector pipeline, t_lexer *lexer, char *token);
 t_command	*command_new(void);
-void		parse_pipe(t_vector pipeline, t_lexer *lexer, char *token);
-void		parse_word(t_vector pipeline, char *token);
+void		command_destroy(t_command *cmd);
+int			parse_pipe(t_vector pipeline, t_lexer *lexer, char *token);
+int			parse_word(t_vector pipeline, char *token);
+char		*word_strip_quotes(char *word);
 void		expand(t_vector pipeline, char *word);
 
 #endif

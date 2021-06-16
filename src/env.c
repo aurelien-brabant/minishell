@@ -2,11 +2,35 @@
 
 #include "minishell/minishell.h"
 #include "minishell/stat.h"
+#include "minishell/error.h"
 //#include "minishell/stat.h"
 #include "libft/io.h"
 #include "libft/cstring.h"
 #include "libft/core.h"
+#include "libft/ctype.h"
 #include <stdlib.h>
+
+/*
+** Check if name is a valid environment variable name. 
+** A valid variable name is any name composed of letters from the portable 
+** character set, digits, and underscores ('_').
+** - Lowercase and uppercase letters can be mixed up, even if it is not advisable.
+** - The name CAN contain digits but CAN'T start with one.
+**
+** REFERENCE: https://pubs.opengroup.org/onlinepubs/9699919799/
+*/
+
+bool	is_valid_env_var_name(const char *name)
+{
+	if (ft_isdigit(*name))
+		return (false);
+	while (*name != '\0')
+	{
+		if (*name != '_' && !ft_isalnum(*name++))
+			return (false);
+	}
+	return (true);
+}
 
 /*
 ** Because we do not have access to setenv or putenv, we need
@@ -28,19 +52,21 @@
 ** Example: minishell_getenv("HOME") => /home/abrabant
 */
 
-char *minishell_getenv(char *var_name)
+char *minishell_getenv(const char *name)
 {
 	t_argv	*env;
 	size_t	i;
-	size_t	var_name_len;
+	size_t	name_len;
 
+	if (!is_valid_env_var_name(name))
+		return (NULL);
 	env = stat_get()->env;
-	var_name_len = ft_strlen(var_name);
+	name_len = ft_strlen(name);
 	i = 0;
 	while (env->args[i] != NULL)
 	{
-		if (ft_strncmp(env->args[i], var_name, var_name_len) == 0)
-			return (env->args[i] + var_name_len + 1);
+		if (ft_strncmp(env->args[i], name, name_len) == 0)
+			return (env->args[i] + name_len + 1);
 		++i;
 	}
 	return (NULL);
@@ -53,26 +79,28 @@ char *minishell_getenv(char *var_name)
 ** Otherwise, the new variable is appended to the environment.
 */
 
-void minishell_setenv(char *var_name, char *value)
+void minishell_setenv(const char *name, char *value)
 {
 	t_argv	*env;
 	char	*entry;
 	size_t	i;
-	size_t	var_name_len;
+	size_t	name_len;
 	size_t	value_len;
 
+	if (!is_valid_env_var_name(name))
+		return ;
 	i = 0;
 	env = stat_get()->env;
-	var_name_len = ft_strlen(var_name);
+	name_len = ft_strlen(name);
 	value_len = ft_strlen(value);
 	entry = ft_gc_add(stat_get()->global_gc,
-			ft_calloc(var_name_len + value_len + 2, sizeof (*entry)), &free);
-	ft_strlcat(entry, var_name, var_name_len + 1);
-	ft_strlcat(entry, "=", var_name_len + 2);
-	ft_strlcat(entry, value, var_name_len + value_len + 2);
+			ft_calloc(name_len + value_len + 2, sizeof (*entry)), &free);
+	ft_strlcat(entry, name, name_len + 1);
+	ft_strlcat(entry, "=", name_len + 2);
+	ft_strlcat(entry, value, name_len + value_len + 2);
 	while (env->args[i] != NULL)
 	{
-		if (ft_strncmp(env->args[i], var_name, var_name_len) == 0)
+		if (ft_strncmp(env->args[i], name, name_len) == 0)
 		{
 				env->args[i] = entry;
 				return ;

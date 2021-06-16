@@ -8,6 +8,7 @@
 
 #include "minishell/lexer.h"
 #include "minishell/stat.h"
+#include "minishell/error.h"
 
 /*
 ** Character classes definition.
@@ -270,6 +271,12 @@ t_token_type	token_get_type(char *token)
 ** Create and initialize a new lexer object
 */
 
+static void		lexer_destroy(t_lexer *lexer)
+{
+	ft_vector_destroy(lexer->tokenv, NULL);
+	free(lexer);
+}
+
 static t_lexer	*lexer_new(void)
 {
 	t_lexer	*lexer;
@@ -277,7 +284,7 @@ static t_lexer	*lexer_new(void)
 	lexer = malloc(sizeof (*lexer));
 	if (lexer == NULL)
 		return (NULL);
-	lexer->tokenv = ft_gc_add(stat_get()->tmp_gc, ft_vector_new(10), &free);
+	lexer->tokenv = ft_vector_new(10);
 	if (lexer->tokenv == NULL)
 	{ 
 		free(lexer);
@@ -287,35 +294,48 @@ static t_lexer	*lexer_new(void)
 	return (lexer);
 }
 
+size_t	collect_token(char *input, size_t i, unsigned char *quote)
+{
+	t_token_type	type;
+
+	type = token_get_type(input);
+	while (chr_get_class(input[i]) != CHR_CLASS_EOL
+			&& (*quote || g_token_rules[type][chr_get_class(input[i])]))
+	{
+		if (chr_get_class(input[i]) == CHR_CLASS_QUOTE)
+		{
+			if (*quote == input[i])
+				*quote = 0;
+			else if (!*quote)
+				*quote = input[i];
+		}
+		++i;
+	}
+	return (i);
+}
+
 t_lexer	*lexer_build(char *input)
 {
 	t_lexer			*lexer;
 	size_t			i;
 	unsigned char	quote;
+	char			*token;
 
 	i = 0;
-	lexer = lexer_new();
-	if (lexer == NULL)
-		return (NULL);
+	lexer = ft_gc_add(stat_get()->tmp_gc,
+			assert_ptr(lexer_new()), &lexer_destroy);
 	quote = 0;
 	while (chr_get_class(input[i]) != CHR_CLASS_EOL)
 	{
 		while (chr_get_class(input[i]) == CHR_CLASS_BLANK)
 			++input;
-		while (chr_get_class(input[i]) != CHR_CLASS_EOL
-				&& (quote || g_token_rules[token_get_type(input)][chr_get_class(input[i])]))
-		{
-			if (chr_get_class(input[i]) == CHR_CLASS_QUOTE)
-			{
-				if (quote == input[i])
-					quote = 0;
-				else if (!quote)
-					quote = input[i];
-			}
-			++i;
-		}
+		i = collect_token(input, i, &quote);
 		if (i > 0)
-			ft_vector_append(lexer->tokenv, ft_substr(input, 0, i));
+		{
+			token = assert_ptr(ft_substr(input, 0, i));
+			ft_vector_append(lexer->tokenv,
+					ft_gc_add(stat_get()->tmp_gc, token, &free));
+		}
 		input += i;
 		i = 0;
 	}

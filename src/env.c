@@ -66,8 +66,11 @@ char *minishell_getenv(const char *name)
 	i = 0;
 	while (env->args[i] != NULL)
 	{
-		if (ft_strncmp(env->args[i], name, name_len) == 0)
+		if (ft_strncmp(env->args[i], name, name_len) == 0
+				&& *(env->args[i] + name_len) == '=')
+		{
 			return (env->args[i] + name_len + 1);
+		}
 		++i;
 	}
 	return (NULL);

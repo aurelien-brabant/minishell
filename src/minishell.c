@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "libft/io.h"
 
@@ -24,11 +25,18 @@ int	minishell_invoke(unsigned int opt, char **optargs, char **envp)
 	while (1)
 	{
 		cmd = prompt_present("\033[0;33mminishell\033[0m-1.0$ ");
+		if (cmd == NULL)
+			continue ;
 		parsed = parser_invoke(cmd);
 		exec(parsed);
 		ft_gc_wipe(stat_get()->tmp_gc);
 	}
-	ft_gc_destroy(stat_get()->tmp_gc);
-	stat_destroy();
+	minishell_exit(EXIT_SUCCESS);
 	return (0);
+}
+
+void	minishell_exit(int exit_status)
+{
+	stat_destroy();
+	exit(exit_status);
 }

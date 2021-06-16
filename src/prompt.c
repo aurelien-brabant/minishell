@@ -31,7 +31,7 @@ char	*prompt_present(const char *prompt)
 {
 	char	*line;
 
-	line = readline(prompt);
+	line = ft_gc_add(stat_get()->tmp_gc, readline(prompt), &free);
 	if (!is_line_blank(line))
 		add_history(line);
 	return (line);

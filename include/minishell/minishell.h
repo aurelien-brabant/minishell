@@ -19,5 +19,6 @@ char	*prompt_present(const char *prompt);
 
 
 int		minishell_invoke(unsigned int opt, char **optargs, char **envp);
+void	minishell_exit(int exit_status);
 
 #endif

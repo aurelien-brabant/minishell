@@ -27,4 +27,5 @@ void	stat_destroy(void)
 {
 	ft_gc_destroy(stat_get()->tmp_gc);
 	ft_gc_destroy(stat_get()->global_gc);
+	argv_destroy(stat_get()->env, NULL);
 }

@@ -24,6 +24,8 @@ static char	*parse_var(char **word_loc)
 	word = *word_loc;
 	while (ft_isalnum(word[i]))
 		++i;
+	if (i == 0)
+		return (NULL);
 	tmp = assert_ptr(ft_substr(word, 0, i));
 	var = minishell_getenv(tmp);
 	free(tmp);

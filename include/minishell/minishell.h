@@ -2,6 +2,9 @@
 # define MINISHELL_H
 # include "minishell/lexer.h"
 # include "minishell/exec.h"
+# include <sys/types.h>
+
+pid_t	sig_pid;
 
 typedef enum e_option_type
 {

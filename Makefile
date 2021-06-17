@@ -20,12 +20,14 @@ PARSER				= $(addprefix src/parser/, parser.c word.c redirection.c	\
 EXEC				= $(addprefix src/exec/, exec.c echo.c cd.c pwd.c export.c	\
 				  	unset.c utils.c exit.c fn_exec.c)
 
+SIGNAL				=$(addprefix src/signal/, signal.c)
+
 OTHER				= $(addprefix src/, main.c parse_clopt.c prompt.c error.c	\
 				  	minishell.c stat.c argv.c env.c)
 
-SRCS				= $(OTHER) $(LEXER) $(PARSER) $(EXEC)
+SRCS				= $(OTHER) $(LEXER) $(PARSER) $(EXEC) $(SIGNAL)
 
-HEADERS				= $(addprefix include/minishell/, minishell.h constants.h stat.h error.h parser.h lexer.h exec.h)
+HEADERS				= $(addprefix include/minishell/, minishell.h constants.h stat.h error.h parser.h lexer.h exec.h signal.h)
 
 OBJS				= $(SRCS:%.c=%.o)
 

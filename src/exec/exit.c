@@ -8,5 +8,5 @@ void	fn_exit(void)
 {
 	ft_gc_wipe(stat_get()->tmp_gc);
 	printf("exit\n");
-	exit (0);
+	exit(0);
 }

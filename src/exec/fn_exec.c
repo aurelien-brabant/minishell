@@ -1,3 +1,4 @@
+#include "minishell/minishell.h"
 #include "minishell/exec.h"
 #include "minishell/env.h"
 #include "minishell/stat.h"
@@ -9,6 +10,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <sys/stat.h>
 //#include <stdio.h>
 
 static char	**get_path(char *cmd)
@@ -68,12 +70,25 @@ static char	**add_cmd_to_path(char *cmd, char **path)
 static void	run_exec(char **path, char **ag)
 {
 	int		ret;
-	int		pid;
 	int		i;
+	struct stat	buffer;
 
 	ret = 0;
 	i = 0;
-	while (path[i])
+	sig_pid = fork();
+	if (!sig_pid)
+	{
+		while (path[i])
+		{
+			if (!stat(path[i], &buffer))
+				execve(path[i], ag, stat_get()->env->args);
+			i++;
+		}
+		ft_dprintf(2, "minishell: %s: command not found\n", ag[0]);
+		exit(127);
+	}
+	waitpid(sig_pid, &ret, 0);
+/*	while (path[i])
 	{
 		pid = fork();
 		if (pid == 0)
@@ -81,10 +96,25 @@ static void	run_exec(char **path, char **ag)
 		waitpid(pid, &ret, 0);
 		if (WEXITSTATUS(ret) != 255)
 			break ;
+		if (!stat(path[i], &buffer))
+		{
+			//childpid = fork();
+			sig_pid = fork();
+			if (sig_pid == 0)
+				execve(path[i], ag, stat_get()->env->args);
+		//	else
+		//	{
+				//waitpid(childpid, &ret, 0);
+			waitpid(sig_pid, &ret, 0);
+			if (WEXITSTATUS(ret) != 255)
+				break ;
+		//	}
+//			ft_dprintf(2, "minishell: %s: command not found\n", ag[0]);
+		}
 		i++;
 	}
 	if (WEXITSTATUS(ret) == 255)
-		ft_dprintf(2, "minishell: %s: command not found\n", ag[0]);
+		ft_dprintf(2, "minishell: %s: command not found\n", ag[0]);*/
 }
 
 void	fn_exec(char *cmd, char **ag)

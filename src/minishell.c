@@ -6,6 +6,7 @@
 #include "minishell/minishell.h"
 #include "minishell/stat.h"
 #include "minishell/parser.h"
+#include "minishell/signal.h"
 
 /*
 ** Invoke a minishell instance.
@@ -22,6 +23,7 @@ int	minishell_invoke(unsigned int opt, char **optargs, char **envp)
 		parser_invoke(optargs[OPTION_TYPE_COMMAND]);
 		return (0);
 	}
+	init_signal();
 	while (1)
 	{
 		cmd = prompt_present("\033[0;33mminishell\033[0m-1.0$ ");

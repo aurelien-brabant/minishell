@@ -5,6 +5,7 @@
 #include "libft/io.h"
 
 #include "minishell/minishell.h"
+#include "minishell/constants.h"
 #include "minishell/stat.h"
 #include "minishell/parser.h"
 #include "minishell/signal.h"
@@ -30,7 +31,7 @@ int	minishell_invoke(unsigned int opt, char **optargs, char **envp)
 	init_signal();
 	while (1)
 	{
-		cmd = prompt_present("\033[0;33mminishell\033[0m-1.0$ ");
+		cmd = prompt_present(MINISHELL_PROMPT);
 		if (cmd == NULL)
 			continue ;
 		parsed = parser_invoke(cmd);

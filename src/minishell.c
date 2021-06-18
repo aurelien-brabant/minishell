@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <sys/wait.h>
 
 #include "libft/io.h"
 
@@ -7,6 +8,8 @@
 #include "minishell/stat.h"
 #include "minishell/parser.h"
 #include "minishell/signal.h"
+
+int	sig_pid = 0;
 
 /*
 ** Invoke a minishell instance.
@@ -17,6 +20,7 @@ int	minishell_invoke(unsigned int opt, char **optargs, char **envp)
 	char		*cmd;
 	t_vector	parsed;
 
+	init_signal();
 	stat_init(opt, optargs, envp);
 	if (opt & (1 << OPTION_TYPE_COMMAND))
 	{

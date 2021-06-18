@@ -8,16 +8,17 @@
 #include "minishell/constants.h"
 #include "minishell/minishell.h"
 
-static void	kill_pid(int sig)
+static void	handle_sigint(int sig)
 {
 	bool	is_pid;
 
 	(void)sig;
 	is_pid = g_pid[PID_CHILD] != 0;
 	if (is_pid)
-		kill(g_pid[PID_CHILD], SIGINT);
+		kill(g_pid[PID_CHILD], sig);
 	stat_get()->last_status_code = 128 + sig;
-	write(STDOUT_FILENO, "\n", 1);
+	if (sig == SIGINT)
+		write(STDOUT_FILENO, "\n", 1);
 	if (!is_pid)
 	{
 		rl_on_new_line();
@@ -28,5 +29,6 @@ static void	kill_pid(int sig)
 
 void	init_signal(void)
 {
-	signal(SIGINT, kill_pid);
+	signal(SIGINT, handle_sigint);
+	signal(SIGQUIT, handle_sigint);
 }

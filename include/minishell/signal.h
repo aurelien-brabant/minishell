@@ -4,7 +4,7 @@
 # define PID_CHILD 0
 # define PID_PARENT 1
 
-extern	pid_t	pid[2];
+extern	pid_t	g_pid[2];
 
 void	init_signal(void);
 

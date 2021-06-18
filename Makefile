@@ -12,7 +12,7 @@ TARGET				= minishell
 # SOURCES
 
 
-LEXER				= $(addprefix src/lexer/, lexer.c token.c)
+LEXER				= $(addprefix src/lexer/, lexer.c token.c utils.c)
 
 PARSER				= $(addprefix src/parser/, parser.c word.c redirection.c	\
 					  command.c pipe.c expand.c)

@@ -38,7 +38,9 @@ typedef enum e_chr_class
 	CHR_CLASS_MAX,
 }	t_chr_class;
 
+t_lexer			*lexer_new(void);
 t_lexer			*lexer_build(char *input);
+void			lexer_destroy(t_lexer *lexer);
 t_token_type	token_get_type(char *token);
 t_token_type	token_get(t_lexer *lexer, char **token);
 t_token_type	token_get_next(t_lexer *lexer, char **token);

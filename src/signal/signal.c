@@ -13,9 +13,9 @@ static void	kill_pid(int sig)
 	bool	is_pid;
 
 	(void)sig;
-	is_pid = sig_pid != 0;
+	is_pid = pid[PID_CHILD] != 0;
 	if (is_pid)
-		kill(sig_pid, SIGINT);
+		kill(pid[PID_CHILD], SIGINT);
 	stat_get()->last_status_code = 128 + sig;
 	write(STDOUT_FILENO, "\n", 1);
 	if (!is_pid)

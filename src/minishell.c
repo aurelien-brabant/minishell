@@ -10,7 +10,7 @@
 #include "minishell/parser.h"
 #include "minishell/signal.h"
 
-int	sig_pid = 0;
+pid_t	pid[2] = {0};
 
 /*
 ** Invoke a minishell instance.

@@ -76,8 +76,8 @@ static void	run_exec(char **path, char **ag)
 
 	ret = 0;
 	i = 0;
-	sig_pid = fork();
-	if (!sig_pid)
+	pid[PID_CHILD] = fork();
+	if (!pid[PID_CHILD])
 	{
 		while (path[i])
 		{
@@ -88,8 +88,8 @@ static void	run_exec(char **path, char **ag)
 		ft_dprintf(2, "minishell: %s: command not found\n", ag[0]);
 		exit(127);
 	}
-	waitpid(sig_pid, &ret, 0);
-	sig_pid = 0;
+	waitpid(pid[PID_CHILD], &ret, 0);
+	pid[PID_CHILD] = 0;
 /*	while (path[i])
 	{
 		pid = fork();
@@ -101,13 +101,13 @@ static void	run_exec(char **path, char **ag)
 		if (!stat(path[i], &buffer))
 		{
 			//childpid = fork();
-			sig_pid = fork();
-			if (sig_pid == 0)
+			pid[PID_CHILD] = fork();
+			if (pid[PID_CHILD] == 0)
 				execve(path[i], ag, stat_get()->env->args);
 		//	else
 		//	{
 				//waitpid(childpid, &ret, 0);
-			waitpid(sig_pid, &ret, 0);
+			waitpid(pid[PID_CHILD], &ret, 0);
 			if (WEXITSTATUS(ret) != 255)
 				break ;
 		//	}

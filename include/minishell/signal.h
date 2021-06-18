@@ -1,7 +1,10 @@
 #ifndef SIGNAL_H
 # define SIGNAL_H
+# include <sys/unistd.h>
+# define PID_CHILD 0
+# define PID_PARENT 1
 
-extern	int sig_pid;
+extern	pid_t	pid[2];
 
 void	init_signal(void);
 

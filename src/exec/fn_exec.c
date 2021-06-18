@@ -89,6 +89,7 @@ static void	run_exec(char **path, char **ag)
 		exit(127);
 	}
 	waitpid(sig_pid, &ret, 0);
+	sig_pid = 0;
 /*	while (path[i])
 	{
 		pid = fork();

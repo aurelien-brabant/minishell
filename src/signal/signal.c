@@ -9,13 +9,19 @@
 
 static void	kill_pid(int sig)
 {
+	bool	is_pid;
+
 	(void)sig;
-	if (sig_pid)
+	is_pid = sig_pid != 0;
+	if (is_pid)
 		kill(sig_pid, SIGINT);
 	write(STDOUT_FILENO, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
+	if (!is_pid)
+	{
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
 }
 
 void	init_signal(void)

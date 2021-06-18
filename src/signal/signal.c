@@ -4,6 +4,7 @@
 #include <unistd.h>
 
 #include "minishell/signal.h"
+#include "minishell/stat.h"
 #include "minishell/constants.h"
 #include "minishell/minishell.h"
 
@@ -15,6 +16,7 @@ static void	kill_pid(int sig)
 	is_pid = sig_pid != 0;
 	if (is_pid)
 		kill(sig_pid, SIGINT);
+	stat_get()->last_status_code = 128 + sig;
 	write(STDOUT_FILENO, "\n", 1);
 	if (!is_pid)
 	{

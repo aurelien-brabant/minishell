@@ -71,7 +71,7 @@ static void	expand_env_variable(t_vector pipeline, t_string *expanded,
 	if (**word_loc == '?')
 	{
 		ft_snprintf(status, sizeof (status), "%hhu",
-				stat_get()->last_status_code);
+			stat_get()->last_status_code);
 		ft_string_append_cstr(*expanded, status);
 		(*word_loc)++;
 		return ;

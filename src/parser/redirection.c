@@ -30,7 +30,7 @@ static t_redirecton_type	redirection_get_type(char *token)
 static t_redirection	*redirection_new(void)
 {
 	t_redirection	*redirection;
-	
+
 	redirection = ft_calloc(1, sizeof (*redirection));
 	return (redirection);
 }
@@ -43,7 +43,8 @@ int	parse_output_redirection(t_vector pipeline, t_lexer *lexer, char *token)
 	cmd = ft_vector_get(pipeline, ft_vector_length(pipeline) - 1);
 	if (ft_strcmp(token, ">") != 0 && ft_strcmp(token, ">>") != 0)
 	{
-		ft_dprintf(STDERR_FILENO, "minishell: %s: invalid output redirection\n", token);
+		ft_dprintf(STDERR_FILENO,
+			"minishell: %s: invalid output redirection\n", token);
 		return (1);
 	}
 	redir = assert_ptr(redirection_new());
@@ -64,7 +65,8 @@ int	parse_input_redirection(t_vector pipeline, t_lexer *lexer, char *token)
 	cmd = ft_vector_get(pipeline, ft_vector_length(pipeline) - 1);
 	if (ft_strcmp(token, "<") != 0 && ft_strcmp(token, "<<") != 0)
 	{
-		ft_dprintf(STDERR_FILENO, "minishell: %s: invalid input redirection\n", token);
+		ft_dprintf(STDERR_FILENO,
+			"minishell: %s: invalid input redirection\n", token);
 		return (1);
 	}
 	if (cmd->redir_in == NULL)

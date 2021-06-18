@@ -59,17 +59,17 @@ static const t_chr_class	g_chr_class[CHAR_MAX] = {
 	[30] = CHR_CLASS_SYMBOL,
 	[31] = CHR_CLASS_SYMBOL,
 
-	['\0'] = CHR_CLASS_EOL, /* END OF LINE - may be modified when readline will be used instead of ft_gnl */
-	['\n'] = CHR_CLASS_EOL, /* END OF LINE - may be modified when readline will be used instead of ft_gnl */
+	['\0'] = CHR_CLASS_EOL,
+	['\n'] = CHR_CLASS_EOL,
 
 	/* BLANK */
 	[' '] = CHR_CLASS_BLANK,
 	['\t'] = CHR_CLASS_BLANK,
 
 	/* OPERATOR */
-	['<'] =	CHR_CLASS_LEFT_ARROW,
-	['>'] =	CHR_CLASS_RIGHT_ARROW,
-	['|'] =	CHR_CLASS_PIPE,
+	[62] = CHR_CLASS_LEFT_ARROW,
+	[60] = CHR_CLASS_RIGHT_ARROW,
+	[124] = CHR_CLASS_PIPE,
 
 	/* MISC */
 	['$'] = CHR_CLASS_DOLLAR,
@@ -157,7 +157,7 @@ static const t_chr_class	g_chr_class[CHAR_MAX] = {
 	['\\'] = CHR_CLASS_SYMBOL,
 	['/'] = CHR_CLASS_SYMBOL,
 	['*'] = CHR_CLASS_SYMBOL,
-	['&'] = CHR_CLASS_SYMBOL,
+	[38] = CHR_CLASS_SYMBOL,
 	['^'] = CHR_CLASS_SYMBOL,
 	['-'] = CHR_CLASS_SYMBOL,
 	['_'] = CHR_CLASS_SYMBOL,
@@ -255,7 +255,7 @@ static const bool			g_token_rules[TOKEN_MAX][CHR_CLASS_MAX] = {
 	},
 };
 
-t_chr_class		chr_get_class(unsigned char c)
+t_chr_class	chr_get_class(unsigned char c)
 {
 	if (c > CHAR_MAX)
 		return (CHR_CLASS_UNDEFINED);
@@ -269,40 +269,13 @@ t_token_type	token_get_type(char *token)
 	return (g_token_type[chr_get_class(*token)]);
 }
 
-/*
-** Create and initialize a new lexer object
-*/
-
-static void		lexer_destroy(t_lexer *lexer)
-{
-	ft_vector_destroy(lexer->tokenv, NULL);
-	free(lexer);
-}
-
-static t_lexer	*lexer_new(void)
-{
-	t_lexer	*lexer;
-
-	lexer = malloc(sizeof (*lexer));
-	if (lexer == NULL)
-		return (NULL);
-	lexer->tokenv = ft_vector_new(10);
-	if (lexer->tokenv == NULL)
-	{ 
-		free(lexer);
-		return (NULL);
-	}
-	lexer->current_token_index = 0;
-	return (lexer);
-}
-
 size_t	collect_token(char *input, size_t i, unsigned char *quote)
 {
 	t_token_type	type;
 
 	type = token_get_type(input);
 	while (chr_get_class(input[i]) != CHR_CLASS_EOL
-			&& (*quote || g_token_rules[type][chr_get_class(input[i])]))
+		&& (*quote || g_token_rules[type][chr_get_class(input[i])]))
 	{
 		if (chr_get_class(input[i]) == CHR_CLASS_QUOTE)
 		{
@@ -315,7 +288,7 @@ size_t	collect_token(char *input, size_t i, unsigned char *quote)
 	}
 	if (*quote)
 		ft_dprintf(STDERR_FILENO, "minishell: warning: unclosed quote will lead"
-				" to undefined behaviour\n");
+			" to undefined behaviour\n");
 	return (i);
 }
 
@@ -339,7 +312,7 @@ t_lexer	*lexer_build(char *input)
 		{
 			token = assert_ptr(ft_substr(input, 0, i));
 			ft_vector_append(lexer->tokenv,
-					ft_gc_add(stat_get()->tmp_gc, token, &free));
+				ft_gc_add(stat_get()->tmp_gc, token, &free));
 		}
 		input += i;
 		i = 0;

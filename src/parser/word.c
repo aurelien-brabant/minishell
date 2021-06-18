@@ -35,11 +35,12 @@ int	parse_word(t_vector pipeline, char *token)
 	t_command		*cmd;
 	t_redirection	*last_out_redir;
 
-	token = word_strip_quotes(token);	
+	token = word_strip_quotes(token);
 	last_out_redir = NULL;
 	cmd = ft_vector_get(pipeline, ft_vector_length(pipeline) - 1);
 	if (ft_vector_length(cmd->redir_out) > 0)
-		last_out_redir = ft_vector_get(cmd->redir_out, ft_vector_length(cmd->redir_out) - 1);
+		last_out_redir = ft_vector_get(cmd->redir_out,
+				ft_vector_length(cmd->redir_out) - 1);
 	if (cmd->redir_in && cmd->redir_in->arg == NULL)
 		cmd->redir_in->arg = token;
 	else if (last_out_redir && last_out_redir->arg == NULL)

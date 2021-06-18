@@ -33,7 +33,7 @@ t_argv	*argv_new(size_t size)
 void	argv_append(t_argv *argv, char *arg)
 {
 	if (argv->length == argv->cap)
-		argv_resize(argv);	
+		argv_resize(argv);
 	argv->args[argv->length++] = arg;
 	argv->args[argv->length] = NULL;
 }

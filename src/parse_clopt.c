@@ -8,7 +8,7 @@
 #include "minishell/minishell.h"
 #include "minishell/constants.h"
 
-static const struct
+static const struct s_options
 {
 	char			*long_opt;
 	char			short_opt;
@@ -16,7 +16,7 @@ static const struct
 	t_option_type	type;
 	bool			requires_arg;
 	char			*usage;
-}	g_options[] = {
+} g_options[] = {
 	{
 		.long_opt = "version",
 		.short_opt = 'v',

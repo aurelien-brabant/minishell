@@ -3,23 +3,34 @@
 #include "minishell/env.h"
 #include "minishell/stat.h"
 #include "minishell/signal.h"
-//#include "minishell/stat.h"
 #include "libft/cstring.h"
 #include "libft/io.h"
-//#include "libft/vector.h"
-//#include <signal.h>
 #include <sys/wait.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/stat.h>
-//#include <stdio.h>
+
+static char	**join_path(char **paths, char *cmd)
+{
+	int		i;
+	char	*tmp;
+
+	i = 0;
+	while (paths[i])
+	{
+		tmp = ft_strjoin(paths[i], "/");
+		free(paths[i]);
+		paths[i] = ft_strjoin(tmp, cmd);
+		free(tmp);
+		i++;
+	}
+	return (paths);
+}
 
 static char	**get_path(char *cmd)
 {
 	char	**paths;
 	char	*path;
-	char	*tmp;
-	int		i;
 
 	path = minishell_getenv("PATH");
 	if (path == NULL)
@@ -27,24 +38,13 @@ static char	**get_path(char *cmd)
 		ft_dprintf(STDERR_FILENO, "WTF, path not set?");
 		return (NULL);
 	}
-//	paths = ft_gc_add(stat_get()->tmp_gc, ft_split(path, ':'), &free_tab);
 	paths = ft_split(path, ':');
 	if (!paths)
 	{
 		free(path);
 		return (NULL);
 	}
-	i = 0;
-	while (paths[i])
-	{
-		tmp = ft_strjoin(paths[i], "/");
-		//paths[i] = ft_gc_add(stat_get()->tmp_gc, ft_strjoin(tmp, cmd), &free);
-		free(paths[i]);
-		paths[i] = ft_strjoin(tmp, cmd);
-		free(tmp);
-		i++;
-	}
-	return (paths);
+	return (join_path(paths, cmd));
 }
 
 static char	**add_cmd_to_path(char *cmd, char **path)
@@ -70,8 +70,8 @@ static char	**add_cmd_to_path(char *cmd, char **path)
 
 static void	run_exec(char **path, char **ag)
 {
-	int		ret;
-	int		i;
+	int			ret;
+	int			i;
 	struct stat	buffer;
 
 	ret = 0;

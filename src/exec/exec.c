@@ -36,18 +36,14 @@ void	exec(t_vector parsed)
 	char	*cmd;
 	char	**ag;
 	size_t	len;
-	//size_t	length;
-	size_t	i;
+	size_t	length;
 
-	//length = ft_vector_length(parsed);
-	i = 0;
-//	while (i < length)
-//	{
-		argvs = ft_vector_get(parsed, i);
-		ag = (char **)argvs->argv->args;
-		cmd = ag[0];
-		len = argvs->argv->length;
-		builtin(cmd, ag, len);
-//		i++;
-//	}
+	length = ft_vector_length(parsed);
+	if (length < 1)
+		return ;
+	argvs = ft_vector_get(parsed, 0);
+	ag = (char **)argvs->argv->args;
+	cmd = ag[0];
+	len = argvs->argv->length;
+	builtin(cmd, ag, len);
 }

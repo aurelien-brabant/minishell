@@ -1,17 +1,12 @@
 #include "minishell/exec.h"
 #include "minishell/env.h"
-//#include "minishell/stat.h"
 #include "libft/cstring.h"
-//#include "libft/io.h"
 #include "libft/vector.h"
-//#include <signal.h>
-//#include <sys/wait.h>
-//#include <unistd.h>
-//#include <stdlib.h>
-//#include <stdio.h>
 
 static void	builtin(char *cmd, char **ag, size_t len)
 {
+	if (!len)
+		return ;
 	if (!ft_strcmp(cmd, "echo"))
 		fn_echo(ag, len);
 	else if (!ft_strcmp(cmd, "cd"))
@@ -33,10 +28,10 @@ static void	builtin(char *cmd, char **ag, size_t len)
 void	exec(t_vector parsed)
 {
 	t_command	*argvs;
-	char	*cmd;
-	char	**ag;
-	size_t	len;
-	size_t	length;
+	char		*cmd;
+	char		**ag;
+	size_t		len;
+	size_t		length;
 
 	length = ft_vector_length(parsed);
 	if (length < 1)

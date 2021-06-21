@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int		tab_len(char **env)
+int	tab_len(char **env)
 {
 	size_t	i;
 
@@ -21,7 +21,6 @@ void	print_tab(char **tab)
 		printf("%s\n", tab[i]);
 		i++;
 	}
-
 }
 
 void	free_tab(char **tab)

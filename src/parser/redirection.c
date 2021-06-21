@@ -1,4 +1,5 @@
 #include <unistd.h>
+#include <stdio.h>
 
 #include "libft/core.h"
 #include "libft/cstring.h"
@@ -7,7 +8,7 @@
 #include "minishell/parser.h"
 #include "minishell/error.h"
 
-static t_redirecton_type	redirection_get_type(char *token)
+static t_redirection_type	redirection_get_type(char *token)
 {
 	static char	*strs[] = {
 		[REDIRECTION_IN] = "<",

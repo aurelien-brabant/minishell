@@ -67,8 +67,8 @@ static const t_chr_class	g_chr_class[CHAR_MAX] = {
 	['\t'] = CHR_CLASS_BLANK,
 
 	/* OPERATOR */
-	[62] = CHR_CLASS_LEFT_ARROW,
-	[60] = CHR_CLASS_RIGHT_ARROW,
+	[60] = CHR_CLASS_LEFT_ARROW,
+	[62] = CHR_CLASS_RIGHT_ARROW,
 	[124] = CHR_CLASS_PIPE,
 
 	/* MISC */

@@ -12,11 +12,11 @@ typedef enum e_redirection_type
 	REDIRECTION_DIN,
 	REDIRECTION_DOUT,
 	REDIRECTION_MAX,
-}	t_redirecton_type;
+}	t_redirection_type;
 
 typedef struct s_redirection
 {
-	t_redirecton_type	type;
+	t_redirection_type	type;
 	char				*arg;
 }	t_redirection;
 

@@ -10,7 +10,7 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 
-static char	**join_path(char **paths, char *cmd)
+static char	**join_path(char **paths, char *bin)
 {
 	int		i;
 	char	*tmp;
@@ -20,14 +20,14 @@ static char	**join_path(char **paths, char *cmd)
 	{
 		tmp = ft_strjoin(paths[i], "/");
 		free(paths[i]);
-		paths[i] = ft_strjoin(tmp, cmd);
+		paths[i] = ft_strjoin(tmp, bin);
 		free(tmp);
 		i++;
 	}
 	return (paths);
 }
 
-static char	**get_path(char *cmd)
+static char	**get_path(char *bin)
 {
 	char	**paths;
 	char	*path;
@@ -35,7 +35,7 @@ static char	**get_path(char *cmd)
 	path = minishell_getenv("PATH");
 	if (path == NULL)
 	{
-		ft_dprintf(STDERR_FILENO, "WTF, path not set?");
+		ft_dprintf(STDERR_FILENO, "minishell: PATH not set\n");
 		return (NULL);
 	}
 	paths = ft_split(path, ':');
@@ -44,93 +44,28 @@ static char	**get_path(char *cmd)
 		free(path);
 		return (NULL);
 	}
-	return (join_path(paths, cmd));
+	return (join_path(paths, bin));
 }
 
-static char	**add_cmd_to_path(char *cmd, char **path)
+void	fn_exec(char **cmd)
 {
-	char	**final_path;
-	int		size;
+	char	**path;
+	struct stat	buffer;
 	int		i;
 
-	size = tab_len(path);
-	final_path = (char **)malloc(sizeof(char *) * (size + 2));
-	if (!final_path)
-		return (NULL);
+	if (!stat(cmd[0], &buffer))
+		exit(execve(cmd[0], cmd, stat_get()->env->args));
+	path = get_path(cmd[0]);
+	if (!path)
+		exit(127);
 	i = 0;
 	while (path[i])
 	{
-		final_path[i] = ft_strdup(path[i]);
-		i++;
-	}
-	final_path[i] = ft_strdup(cmd);
-	final_path[i + 1] = NULL;
-	return (final_path);
-}
-
-static void	run_exec(char **path, char **ag)
-{
-	int			ret;
-	int			i;
-	struct stat	buffer;
-
-	ret = 0;
-	i = 0;
-	g_pid[PID_CHILD] = fork();
-	if (!g_pid[PID_CHILD])
-	{
-		while (path[i])
-		{
-			if (!stat(path[i], &buffer))
-				execve(path[i], ag, stat_get()->env->args);
-			i++;
-		}
-		ft_dprintf(2, "minishell: %s: command not found\n", ag[0]);
-		exit(127);
-	}
-	waitpid(g_pid[PID_CHILD], &ret, 0);
-	g_pid[PID_CHILD] = 0;
-/*	while (path[i])
-	{
-		g_pid = fork();
-		if (g_pid == 0)
-			exit(execve(path[i], ag, stat_get()->env->args));
-		waitg_pid(g_pid, &ret, 0);
-		if (WEXITSTATUS(ret) != 255)
-			break ;
 		if (!stat(path[i], &buffer))
-		{
-			//childg_pid = fork();
-			g_pid[PID_CHILD] = fork();
-			if (g_pid[PID_CHILD] == 0)
-				execve(path[i], ag, stat_get()->env->args);
-		//	else
-		//	{
-				//waitg_pid(childg_pid, &ret, 0);
-			waitg_pid(g_pid[PID_CHILD], &ret, 0);
-			if (WEXITSTATUS(ret) != 255)
-				break ;
-		//	}
-//			ft_dprintf(2, "minishell: %s: command not found\n", ag[0]);
-		}
+			exit(execve(path[i], cmd, stat_get()->env->args));
 		i++;
 	}
-	if (WEXITSTATUS(ret) == 255)
-		ft_dprintf(2, "minishell: %s: command not found\n", ag[0]);*/
-}
-
-void	fn_exec(char *cmd, char **ag)
-{
-	char	**tmp;
-	char	**path;
-
-	tmp = get_path(cmd);
-	if (!tmp)
-		return ;
-	path = add_cmd_to_path(cmd, tmp);
-	free_tab(tmp);
-	if (!path)
-		return ;
-	run_exec(path, ag);
 	free_tab(path);
+	ft_dprintf(2, "minishell: %s: command not found\n", cmd[0]);
+	exit(127);
 }

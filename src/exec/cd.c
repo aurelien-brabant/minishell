@@ -15,15 +15,15 @@ static void	update_pwd(char *old_pwd)
 	minishell_setenv("OLDPWD", old_pwd);
 }
 
-void	fn_cd(char **ag)
+void	fn_cd(char **cmd)
 {
 	char	*goto_path;
 	char	old_pwd[PATH_MAX];
 	int		ret;
 
 	getcwd(old_pwd, PATH_MAX);
-	if (ag[1])
-		goto_path = ag[1];
+	if (cmd[1])
+		goto_path = cmd[1];
 	else
 	{
 		goto_path = minishell_getenv("HOME");

@@ -22,14 +22,14 @@ static int	check_var_name(char *s)
 	return (1);
 }
 
-void	fn_export(char **ag, size_t len)
+void	fn_export(char **cmd, size_t len)
 {
 	char	*var_name;
 	char	*s;
 
 	if (len == 2)
 	{
-		s = ft_strdup(ag[1]);
+		s = ft_strdup(cmd[1]);
 		var_name = s;
 		s = ft_strchr(s, '=');
 		if (s == NULL)

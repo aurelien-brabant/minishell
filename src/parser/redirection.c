@@ -61,7 +61,8 @@ int	parse_output_redirection(t_vector pipeline, t_lexer *lexer, char *token)
 
 int	parse_input_redirection(t_vector pipeline, t_lexer *lexer, char *token)
 {
-	t_command	*cmd;
+	t_command		*cmd;
+	t_redirection	*redir;
 
 	cmd = ft_vector_get(pipeline, ft_vector_length(pipeline) - 1);
 	if (ft_strcmp(token, "<") != 0 && ft_strcmp(token, "<<") != 0)
@@ -70,9 +71,9 @@ int	parse_input_redirection(t_vector pipeline, t_lexer *lexer, char *token)
 			"minishell: %s: invalid input redirection\n", token);
 		return (1);
 	}
-	if (cmd->redir_in == NULL)
-		cmd->redir_in = assert_ptr(redirection_new());
-	cmd->redir_in->type = redirection_get_type(token);
+	redir = assert_ptr(redirection_new());
+	redir->type = redirection_get_type(token);
+	ft_vector_append(cmd->redir_in, redir);
 	if (token_get_next(lexer, &token) != TOKEN_WORD)
 	{
 		ft_dprintf(STDERR_FILENO, "minishell: %s: valid arg required\n", token);

@@ -47,12 +47,13 @@ static int	print_command(t_command *cmd, int index)
 	for (size_t i = 0; i < cmd->argv->length; ++i) {
 		printf("ARG %s\n", cmd->argv->args[i]);
 	}
-	if (cmd->redir_in != NULL)
-		printf("Redirection IN:\nType: %d\nARG=%s\n", cmd->redir_in->type,
-		cmd->redir_in->arg);
 	for (size_t i = 0; i < ft_vector_length(cmd->redir_out); ++i) {
 		t_redirection *redir = ft_vector_get(cmd->redir_out, i);
 		printf("Redirection OUT:\nType: %d\nARG=%s\n", redir->type, redir->arg);
+	}
+	for (size_t i = 0; i < ft_vector_length(cmd->redir_in); ++i) {
+		t_redirection *redir = ft_vector_get(cmd->redir_in, i);
+		printf("Redirection IN:\nType: %d\nARG=%s\n", redir->type, redir->arg);
 	}
 	return (0);
 }

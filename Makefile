@@ -19,7 +19,7 @@ PARSER				= $(addprefix src/parser/, parser.c word.c redirection.c	\
 
 BUILTIN				= $(addprefix src/builtin/, builtin.c echo.c cd.c pwd.c export.c unset.c exit.c env.c)
 
-EXEC				= $(addprefix src/exec/, exec.c	utils.c)
+EXEC				= $(addprefix src/exec/, exec.c redirection.c utils.c)
 
 SIGNAL				=$(addprefix src/signal/, signal.c)
 

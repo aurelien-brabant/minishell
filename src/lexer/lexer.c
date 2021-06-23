@@ -72,7 +72,8 @@ static const t_chr_class	g_chr_class[CHAR_MAX] = {
 	[124] = CHR_CLASS_PIPE,
 
 	/* MISC */
-	['$'] = CHR_CLASS_DOLLAR,
+	['$'] = CHR_CLASS_SYMBOL,
+	['~'] = CHR_CLASS_SYMBOL,
 
 	/* QUOTES */
 	['"'] = CHR_CLASS_QUOTE,

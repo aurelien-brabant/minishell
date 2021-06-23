@@ -65,113 +65,6 @@ void	exec(t_vector parsed)
 
 pid_t	*g_pids = NULL;
 
-/*****************************************************************************/
-/*                                UTILITIES                                  */
-/*****************************************************************************/
-
-/*
-** Check if the current path points to a directory.
-** 1 is returned if it's indeed a directory.
-** 0 is returned if it's a regular file instead.
-** -1 is returned if an invalid path has been passed.
-*/
-
-int	isdir(const char *path)
-{
-	int			fd;
-
-	fd = open(path, O_RDONLY);
-	if (fd == -1)
-		return (-1);
-	return (read(fd, NULL, 0) == -1);
-}
-
-static int	open_in(t_command *cmd, int *fd_in)
-{
-	size_t			i;
-	t_redirection	*redir;
-
-	*fd_in = -1;
-	i = 0;
-	while (i < ft_vector_length(cmd->redir_in))
-	{
-		if (i > 0)
-			close(*fd_in);
-		redir = ft_vector_get(cmd->redir_in, i);
-		*fd_in = open(redir->arg, O_RDONLY);
-		if (*fd_in == -1)
-		{
-			ft_dprintf(STDERR_FILENO, "minishell: %s: %s\n",
-					redir->arg, strerror(errno));
-			return (1);
-		}
-		++i;
-	}
-	return (0);
-}
-
-static int	open_out(t_command *cmd, int *fd_out)
-{
-	size_t			i;
-	t_redirection	*redir;
-
-	*fd_out = -1;
-	i = 0;
-	while (i < ft_vector_length(cmd->redir_out))
-	{
-		if (i > 0)
-			close(*fd_out);
-		redir = ft_vector_get(cmd->redir_out, i);
-		if (redir->type == REDIRECTION_DOUT)
-			*fd_out = open(redir->arg, O_RDWR | O_APPEND | O_CREAT, 0644);
-		else
-			*fd_out = open(redir->arg, O_RDWR | O_TRUNC | O_CREAT, 0644);
-		if (*fd_out == -1)
-		{
-			ft_dprintf(STDERR_FILENO, "minishell: %s: %s\n",
-					redir->arg, strerror(errno));
-			return (1);
-		}
-		++i;
-	}
-	return (0);
-}
-
-/*
-** A simple wrapper around close(2).
-** Does not attempt to close a file descriptor which value is -1.
-** If the address of a valid file descriptor is passed, it is closed
-** and then set to -1 to indicate it has been already closed.
-** The return value of close is returned.
-*/
-
-int	close_safe(int *fd)
-{
-	int	ret;
-
-	ret = 0;
-	if (*fd != -1)
-	{
-		ret = close(*fd);
-		*fd = -1;
-	}
-	return (ret);
-}
-
-static void	safe_execve(char *path, char *argv[], char *envp[])
-{
-	if (execve(path, argv, envp) == -1)
-	{
-		ft_dprintf(STDERR_FILENO, "minishell: %s: %s\n", path, strerror(errno));
-		free(path);
-		exit(126);
-	}
-}
-
-/*****************************************************************************/
-/*                               EXECUTION                                   */
-/*****************************************************************************/
-
 static char	*get_cmd_path(const char *cmd, const char *path)
 {
 	char	*cmd_path;
@@ -208,7 +101,7 @@ static void	execute_from_path(t_command *cmd)
 	while (tok != NULL)
 	{
 		cmd_path = get_cmd_path(cmd->argv->args[0], tok);
-		if (isdir(cmd_path) != -1)
+		if (file_exists(cmd_path))
 			safe_execve(cmd_path, cmd->argv->args, stat_get()->env->args);
 		free(cmd_path);
 		tok = ft_strtok(NULL, ":");
@@ -217,18 +110,7 @@ static void	execute_from_path(t_command *cmd)
 	ft_dprintf(STDERR_FILENO, "minishell: %s: command not found\n", cmd->argv->args[0]);
 }
 
-static void	make_redirections(int pipefd[2], int redir_fd[2],
-		int index, int length)
-{
-	if (redir_fd[1] != -1)
-		dup2(redir_fd[1], STDOUT_FILENO);
-	else if (index < length - 1)
-		dup2(pipefd[1], STDOUT_FILENO);
-	if (redir_fd[0] != -1)
-		dup2(redir_fd[0], STDIN_FILENO);
-	else if (index > 0)
-		dup2(pipefd[-2], STDIN_FILENO);
-}
+
 
 /*
 ** If a command has been provided (and not only redirections)
@@ -244,7 +126,7 @@ static void	execute_command(t_command *cmd)
 	char	*label;
 
 	label = cmd->argv->args[0];
-	if (isdir(label) != -1)
+	if (file_exists(label))
 		safe_execve(label, cmd->argv->args, stat_get()->env->args);
 	else
 		execute_from_path(cmd);

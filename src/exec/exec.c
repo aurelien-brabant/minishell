@@ -113,12 +113,17 @@ static void	execute_from_path(t_command *cmd)
 	ft_dprintf(STDERR_FILENO, "minishell: %s: command not found\n", cmd->argv->args[0]);
 }
 
-
-
 /*
-** If a command has been provided (and not only redirections)
-** execute it, using the absolute path if a valid one is provided, or
-** searching for the valid path based on the value of the PATH variable.
+** If a command has been provided (and not only redirections) execute it.
+** If the provided path already points to an existing file or folder,
+** an attempt to execute it will be made. 
+**
+** It is important to note though, that any command name which is not prefixed
+** by any forward slash ('/') (being an absolute or a relative path) will 
+** ALWAYS be executed from the defined PATH. Let's say an executable which's 
+** name is a.out is available in the current directory, the command "a.out"
+** will report the "command not found" error while the command "./a.out" will
+** properly execute it.
 **
 ** NOTE: execute_command is executed in the child process, where all required
 ** redirections should have been already done.
@@ -127,12 +132,18 @@ static void	execute_from_path(t_command *cmd)
 static void	execute_command(t_command *cmd)
 {
 	char	*label;
+	size_t	i;
 
 	label = cmd->argv->args[0];
 	if (file_exists(label))
-		safe_execve(label, cmd->argv->args, stat_get()->env->args);
-	else
-		execute_from_path(cmd);
+	{
+		i = 0;
+		while (label[i] == '.')
+			++i;
+		if (i <= 2 && label[i] == '/')
+			safe_execve(label, cmd->argv->args, stat_get()->env->args);
+	}
+	execute_from_path(cmd);
 }
 
 void	process_command(t_command *cmd, int *pipefd,

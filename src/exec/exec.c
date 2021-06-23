@@ -161,11 +161,58 @@ int	close_safe(int *fd)
 /*                               EXECUTION                                   */
 /*****************************************************************************/
 
-/*
+static char	*get_cmd_path(const char *cmd, const char *path)
+{
+	char	*cmd_path;
+	size_t	i;
+
+	cmd_path = malloc(sizeof (*cmd_path) + ft_strlen(cmd)
+			+ ft_strlen(path) + 2);
+	if (cmd_path == NULL)
+		return (NULL);
+	i = 0;
+	while (*path != '\0')
+		cmd_path[i++] = *path++;
+	cmd_path[i++] = '/';
+	while (*cmd != '\0')
+		cmd_path[i++] = *cmd++;
+	cmd_path[i] = '\0';
+	return (cmd_path);
+}
+
 static void	execute_from_path(t_command *cmd)
 {
+	char	*path;
+	char	*tok;
+	char	*cmd_path;
+
+	path = minishell_getenv("PATH");
+	if (path == NULL)
+	{
+		ft_dprintf(STDERR_FILENO, "PATH variable is not set!\n");
+		exit(127);
+	}
+	path = ft_strdup(path);
+	tok = ft_strtok(path, ":");
+	while (tok != NULL)
+	{
+		cmd_path = get_cmd_path(cmd->argv->args[0], tok);
+		if (isdir(cmd_path) != -1)
+		{
+			if (execve(cmd_path, cmd->argv->args, stat_get()->env->args) == -1)
+			{
+				ft_dprintf(STDERR_FILENO, "minishell: %s: %s\n",
+						cmd->argv->args[0], strerror(errno));
+				free(cmd_path);
+				exit(126);
+			}
+		}
+		free(cmd_path);
+		tok = ft_strtok(NULL, ":");
+	}
+	free(path);
+	ft_dprintf(STDERR_FILENO, "minishell: %s: command not found\n", cmd->argv->args[0]);
 }
-*/
 
 /*
 ** If a command has been provided (and not only redirections)
@@ -190,6 +237,8 @@ static void	execute_command(t_command *cmd)
 			exit(126);
 		}
 	}
+	else
+		execute_from_path(cmd);
 }
 
 void	process_command(t_command *cmd, int *pipefd,

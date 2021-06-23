@@ -31,7 +31,7 @@ int	minishell_invoke(unsigned int opt, char **optargs, char **envp)
 	init_signal();
 	while (1)
 	{
-		cmd = prompt_present(MINISHELL_PROMPT);
+		cmd = prompt_present();
 		if (cmd == NULL)
 			minishell_exit(0);
 		parsed = parser_invoke(cmd);

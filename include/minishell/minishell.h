@@ -16,7 +16,7 @@ typedef enum e_option_type
 int		parse_clopt(int argc, char *argv[], unsigned int *options,
 			char **optargs);
 void	minishell_output_usage(void);
-char	*prompt_present(const char *prompt);
+char	*prompt_present(void);
 
 
 int		minishell_invoke(unsigned int opt, char **optargs, char **envp);

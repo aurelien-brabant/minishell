@@ -1,4 +1,5 @@
 #include <unistd.h>
+#include <limits.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <readline/readline.h>
@@ -8,6 +9,7 @@
 #include "libft/ctype.h"
 
 #include "minishell/minishell.h"
+#include "minishell/constants.h"
 #include "minishell/stat.h"
 
 static bool	is_line_blank(const char *line)
@@ -27,11 +29,11 @@ static bool	is_line_blank(const char *line)
 ** built-in support for history, path auto-completion, and so on.
 */
 
-char	*prompt_present(const char *prompt)
+char	*prompt_present(void)
 {
 	char	*line;
-
-	line = ft_gc_add(stat_get()->tmp_gc, readline(prompt), &free);
+	
+	line = ft_gc_add(stat_get()->tmp_gc, readline(MINISHELL_PROMPT), &free);
 	if (line && !is_line_blank(line))
 		add_history(line);
 	return (line);

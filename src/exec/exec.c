@@ -318,6 +318,8 @@ void	wait_for_pids(int *pipefd, size_t length)
 			close_safe(&(pipefd + (i * 2))[-2]);
 		g_pids[i] = 0;
 	}
+	free(g_pids);
+	g_pids = NULL;
 }
 
 void	exec(t_vector parsed)
@@ -330,7 +332,8 @@ void	exec(t_vector parsed)
 	length = ft_vector_length(parsed);
 	if (length == 0)
 		return ;
-	g_pids = assert_ptr(ft_calloc(sizeof (*g_pids), length));
+	g_pids = assert_ptr(ft_calloc(sizeof (*g_pids), length + 1));
+	g_pids[length] = -1;
 	pipefd = assert_ptr(malloc(sizeof (int) * (length * 2)));
 	i = 0;
 	while (i < length)
@@ -344,6 +347,5 @@ void	exec(t_vector parsed)
 	}
 	wait_for_pids(pipefd, length);
 	close_safe(pipefd + ((length - 1) * 2));
-	free(g_pids);
 	free(pipefd);
 }

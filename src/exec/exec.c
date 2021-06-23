@@ -257,19 +257,21 @@ void	process_command(t_command *cmd, int *pipefd,
 	int		redir_fd[2];
 	size_t	i;
 
-	open_in(cmd, &redir_fd[0]);
-	open_out(cmd, &redir_fd[1]);
-	pipe(pipefd);
-	pid = fork();
-	if (pid == 0)
+	pid = -1;
+	if (!pipe(pipefd) && !open_in(cmd, &redir_fd[0])
+			&& !open_out(cmd, &redir_fd[1]))
 	{
-		i = index;
-		while (i > 0)
-			close_safe(&pipefd[1 - (i-- * 2)]);
-		make_redirections(pipefd, redir_fd, index, length);	
-		if (cmd->argv->length > 0)
-			execute_command(cmd);
-		exit(0);
+		pid = fork();
+		if (pid == 0)
+		{
+			i = index;
+			while (i > 0)
+				close_safe(&pipefd[1 - (i-- * 2)]);
+			make_redirections(pipefd, redir_fd, index, length);	
+			if (cmd->argv->length > 0)
+				execute_command(cmd);
+			exit(0);
+		}
 	}
 	g_pids[index] = pid;
 	close_safe(&redir_fd[0]);
@@ -285,11 +287,12 @@ void	process_builtin(t_command *cmd, int *pipefd, int index, int length)
 	builtin = builtin_get(cmd->argv->args[0]);
 	savefd[0] = dup(STDIN_FILENO);
 	savefd[1] = dup(STDOUT_FILENO);
-	open_in(cmd, &redir_fd[0]);
-	open_out(cmd, &redir_fd[1]);
-	pipe(pipefd);
-	make_redirections(pipefd, redir_fd, index, length);	
-	builtin(cmd->argv->length, cmd->argv->args);
+	if (!pipe(pipefd) && !open_in(cmd, &redir_fd[0])
+				&& !open_out(cmd, &redir_fd[1]))
+	{
+		make_redirections(pipefd, redir_fd, index, length);	
+		builtin(cmd->argv->length, cmd->argv->args);
+	}
 	close(pipefd[1]);
 	close_safe(&redir_fd[0]);
 	close_safe(&redir_fd[1]);
@@ -318,7 +321,6 @@ void	wait_for_pids(int *pipefd, size_t length)
 			close_safe(&(pipefd + (i * 2))[-2]);
 		g_pids[i] = 0;
 	}
-	free(g_pids);
 	g_pids = NULL;
 }
 
@@ -328,13 +330,15 @@ void	exec(t_vector parsed)
 	int			*pipefd;
 	size_t		i;
 	size_t		length;
-
+	
 	length = ft_vector_length(parsed);
 	if (length == 0)
 		return ;
-	g_pids = assert_ptr(ft_calloc(sizeof (*g_pids), length + 1));
+	g_pids = ft_gc_add(stat_get()->tmp_gc, 
+			assert_ptr(ft_calloc(sizeof (*g_pids), length + 1)), &free);
 	g_pids[length] = -1;
-	pipefd = assert_ptr(malloc(sizeof (int) * (length * 2)));
+	pipefd = ft_gc_add(stat_get()->tmp_gc, 
+			assert_ptr(malloc(sizeof (int) * (length * 2))), &free);
 	i = 0;
 	while (i < length)
 	{
@@ -347,5 +351,4 @@ void	exec(t_vector parsed)
 	}
 	wait_for_pids(pipefd, length);
 	close_safe(pipefd + ((length - 1) * 2));
-	free(pipefd);
 }

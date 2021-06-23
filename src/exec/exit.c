@@ -4,9 +4,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void	fn_exit(void)
+int	fn_exit(char *argv[], size_t argc)
 {
+	(void)argc;
+	(void)argv;
 	ft_gc_wipe(stat_get()->tmp_gc);
 	printf("exit\n");
-	exit(0);
+	minishell_exit(0);
+	return (0);
 }

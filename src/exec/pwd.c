@@ -12,13 +12,16 @@ char	*get_pwd(void)
 	return (getcwd(buf, PATH_MAX));
 }
 
-void	fn_pwd(void)
+int	fn_pwd(char *argv[], size_t argc)
 {
 	char	*pwd;
 
+	(void)argv;
+	(void)argc;
 	pwd = ft_strdup(get_pwd());
 	if (!pwd)
-		return ;
+		return (0);
 	printf("%s\n", pwd);
 	free(pwd);
+	return (0);
 }

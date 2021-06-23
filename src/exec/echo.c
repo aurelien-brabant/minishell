@@ -2,13 +2,13 @@
 #include "libft/cstring.h"
 #include <stdio.h>
 
-void	fn_echo(char **ag, size_t len)
+int	fn_echo(char **ag, size_t len)
 {
 	size_t	i;
 	int		flag;
 
 	if (!ag[1])
-		return ;
+		return (0);
 	flag = 0;
 	if (!ft_strcmp("-n", ag[1]))
 		flag++;
@@ -25,4 +25,5 @@ void	fn_echo(char **ag, size_t len)
 	}
 	if (!flag)
 		printf("\n");
+	return (0);
 }

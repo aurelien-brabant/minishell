@@ -3,7 +3,7 @@
 #include "libft/cstring.h"
 #include <stdlib.h>
 
-void	fn_unset(char **ag, size_t len)
+int	fn_unset(char **ag, size_t len)
 {
 	char	*s;
 	char	*sep;
@@ -17,6 +17,7 @@ void	fn_unset(char **ag, size_t len)
 		minishell_unsetenv(s);
 		free(s);
 	}
+	return (0);
 }
 
 /*

@@ -22,7 +22,7 @@ static int	check_var_name(char *s)
 	return (1);
 }
 
-void	fn_export(char **ag, size_t len)
+int	fn_export(char **ag, size_t len)
 {
 	char	*var_name;
 	char	*s;
@@ -43,4 +43,5 @@ void	fn_export(char **ag, size_t len)
 				var_name);
 		free(var_name);
 	}
+	return (0);
 }

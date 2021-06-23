@@ -18,7 +18,7 @@ PARSER				= $(addprefix src/parser/, parser.c word.c redirection.c	\
 					  command.c pipe.c expand.c)
 
 EXEC				= $(addprefix src/exec/, exec.c echo.c cd.c pwd.c export.c	\
-				  	unset.c utils.c exit.c fn_exec.c)
+				  	unset.c utils.c exit.c fn_exec.c builtin.c)
 
 SIGNAL				=$(addprefix src/signal/, signal.c)
 

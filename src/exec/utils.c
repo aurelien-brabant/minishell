@@ -5,6 +5,8 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
+#include "minishell/exec.h"
+
 #include "libft/io.h"
 
 /*
@@ -40,7 +42,7 @@ int	close_safe(int *fd)
 
 void	safe_execve(char *path, char *argv[], char *envp[])
 {
-	if (execve(path, argv, envp) == -1)
+	if (isdir(path) || execve(path, argv, envp) == -1)
 	{
 		ft_dprintf(STDERR_FILENO, "minishell: %s: %s\n", path, strerror(errno));
 		free(path);
@@ -53,4 +55,30 @@ bool	file_exists(const char *filepath)
 	struct stat	st;
 
 	return (stat(filepath, &st) == 0);
+}
+
+/*
+** Returns whether or not filepath is a path pointing to a directory.
+** If it is the case, the errno variable is ensured to be set to EISDIR after
+** isdir has returned. It may seem kinda weird for a function such as isdir,
+** but it can become really handly while doing error handling.
+*/
+
+bool	isdir(const char *filepath)
+{
+	int		fd;
+	int		old_errno;
+	bool	ret;
+
+	ret = false;
+	old_errno = 0;
+	fd = open(filepath, O_RDONLY);
+	if (fd != -1 && read(fd, NULL, 0) == -1)
+	{
+		old_errno = errno;
+		ret = errno == EISDIR;
+	}
+	errno = old_errno;
+	close_safe(&fd);
+	return (ret);
 }

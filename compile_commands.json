@@ -1,56 +1,478 @@
 [
-  {
-    "arguments": [
-      "/usr/bin/clang-11",
-      "-g",
-      "-Iinclude",
-      "-Ilibft/include",
-      "-Wall",
-      "-Wextra",
-      "-Werror",
-      "-c",
-      "-o",
-      "src/main.o",
-      "src/main.c"
-    ],
-    "directory": "/home/abrabant/Prog/42/minishell",
-    "file": "/home/abrabant/Prog/42/minishell/src/main.c",
-    "output": "/home/abrabant/Prog/42/minishell/src/main.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/clang-11",
-      "-g",
-      "-Iinclude",
-      "-Ilibft/include",
-      "-Wall",
-      "-Wextra",
-      "-Werror",
-      "-c",
-      "-o",
-      "src/parse_clopt.o",
-      "src/parse_clopt.c"
-    ],
-    "directory": "/home/abrabant/Prog/42/minishell",
-    "file": "/home/abrabant/Prog/42/minishell/src/parse_clopt.c",
-    "output": "/home/abrabant/Prog/42/minishell/src/parse_clopt.o"
-  },
-  {
-    "arguments": [
-      "/usr/bin/clang-11",
-      "-g",
-      "-Iinclude",
-      "-Ilibft/include",
-      "-Wall",
-      "-Wextra",
-      "-Werror",
-      "-c",
-      "-o",
-      "src/prompt.o",
-      "src/prompt.c"
-    ],
-    "directory": "/home/abrabant/Prog/42/minishell",
-    "file": "/home/abrabant/Prog/42/minishell/src/prompt.c",
-    "output": "/home/abrabant/Prog/42/minishell/src/prompt.o"
-  }
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/minishell.o",
+            "src/minishell.c"
+        ],
+        "directory": "/home/abrabant/minishell",
+        "file": "src/minishell.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/argv.o",
+            "src/argv.c"
+        ],
+        "directory": "/home/abrabant/minishell",
+        "file": "src/argv.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/parser/parser.o",
+            "src/parser/parser.c"
+        ],
+        "directory": "/home/abrabant/minishell",
+        "file": "src/parser/parser.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/env.o",
+            "src/env.c"
+        ],
+        "directory": "/home/abrabant/minishell",
+        "file": "src/env.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/error.o",
+            "src/error.c"
+        ],
+        "directory": "/home/abrabant/minishell",
+        "file": "src/error.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/parser/expand.o",
+            "src/parser/expand.c"
+        ],
+        "directory": "/home/abrabant/minishell",
+        "file": "src/parser/expand.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/exec/exec.o",
+            "src/exec/exec.c"
+        ],
+        "directory": "/home/abrabant/minishell",
+        "file": "src/exec/exec.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/exec/pwd.o",
+            "src/exec/pwd.c"
+        ],
+        "directory": "/home/abrabant/minishell",
+        "file": "src/exec/pwd.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/stat.o",
+            "src/stat.c"
+        ],
+        "directory": "/home/abrabant/minishell",
+        "file": "src/stat.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/exec/export.o",
+            "src/exec/export.c"
+        ],
+        "directory": "/home/abrabant/minishell",
+        "file": "src/exec/export.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/parser/redirection.o",
+            "src/parser/redirection.c"
+        ],
+        "directory": "/home/abrabant/minishell",
+        "file": "src/parser/redirection.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/lexer/lexer.o",
+            "src/lexer/lexer.c"
+        ],
+        "directory": "/home/abrabant/minishell",
+        "file": "src/lexer/lexer.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/lexer/utils.o",
+            "src/lexer/utils.c"
+        ],
+        "directory": "/home/abrabant/minishell",
+        "file": "src/lexer/utils.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/prompt.o",
+            "src/prompt.c"
+        ],
+        "directory": "/home/abrabant/minishell",
+        "file": "src/prompt.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/exec/builtin.o",
+            "src/exec/builtin.c"
+        ],
+        "directory": "/home/abrabant/minishell",
+        "file": "src/exec/builtin.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/parse_clopt.o",
+            "src/parse_clopt.c"
+        ],
+        "directory": "/home/abrabant/minishell",
+        "file": "src/parse_clopt.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/parser/command.o",
+            "src/parser/command.c"
+        ],
+        "directory": "/home/abrabant/minishell",
+        "file": "src/parser/command.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/lexer/token.o",
+            "src/lexer/token.c"
+        ],
+        "directory": "/home/abrabant/minishell",
+        "file": "src/lexer/token.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/exec/cd.o",
+            "src/exec/cd.c"
+        ],
+        "directory": "/home/abrabant/minishell",
+        "file": "src/exec/cd.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/exec/echo.o",
+            "src/exec/echo.c"
+        ],
+        "directory": "/home/abrabant/minishell",
+        "file": "src/exec/echo.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/exec/unset.o",
+            "src/exec/unset.c"
+        ],
+        "directory": "/home/abrabant/minishell",
+        "file": "src/exec/unset.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/main.o",
+            "src/main.c"
+        ],
+        "directory": "/home/abrabant/minishell",
+        "file": "src/main.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/exec/fn_exec.o",
+            "src/exec/fn_exec.c"
+        ],
+        "directory": "/home/abrabant/minishell",
+        "file": "src/exec/fn_exec.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/exec/utils.o",
+            "src/exec/utils.c"
+        ],
+        "directory": "/home/abrabant/minishell",
+        "file": "src/exec/utils.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/signal/signal.o",
+            "src/signal/signal.c"
+        ],
+        "directory": "/home/abrabant/minishell",
+        "file": "src/signal/signal.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/exec/exit.o",
+            "src/exec/exit.c"
+        ],
+        "directory": "/home/abrabant/minishell",
+        "file": "src/exec/exit.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/parser/pipe.o",
+            "src/parser/pipe.c"
+        ],
+        "directory": "/home/abrabant/minishell",
+        "file": "src/parser/pipe.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/parser/word.o",
+            "src/parser/word.c"
+        ],
+        "directory": "/home/abrabant/minishell",
+        "file": "src/parser/word.c"
+    }
 ]

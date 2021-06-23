@@ -10,17 +10,24 @@
 
 static void	handle_sigint(int sig)
 {
-	bool	is_pid;
+	pid_t	*pid_loc;
+	int		signaled;
 
-	is_pid = g_pid[PID_CHILD] != 0;
-	if (is_pid)
+	signaled = 0;
+	if (g_pids != NULL)
 	{
-		kill(g_pid[PID_CHILD], sig);
-		stat_get()->last_status_code = 128 + sig;
+		pid_loc = g_pids;
+		while (*pid_loc != -1)
+		{
+			if (*pid_loc != 0)
+				kill(*pid_loc, sig);
+			++pid_loc;
+		}
+		signaled = 1;
 	}
 	if (sig == SIGINT)
 		write(STDOUT_FILENO, "\n", 1);
-	if (!is_pid)
+	if (!signaled)
 	{
 		rl_on_new_line();
 		if (sig == SIGINT)

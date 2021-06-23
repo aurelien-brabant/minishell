@@ -17,15 +17,16 @@ LEXER				= $(addprefix src/lexer/, lexer.c token.c utils.c)
 PARSER				= $(addprefix src/parser/, parser.c word.c redirection.c	\
 					  command.c pipe.c expand.c)
 
-EXEC				= $(addprefix src/exec/, exec.c echo.c cd.c pwd.c export.c	\
-				  	unset.c utils.c exit.c fn_exec.c)
+BUILTIN				= $(addprefix src/builtin/, builtin.c echo.c cd.c pwd.c export.c unset.c exit.c env.c)
+
+EXEC				= $(addprefix src/exec/, exec.c	utils.c)
 
 SIGNAL				=$(addprefix src/signal/, signal.c)
 
 OTHER				= $(addprefix src/, main.c parse_clopt.c prompt.c error.c	\
 				  	minishell.c stat.c argv.c env.c)
 
-SRCS				= $(OTHER) $(LEXER) $(PARSER) $(EXEC) $(SIGNAL)
+SRCS				= $(OTHER) $(LEXER) $(PARSER) $(EXEC) $(SIGNAL) $(BUILTIN)
 
 HEADERS				= $(addprefix include/minishell/, minishell.h constants.h stat.h error.h parser.h lexer.h exec.h signal.h)
 

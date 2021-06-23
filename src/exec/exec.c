@@ -271,6 +271,33 @@ void	process_command(t_command *cmd, int *pipefd,
 	close_safe(&fd_out);
 }
 
+void	process_builtin(t_builtin builtin, t_command *cmd, int *pipefd, int index, int length)
+{
+	int		savefd[2];	
+	int		fd_in;
+	int		fd_out;
+
+	savefd[0] = dup(STDIN_FILENO);
+	savefd[1] = dup(STDOUT_FILENO);
+	open_in(cmd, &fd_in);
+	open_out(cmd, &fd_out);
+	pipe(pipefd);
+	if (index < length - 1)
+		dup2(pipefd[1], STDOUT_FILENO);
+	else if (fd_out != -1)
+		dup2(fd_out, STDOUT_FILENO);
+	if (fd_in != -1)
+		dup2(fd_in, STDIN_FILENO);
+	else if (index > 0)
+		dup2(pipefd[-2], STDIN_FILENO);
+	builtin(cmd->argv->args, cmd->argv->length);
+	close(pipefd[1]);
+	close_safe(&fd_in);
+	close_safe(&fd_out);
+	dup2(savefd[0], STDIN_FILENO);
+	dup2(savefd[1], STDOUT_FILENO);
+}
+
 void	wait_for_pids(int *pipefd, size_t length)
 {
 	size_t	i;
@@ -298,6 +325,7 @@ void	exec(t_vector parsed)
 	int			*pipefd;
 	size_t		i;
 	size_t		length;
+	t_builtin	builtin;
 
 	length = ft_vector_length(parsed);
 	if (length == 0)
@@ -305,13 +333,17 @@ void	exec(t_vector parsed)
 	g_pids = assert_ptr(ft_calloc(sizeof (*g_pids), length));
 	pipefd = assert_ptr(malloc(sizeof (int) * (length * 2)));
 	i = 0;
-	while (i < length)
-		pipe(pipefd + (i++ * 2));
+	//while (i < length)
+	//pipe(pipefd + (i++ * 2));
 	i = 0;
 	while (i < length)
 	{
 		cmd = ft_vector_get(parsed, i);
-		process_command(cmd, pipefd + (i * 2), i, length);
+		builtin = builtin_get(cmd->argv->args[0]);
+		if (builtin == NULL)
+			process_command(cmd, pipefd + (i * 2), i, length);
+		else
+			process_builtin(builtin, cmd, pipefd + (i * 2), i, length);
 		++i;
 	}
 	wait_for_pids(pipefd, length);

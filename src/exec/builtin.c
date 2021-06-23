@@ -58,6 +58,7 @@ t_builtin	builtin_get(const char *cmd_name)
 	{
 		if (ft_strcmp(g_builtin_tab[i].id, cmd_name) == 0)
 			return (g_builtin_tab[i].builtin);
+		++i;
 	}
 	return (NULL);
 }

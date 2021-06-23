@@ -5,6 +5,8 @@
 
 typedef int (*t_builtin)(char *argv[], size_t argc);
 
+t_builtin	builtin_get(const char *cmd_name);
+
 void	exec(t_vector parsed);
 char	*get_pwd(void);
 

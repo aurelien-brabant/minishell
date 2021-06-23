@@ -64,6 +64,10 @@ void	exec(t_vector parsed)
 
 pid_t	*g_pids = NULL;
 
+/*****************************************************************************/
+/*                                UTILITIES                                  */
+/*****************************************************************************/
+
 /*
 ** Check if the current path points to a directory.
 ** 1 is returned if it's indeed a directory.
@@ -76,7 +80,9 @@ int	isdir(const char *path)
 	int			fd;
 
 	fd = open(path, O_RDONLY);
-	return (fd != -1 && read(fd, NULL, 0) == -1 && close(fd) == 0);
+	if (fd == -1)
+		return (-1);
+	return (read(fd, NULL, 0) == -1);
 }
 
 static int	open_in(t_command *cmd, int *fd_in)
@@ -151,6 +157,16 @@ int	close_safe(int *fd)
 	return (ret);
 }
 
+/*****************************************************************************/
+/*                               EXECUTION                                   */
+/*****************************************************************************/
+
+/*
+static void	execute_from_path(t_command *cmd)
+{
+}
+*/
+
 /*
 ** If a command has been provided (and not only redirections)
 ** execute it, using the absolute path if a valid one is provided, or
@@ -160,11 +176,21 @@ int	close_safe(int *fd)
 ** redirections should have been already done.
 */
 
-/*
-static	execute_command()
+static void	execute_command(t_command *cmd)
 {
+	char	*label;
+
+	label = cmd->argv->args[0];
+	if (isdir(label) != -1)
+	{
+		if (execve(label, cmd->argv->args, stat_get()->env->args) == -1)
+		{
+			ft_dprintf(STDERR_FILENO, "minishell: %s: %s\n", label,
+					strerror(errno));
+			exit(126);
+		}
+	}
 }
-*/
 
 void	process_command(t_command *cmd, int *pipefd,
 		size_t index, size_t length)
@@ -192,7 +218,8 @@ void	process_command(t_command *cmd, int *pipefd,
 		else if (index > 0)
 			dup2(pipefd[-2], STDIN_FILENO);
 		if (cmd->argv->length > 0)
-			execve(cmd->argv->args[0], cmd->argv->args, stat_get()->env->args);
+			execute_command(cmd);
+			//execve(cmd->argv->args[0], cmd->argv->args, stat_get()->env->args);
 		exit(0);
 	}
 	g_pids[index] = pid;
@@ -203,11 +230,17 @@ void	process_command(t_command *cmd, int *pipefd,
 void	wait_for_pids(int *pipefd, size_t length)
 {
 	size_t	i;
+	pid_t	pid;
 
 	i = 0;
-	while (i < length)
+	while (1)
 	{
-		waitpid(g_pids[i], NULL, 0);
+		pid = wait(NULL);
+		if (pid <= 0)
+			break ;
+		i = 0;
+		while (i < length && g_pids[i] != pid)
+			++i;
 		close_safe(&(pipefd + (i * 2))[1]);
 		if (i > 0)
 			close_safe(&(pipefd + (i * 2))[-2]);

@@ -1,6 +1,7 @@
 #include "libft/cstring.h"
 
 #include "minishell/exec.h"
+#include "minishell/builtin.h"
 
 static const struct s_builtin_entry
 {
@@ -9,32 +10,36 @@ static const struct s_builtin_entry
 }	g_builtin_tab[] = {
 	{
 		.id = "exit",
-		.builtin = fn_exit,
+		.builtin = builtin_exit,
 	},
 	{
 		.id = "cd",
-		.builtin = fn_cd,
+		.builtin = builtin_cd,
 	},
 	{
 		.id = "export",
-		.builtin = fn_export,
+		.builtin = builtin_export,
 	},
 	{
 		.id = "unset",
-		.builtin = fn_unset
+		.builtin = builtin_unset
 	},
 	{
 		.id = "echo",
-		.builtin = fn_echo,
+		.builtin = builtin_echo,
 	},
 	{
 		.id = "pwd",
-		.builtin = fn_pwd,
+		.builtin = builtin_pwd,
+	},
+	{
+		.id = "env",
+		.builtin = builtin_env,
 	},
 	{
 		.id = NULL,
 		.builtin = NULL,
-	}
+	},
 };
 
 /*

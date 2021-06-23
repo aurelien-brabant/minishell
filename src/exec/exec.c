@@ -217,6 +217,19 @@ static void	execute_from_path(t_command *cmd)
 	ft_dprintf(STDERR_FILENO, "minishell: %s: command not found\n", cmd->argv->args[0]);
 }
 
+static void	make_redirections(int pipefd[2], int redir_fd[2],
+		int index, int length)
+{
+	if (redir_fd[1] != -1)
+		dup2(redir_fd[1], STDOUT_FILENO);
+	else if (index < length - 1)
+		dup2(pipefd[1], STDOUT_FILENO);
+	if (redir_fd[0] != -1)
+		dup2(redir_fd[0], STDIN_FILENO);
+	else if (index > 0)
+		dup2(pipefd[-2], STDIN_FILENO);
+}
+
 /*
 ** If a command has been provided (and not only redirections)
 ** execute it, using the absolute path if a valid one is provided, or
@@ -241,12 +254,11 @@ void	process_command(t_command *cmd, int *pipefd,
 		size_t index, size_t length)
 {
 	pid_t	pid;
-	int		fd_in;
-	int		fd_out;
+	int		redir_fd[2];
 	size_t	i;
 
-	open_in(cmd, &fd_in);
-	open_out(cmd, &fd_out);
+	open_in(cmd, &redir_fd[0]);
+	open_out(cmd, &redir_fd[1]);
 	pipe(pipefd);
 	pid = fork();
 	if (pid == 0)
@@ -254,56 +266,37 @@ void	process_command(t_command *cmd, int *pipefd,
 		i = index;
 		while (i > 0)
 			close_safe(&pipefd[1 - (i-- * 2)]);
-		if (index < length - 1)
-			dup2(pipefd[1], STDOUT_FILENO);
-		else if (fd_out != -1)
-		{
-			printf("Out redirection\n");
-			dup2(fd_out, STDOUT_FILENO);
-		}
-		if (fd_in != -1)
-			dup2(fd_in, STDIN_FILENO);
-		else if (index > 0)
-			dup2(pipefd[-2], STDIN_FILENO);
+		make_redirections(pipefd, redir_fd, index, length);	
 		if (cmd->argv->length > 0)
 			execute_command(cmd);
-			//execve(cmd->argv->args[0], cmd->argv->args, stat_get()->env->args);
 		exit(0);
 	}
 	g_pids[index] = pid;
-	close_safe(&fd_in);
-	close_safe(&fd_out);
+	close_safe(&redir_fd[0]);
+	close_safe(&redir_fd[1]);
 }
 
 void	process_builtin(t_command *cmd, int *pipefd, int index, int length)
 {
 	int			savefd[2];	
-	int			fd_in;
-	int			fd_out;
+	int			redir_fd[2];
 	t_builtin	builtin;
 
 	builtin = builtin_get(cmd->argv->args[0]);
 	savefd[0] = dup(STDIN_FILENO);
 	savefd[1] = dup(STDOUT_FILENO);
-	open_in(cmd, &fd_in);
-	open_out(cmd, &fd_out);
+	open_in(cmd, &redir_fd[0]);
+	open_out(cmd, &redir_fd[1]);
 	pipe(pipefd);
-	if (index < length - 1)
-		dup2(pipefd[1], STDOUT_FILENO);
-	else if (fd_out != -1)
-		dup2(fd_out, STDOUT_FILENO);
-	if (fd_in != -1)
-		dup2(fd_in, STDIN_FILENO);
-	else if (index > 0)
-		dup2(pipefd[-2], STDIN_FILENO);
+	make_redirections(pipefd, redir_fd, index, length);	
 	builtin(cmd->argv->length, cmd->argv->args);
 	close(pipefd[1]);
-	close_safe(&fd_in);
-	close_safe(&fd_out);
+	close_safe(&redir_fd[0]);
+	close_safe(&redir_fd[1]);
 	dup2(savefd[0], STDIN_FILENO);
 	dup2(savefd[1], STDOUT_FILENO);
-	close(savefd[0]);
-	close(savefd[1]);
+	close_safe(&savefd[0]);
+	close_safe(&savefd[1]);
 }
 
 void	wait_for_pids(int *pipefd, size_t length)
@@ -323,7 +316,7 @@ void	wait_for_pids(int *pipefd, size_t length)
 		close_safe(&(pipefd + (i * 2))[1]);
 		if (i > 0)
 			close_safe(&(pipefd + (i * 2))[-2]);
-		++i;
+		g_pids[i] = 0;
 	}
 }
 
@@ -350,4 +343,7 @@ void	exec(t_vector parsed)
 		++i;
 	}
 	wait_for_pids(pipefd, length);
+	close_safe(pipefd + ((length - 1) * 2));
+	free(g_pids);
+	free(pipefd);
 }

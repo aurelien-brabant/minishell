@@ -282,14 +282,11 @@ size_t	collect_token(char *input, size_t i, unsigned char *quote)
 		{
 			if (*quote == input[i])
 				*quote = 0;
-			else if (!*quote)
+			else if (!*quote && ft_strchr(input + 1, input[i]))
 				*quote = input[i];
 		}
 		++i;
 	}
-	if (*quote)
-		ft_dprintf(STDERR_FILENO, "minishell: warning: unclosed quote will lead"
-			" to undefined behaviour\n");
 	return (i);
 }
 

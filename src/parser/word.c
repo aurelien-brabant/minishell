@@ -4,7 +4,9 @@
 #include "libft/cstring.h"
 
 #include "minishell/parser.h"
+#include "minishell/error.h"
 
+/*
 char	*word_strip_quotes(char *word)
 {
 	unsigned char	quote;
@@ -25,6 +27,31 @@ char	*word_strip_quotes(char *word)
 		else if (word[j] != quote)
 			stripped[i++] = word[j];
 		++j;
+	}
+	stripped[i] = '\0';
+	return (stripped);
+}
+*/
+
+char	*word_strip_quotes(char *word)
+{
+	char	*stripped;
+	char	quote;
+	size_t	i;
+
+	quote = 0;
+	stripped = assert_ptr(ft_strdup(word));
+	i = 0;
+	while (*word != '\0')
+	{
+		if (*word == quote)
+			quote = 0;
+		else if (!quote && (*word == '\'' || *word == '\"') 
+				&& ft_strchr(word + 1, *word))
+			quote = *word; 
+		else
+			stripped[i++] = *word;
+		++word;
 	}
 	stripped[i] = '\0';
 	return (stripped);

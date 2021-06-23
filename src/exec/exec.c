@@ -151,7 +151,22 @@ int	close_safe(int *fd)
 	return (ret);
 }
 
-void	execute_command(t_command *cmd, int *pipefd,
+/*
+** If a command has been provided (and not only redirections)
+** execute it, using the absolute path if a valid one is provided, or
+** searching for the valid path based on the value of the PATH variable.
+**
+** NOTE: execute_command is executed in the child process, where all required
+** redirections should have been already done.
+*/
+
+/*
+static	execute_command()
+{
+}
+*/
+
+void	process_command(t_command *cmd, int *pipefd,
 		size_t index, size_t length)
 {
 	pid_t	pid;
@@ -159,8 +174,9 @@ void	execute_command(t_command *cmd, int *pipefd,
 	int		fd_out;
 	size_t	i;
 
-	if (open_in(cmd, &fd_in) || open_out(cmd, &fd_out) || pipe(pipefd))
-		return ;
+	open_in(cmd, &fd_in);
+	open_out(cmd, &fd_out);
+	pipe(pipefd);
 	pid = fork();
 	if (pid == 0)
 	{
@@ -175,7 +191,9 @@ void	execute_command(t_command *cmd, int *pipefd,
 			dup2(fd_in, STDIN_FILENO);
 		else if (index > 0)
 			dup2(pipefd[-2], STDIN_FILENO);
-		execve(cmd->argv->args[0], cmd->argv->args, stat_get()->env->args);
+		if (cmd->argv->length > 0)
+			execve(cmd->argv->args[0], cmd->argv->args, stat_get()->env->args);
+		exit(0);
 	}
 	g_pids[index] = pid;
 	close_safe(&fd_in);
@@ -203,7 +221,6 @@ void	exec(t_vector parsed)
 	int			*pipefd;
 	size_t		i;
 	size_t		length;
-	int			isdir_ret;
 
 	length = ft_vector_length(parsed);
 	if (length == 0)
@@ -217,19 +234,7 @@ void	exec(t_vector parsed)
 	while (i < length)
 	{
 		cmd = ft_vector_get(parsed, i);
-		if (cmd->argv->length == 0)
-		{
-			++i;
-			continue ;
-		}
-		isdir_ret = isdir(cmd->argv->args[0]);
-		if (isdir_ret)
-		{
-			ft_dprintf(STDERR_FILENO, "minishell: %s: %s\n",
-					cmd->argv->args[0], strerror(EISDIR));
-		}
-		else if (isdir_ret == 0)
-			execute_command(cmd, pipefd + (i * 2), i, length);
+		process_command(cmd, pipefd + (i * 2), i, length);
 		++i;
 	}
 	wait_for_pids(pipefd, length);

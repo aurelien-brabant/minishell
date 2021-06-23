@@ -157,6 +157,16 @@ int	close_safe(int *fd)
 	return (ret);
 }
 
+static void	safe_execve(char *path, char *argv[], char *envp[])
+{
+	if (execve(path, argv, envp) == -1)
+	{
+		ft_dprintf(STDERR_FILENO, "minishell: %s: %s\n", path, strerror(errno));
+		free(path);
+		exit(126);
+	}
+}
+
 /*****************************************************************************/
 /*                               EXECUTION                                   */
 /*****************************************************************************/
@@ -198,15 +208,7 @@ static void	execute_from_path(t_command *cmd)
 	{
 		cmd_path = get_cmd_path(cmd->argv->args[0], tok);
 		if (isdir(cmd_path) != -1)
-		{
-			if (execve(cmd_path, cmd->argv->args, stat_get()->env->args) == -1)
-			{
-				ft_dprintf(STDERR_FILENO, "minishell: %s: %s\n",
-						cmd->argv->args[0], strerror(errno));
-				free(cmd_path);
-				exit(126);
-			}
-		}
+			safe_execve(cmd_path, cmd->argv->args, stat_get()->env->args);
 		free(cmd_path);
 		tok = ft_strtok(NULL, ":");
 	}
@@ -229,14 +231,7 @@ static void	execute_command(t_command *cmd)
 
 	label = cmd->argv->args[0];
 	if (isdir(label) != -1)
-	{
-		if (execve(label, cmd->argv->args, stat_get()->env->args) == -1)
-		{
-			ft_dprintf(STDERR_FILENO, "minishell: %s: %s\n", label,
-					strerror(errno));
-			exit(126);
-		}
-	}
+		safe_execve(label, cmd->argv->args, stat_get()->env->args);
 	else
 		execute_from_path(cmd);
 }

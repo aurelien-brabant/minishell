@@ -97,14 +97,17 @@ static void	execute_from_path(t_command *cmd)
 		exit(127);
 	}
 	path = ft_strdup(path);
-	tok = ft_strtok(path, ":");
-	while (tok != NULL)
+	if (cmd->argv->args[0][0] != '\0')
 	{
-		cmd_path = get_cmd_path(cmd->argv->args[0], tok);
-		if (file_exists(cmd_path))
-			safe_execve(cmd_path, cmd->argv->args, stat_get()->env->args);
-		free(cmd_path);
-		tok = ft_strtok(NULL, ":");
+		tok = ft_strtok(path, ":");
+		while (tok != NULL)
+		{
+			cmd_path = get_cmd_path(cmd->argv->args[0], tok);
+			if (file_exists(cmd_path))
+				safe_execve(cmd_path, cmd->argv->args, stat_get()->env->args);
+			free(cmd_path);
+			tok = ft_strtok(NULL, ":");
+		}
 	}
 	free(path);
 	ft_dprintf(STDERR_FILENO, "minishell: %s: command not found\n", cmd->argv->args[0]);

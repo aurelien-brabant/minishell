@@ -29,15 +29,16 @@ int	minishell_invoke(unsigned int opt, char **optargs, char **envp)
 		return (0);
 	}
 	init_signal();
-	while (1)
+	cmd = prompt_present();
+	while (cmd != NULL)
 	{
-		cmd = prompt_present();
-		if (cmd == NULL)
-			minishell_exit(0);
 		parsed = parser_invoke(cmd);
 		if (parsed != NULL)
 			exec(parsed);
+		else
+			stat_get()->last_status_code = 2;
 		ft_gc_wipe(stat_get()->tmp_gc);
+		cmd = prompt_present();
 	}
 	minishell_exit(EXIT_SUCCESS);
 	return (0);

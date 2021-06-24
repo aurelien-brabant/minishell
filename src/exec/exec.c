@@ -111,6 +111,7 @@ static void	execute_from_path(t_command *cmd)
 	}
 	free(path);
 	ft_dprintf(STDERR_FILENO, "minishell: %s: command not found\n", cmd->argv->args[0]);
+	exit(127);
 }
 
 /*

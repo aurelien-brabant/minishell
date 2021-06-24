@@ -201,7 +201,8 @@ void	process_builtin(t_command *cmd, int *pipefd, int index, int length)
 				&& !open_out(cmd, &redir_fd[1]))
 	{
 		make_redirections(pipefd, redir_fd, index, length);	
-		builtin(cmd->argv->length, cmd->argv->args);
+		stat_get()->last_status_code = 
+			builtin(cmd->argv->length, cmd->argv->args);
 	}
 	close_pipes(pipefd - (index * 2), length);
 	close_safe(&redir_fd[0]);
@@ -216,19 +217,28 @@ void	wait_for_pids(int *pipefd, size_t length)
 {
 	size_t	i;
 	pid_t	pid;
+	int		wstatus;
+	int		last_status;
 
+	last_status = -1;
 	i = 0;
 	while (1)
 	{
 		i = 0;
-		pid = wait(NULL);
-		if (pid <= 0)
+		pid = wait(&wstatus);
+		if (pid == -1)
 			break ;
 		close_pipes(pipefd, length);
-		while (i < length && g_pids[i] != pid)
+		while (g_pids[i] != pid)
 			++i;
+		if (WIFSIGNALED(wstatus))
+			last_status = 128 + WTERMSIG(wstatus);
+		else if (i == length - 1)
+			last_status = WEXITSTATUS(wstatus);
 		g_pids[i] = 0;
 	}
+	if (last_status != -1)
+		stat_get()->last_status_code = last_status;
 	g_pids = NULL;
 }
 

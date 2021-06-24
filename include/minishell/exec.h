@@ -9,8 +9,8 @@ void	exec(t_vector parsed);
 
 int		open_in(t_command *cmd, int *fd_in);
 int		open_out(t_command *cmd, int *fd_out);
-void	make_redirections(int pipefd[2], int redir_fd[2],
-		int index, int length);
+
+void	make_redirections(t_vector redirv, int pipefd[2], int index, int length);
 
 /* UTILS */
 

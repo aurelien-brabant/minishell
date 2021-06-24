@@ -44,7 +44,7 @@ int	builtin_export(int argc, char *argv[])
 		else
 		{
 			ft_dprintf(2, "minishell: export \"%s\": not a valid variable"
-					" identifier\n", var_name);
+				" identifier\n", var_name);
 			return (1);
 		}
 		free(var_name);

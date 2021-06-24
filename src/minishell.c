@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/wait.h>
-
+#include <unistd.h>
 #include "libft/io.h"
 
 #include "minishell/minishell.h"
@@ -40,6 +40,7 @@ int	minishell_invoke(unsigned int opt, char **optargs, char **envp)
 		ft_gc_wipe(stat_get()->tmp_gc);
 		cmd = prompt_present();
 	}
+	write(STDOUT_FILENO, "exit\n", 5);
 	minishell_exit(EXIT_SUCCESS);
 	return (0);
 }

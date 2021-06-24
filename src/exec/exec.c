@@ -287,6 +287,7 @@ void	exec(t_vector parsed)
 	if (length == 0)
 		return ;
 	g_pids = gc_add_tmp(ft_calloc(sizeof (*g_pids), length + 1), &free);
+	g_pids[length] = -1;
 	pipefd = gc_add_tmp(malloc(sizeof (int) * (length * 2)), &free);
 	exec_loop(parsed, pipefd, &builtin_executed);
 	if (builtin_executed)

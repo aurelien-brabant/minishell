@@ -1,3 +1,4 @@
+#include <linux/limits.h>
 #include <unistd.h>
 #include <limits.h>
 #include <stdlib.h>
@@ -32,8 +33,15 @@ static bool	is_line_blank(const char *line)
 char	*prompt_present(void)
 {
 	char	*line;
+	char	prompt[PATH_MAX + 1];
 	
-	line = ft_gc_add(stat_get()->tmp_gc, readline(MINISHELL_PROMPT), &free);
+	if (stat_get()->last_status_code == 0)
+		ft_snprintf(prompt, PATH_MAX, "\033[0;34mminishell \033[0m$> ");
+	else
+		ft_snprintf(prompt, PATH_MAX, 
+			"\033[0;34mminishell \033[0m(\033[0;31m%hhu ↵\033[0m) $> ",
+				stat_get()->last_status_code);
+	line = ft_gc_add(stat_get()->tmp_gc, readline(prompt), &free);
 	if (line && !is_line_blank(line))
 		add_history(line);
 	return (line);

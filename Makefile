@@ -40,6 +40,7 @@ libft:
 	git clone https://github.com/aurelien-brabant/libft
 
 $(TARGET): libft $(HEADERS) $(OBJS) 
+	@. ./configure.sh
 	make -C libft
 	@$(LD) -o $(TARGET) $(OBJS) $(LD_FLAGS)
 	@printf "LD\t$(TARGET)\n"

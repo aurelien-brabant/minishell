@@ -12,6 +12,7 @@
 #include "minishell/error.h"
 #include "minishell/stat.h"
 #include "minishell/builtin.h"
+#include "minishell/signal.h"
 
 #include "libft/core.h"
 #include "libft/cstring.h"
@@ -235,7 +236,10 @@ void	wait_for_pids(int *pipefd, size_t length)
 		if (i == length - 1)
 		{
 			if (WIFSIGNALED(status))
+			{
+				print_sig_msg(WTERMSIG(status));
 				stat_get()->last_status_code = 128 + WTERMSIG(status);
+			}
 			else
 				stat_get()->last_status_code = WEXITSTATUS(status);
 		}

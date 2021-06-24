@@ -32,8 +32,10 @@ int	builtin_cd(int argc, char *argv[])
 	{
 		goto_path = minishell_getenv("HOME");
 		if (!goto_path)
+		{
 			ft_dprintf(2, "cd: HOME not set\n");
-		return (1);
+			return (1);
+		}
 	}
 	if (!goto_path)
 		return (0);

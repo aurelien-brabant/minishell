@@ -161,6 +161,7 @@ void	process_command(t_command *cmd, int *pipefd,
 		if (pid == 0)
 		{
 			i = index;
+			close(pipefd[0]);
 			while (i > 0)
 				close_safe(&pipefd[1 - (i-- * 2)]);
 			make_redirections(pipefd, redir_fd, index, length);	
@@ -172,6 +173,19 @@ void	process_command(t_command *cmd, int *pipefd,
 	g_pids[index] = pid;
 	close_safe(&redir_fd[0]);
 	close_safe(&redir_fd[1]);
+}
+
+void	close_pipes(int *pipefd, size_t length)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < length)
+	{
+		close_safe(&(pipefd + (i * 2))[0]);
+		close_safe(&(pipefd + (i * 2))[1]);
+		++i;
+	}
 }
 
 void	process_builtin(t_command *cmd, int *pipefd, int index, int length)
@@ -189,7 +203,7 @@ void	process_builtin(t_command *cmd, int *pipefd, int index, int length)
 		make_redirections(pipefd, redir_fd, index, length);	
 		builtin(cmd->argv->length, cmd->argv->args);
 	}
-	close(pipefd[1]);
+	close_pipes(pipefd - (index * 2), length);
 	close_safe(&redir_fd[0]);
 	close_safe(&redir_fd[1]);
 	dup2(savefd[0], STDIN_FILENO);
@@ -206,15 +220,13 @@ void	wait_for_pids(int *pipefd, size_t length)
 	i = 0;
 	while (1)
 	{
+		i = 0;
 		pid = wait(NULL);
 		if (pid <= 0)
 			break ;
-		i = 0;
+		close_pipes(pipefd, length);
 		while (i < length && g_pids[i] != pid)
 			++i;
-		close_safe(&(pipefd + (i * 2))[1]);
-		if (i > 0)
-			close_safe(&(pipefd + (i * 2))[-2]);
 		g_pids[i] = 0;
 	}
 	g_pids = NULL;
@@ -246,5 +258,4 @@ void	exec(t_vector parsed)
 		++i;
 	}
 	wait_for_pids(pipefd, length);
-	close_safe(pipefd + ((length - 1) * 2));
 }

@@ -42,8 +42,11 @@ int	builtin_export(int argc, char *argv[])
 		if (check_var_name(var_name))
 			minishell_setenv(var_name, s);
 		else
+		{
 			ft_dprintf(2, "minishell: export \"%s\": not a valid variable"
 					" identifier\n", var_name);
+			return (1);
+		}
 		free(var_name);
 	}
 	return (0);

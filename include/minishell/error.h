@@ -12,5 +12,6 @@ typedef enum e_error
 int		error_print(t_error error);
 void	error_fatal(t_error error);
 void	*assert_ptr(void *p);
+void	*gc_add_tmp(void *el, void (*fn)(void *));
 
 #endif

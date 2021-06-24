@@ -40,3 +40,19 @@ void	*assert_ptr(void *p)
 		error_fatal(ERROR_BADALLOC);
 	return (p);
 }
+
+/*
+** Handy shortcut to add elements to the temporary gc (stat->tmp_gc).
+** If el is a NULL pointer, it should mean that malloc or ft_calloc failed,
+** so the program will cleanly exit if such thing occurs.
+*/
+
+void	*gc_add_tmp(void *el, void (*fn)(void *))
+{
+	t_gc	gc;
+
+	gc = stat_get()->tmp_gc;
+	assert_ptr(el);
+	ft_gc_add(gc, el, fn);
+	return (el);
+}

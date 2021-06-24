@@ -161,7 +161,7 @@ void	process_command(t_command *cmd, int *pipefd,
 		if (pid == 0)
 		{
 			i = index;
-			close(pipefd[0]);
+			close_safe(&pipefd[0]);
 			while (i > 0)
 				close_safe(&pipefd[1 - (i-- * 2)]);
 			make_redirections(pipefd, redir_fd, index, length);	
@@ -201,10 +201,9 @@ void	process_builtin(t_command *cmd, int *pipefd, int index, int length)
 				&& !open_out(cmd, &redir_fd[1]))
 	{
 		make_redirections(pipefd, redir_fd, index, length);	
-		stat_get()->last_status_code = 
+		stat_get()->last_status_code = (unsigned char)
 			builtin(cmd->argv->length, cmd->argv->args);
 	}
-	close_pipes(pipefd - (index * 2), length);
 	close_safe(&redir_fd[0]);
 	close_safe(&redir_fd[1]);
 	dup2(savefd[0], STDIN_FILENO);
@@ -217,55 +216,80 @@ void	wait_for_pids(int *pipefd, size_t length)
 {
 	size_t	i;
 	pid_t	pid;
-	int		wstatus;
-	int		last_status;
+	int		status;
 
-	last_status = -1;
-	i = 0;
 	while (1)
 	{
-		i = 0;
-		pid = wait(&wstatus);
+		pid = wait(&status);
 		if (pid == -1)
 			break ;
 		close_pipes(pipefd, length);
+		i = 0;
 		while (g_pids[i] != pid)
 			++i;
-		if (WIFSIGNALED(wstatus))
-			last_status = 128 + WTERMSIG(wstatus);
-		else if (i == length - 1)
-			last_status = WEXITSTATUS(wstatus);
+		if (i == length - 1)
+		{
+			if (WIFSIGNALED(status))
+				stat_get()->last_status_code = 128 + WTERMSIG(status);
+			else
+				stat_get()->last_status_code = WEXITSTATUS(status);
+		}
 		g_pids[i] = 0;
 	}
-	if (last_status != -1)
-		stat_get()->last_status_code = last_status;
 	g_pids = NULL;
 }
 
-void	exec(t_vector parsed)
+/*
+** Execute each command stored in the pipeline.
+**
+** A command can either be a shell builtin or an external program that lives
+** outside the minishell program.
+**
+** The address of a boolean value is passed, which should indicate at the
+** end of exec_loop whether or not a shell builtin has been executed.
+** This is important to know because if it is the case, it means that
+** a command in the pipeline already exited by definition,  because a shell
+** builtin is not a subprocess. Therefore, all the pipes opened for the
+** pipeline must be closed before even waiting for the termination of other
+** commands.
+*/
+
+static void	exec_loop(t_vector parsed, int *pipefd, bool *builtin_executed)
 {
 	t_command	*cmd;
-	int			*pipefd;
 	size_t		i;
 	size_t		length;
-	
-	length = ft_vector_length(parsed);
-	if (length == 0)
-		return ;
-	g_pids = ft_gc_add(stat_get()->tmp_gc, 
-			assert_ptr(ft_calloc(sizeof (*g_pids), length + 1)), &free);
-	g_pids[length] = -1;
-	pipefd = ft_gc_add(stat_get()->tmp_gc, 
-			assert_ptr(malloc(sizeof (int) * (length * 2))), &free);
+
 	i = 0;
+	length = ft_vector_length(parsed);
 	while (i < length)
 	{
 		cmd = ft_vector_get(parsed, i);
 		if (cmd->argv->length > 0 && builtin_get(cmd->argv->args[0]))
+		{
 			process_builtin(cmd, pipefd + (i * 2), i, length);
+			*builtin_executed = true;
+		}
 		else
 			process_command(cmd, pipefd + (i * 2), i, length);
 		++i;
 	}
+}
+
+void	exec(t_vector parsed)
+{
+	int			*pipefd;
+	size_t		length;
+	bool		builtin_executed;
+	
+	builtin_executed = false; 
+	length = ft_vector_length(parsed);
+	if (length == 0)
+		return ;
+	g_pids = gc_add_tmp(ft_calloc(sizeof (*g_pids), length + 1), &free);
+	pipefd = gc_add_tmp(malloc(sizeof (int) * (length * 2)), &free);
+	exec_loop(parsed, pipefd, &builtin_executed);
+	if (builtin_executed)
+		close_pipes(pipefd, length);
 	wait_for_pids(pipefd, length);
 }

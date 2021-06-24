@@ -12,6 +12,7 @@
 #include "minishell/error.h"
 #include "minishell/stat.h"
 #include "minishell/builtin.h"
+#include "minishell/signal.h"
 
 #include "libft/core.h"
 #include "libft/cstring.h"
@@ -154,7 +155,7 @@ void	process_command(t_command *cmd, int *pipefd,
 	int		redir_fd[2];
 	size_t	i;
 
-	pid = -1;
+	pid = 0;
 	if (!pipe(pipefd) && !open_in(cmd, &redir_fd[0])
 			&& !open_out(cmd, &redir_fd[1]))
 	{
@@ -171,6 +172,8 @@ void	process_command(t_command *cmd, int *pipefd,
 			exit(0);
 		}
 	}
+	else
+		stat_get()->last_status_code = 1;
 	g_pids[index] = pid;
 	close_safe(&redir_fd[0]);
 	close_safe(&redir_fd[1]);
@@ -205,6 +208,8 @@ void	process_builtin(t_command *cmd, int *pipefd, int index, int length)
 		stat_get()->last_status_code = (unsigned char)
 			builtin(cmd->argv->length, cmd->argv->args);
 	}
+	else
+		stat_get()->last_status_code = 1;
 	close_safe(&redir_fd[0]);
 	close_safe(&redir_fd[1]);
 	dup2(savefd[0], STDIN_FILENO);
@@ -231,7 +236,10 @@ void	wait_for_pids(int *pipefd, size_t length)
 		if (i == length - 1)
 		{
 			if (WIFSIGNALED(status))
+			{
+				print_sig_msg(WTERMSIG(status));
 				stat_get()->last_status_code = 128 + WTERMSIG(status);
+			}
 			else
 				stat_get()->last_status_code = WEXITSTATUS(status);
 		}

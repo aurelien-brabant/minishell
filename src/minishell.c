@@ -2,15 +2,17 @@
 #include <stdio.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <limits.h>
+
 #include "libft/io.h"
+#include "libft/cstring.h"
 
 #include "minishell/minishell.h"
 #include "minishell/constants.h"
 #include "minishell/stat.h"
 #include "minishell/parser.h"
 #include "minishell/signal.h"
-
-pid_t	g_pid[2] = {0};
+#include "minishell/env.h"
 
 /*
 ** Invoke a minishell instance.

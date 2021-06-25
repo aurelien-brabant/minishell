@@ -159,6 +159,8 @@ void	process_command(t_command *cmd, int *pipefd,
 		pid = fork();
 		if (pid == 0)
 		{
+			signal(SIGINT, SIG_DFL);
+			signal(SIGSTOP, SIG_DFL);
 			if (make_redirections(cmd->redir, pipefd, index, length) != 0)
 				exit(2);
 			if (cmd->argv->length > 0)

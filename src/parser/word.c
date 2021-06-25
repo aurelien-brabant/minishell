@@ -60,17 +60,13 @@ char	*word_strip_quotes(char *word)
 int	parse_word(t_vector pipeline, char *token)
 {
 	t_command		*cmd;
-	t_redirection	*last_out_redir;
-	t_redirection	*last_in_redir;
+	t_redirection	*last_redir;
 
 	token = word_strip_quotes(token);
 	cmd = ft_vector_get(pipeline, ft_vector_length(pipeline) - 1);
-	last_out_redir = ft_vector_last(cmd->redir_out);
-	last_in_redir = ft_vector_last(cmd->redir_in);
-	if (last_in_redir && last_in_redir->arg == NULL)
-		last_in_redir->arg = token;
-	else if (last_out_redir && last_out_redir->arg == NULL)
-		last_out_redir->arg = token;
+	last_redir = ft_vector_last(cmd->redir);
+	if (last_redir && last_redir->arg == NULL)
+		last_redir->arg = token;
 	else
 		argv_append(cmd->argv, token);
 	return (0);

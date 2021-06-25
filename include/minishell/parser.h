@@ -23,8 +23,7 @@ typedef struct s_redirection
 typedef struct s_command
 {
 	t_argv			*argv;
-	t_vector		redir_in;
-	t_vector		redir_out;
+	t_vector		redir;
 }	t_command;
 
 t_vector	*parser_invoke(char *input);

@@ -110,6 +110,10 @@ int	make_redirections(t_vector redirv, int pipefd[2], size_t index,
 int	make_builtin_redirections(t_vector redirv, int pipefd[2], size_t index,
 		size_t length)
 {
+	int		ttyfd[2];
+
+	ttyfd[0] = dup(STDIN_FILENO);
+	ttyfd[1] = dup(STDOUT_FILENO);
 	if (index < length - 1)
 		dup2(pipefd[1], STDOUT_FILENO);
 	if (index > 0)
@@ -117,5 +121,5 @@ int	make_builtin_redirections(t_vector redirv, int pipefd[2], size_t index,
 	if (index > 0)
 		close_safe(&pipefd[-2]);
 	close_safe(&pipefd[1]);
-	return (make_file_redirections(redirv, NULL));
+	return (make_file_redirections(redirv, ttyfd));
 }

@@ -38,7 +38,7 @@ int	minishell_invoke(unsigned int opt, char **optargs, char **envp)
 		if (parsed != NULL)
 			exec(parsed);
 		else
-			stat_get()->last_status_code = 2;
+			stat_get()->last_status_code = PARSING_ERROR;
 		ft_gc_wipe(stat_get()->tmp_gc);
 		cmd = prompt_present();
 	}
@@ -50,5 +50,6 @@ int	minishell_invoke(unsigned int opt, char **optargs, char **envp)
 void	minishell_exit(int exit_status)
 {
 	stat_destroy();
+	unlink(HERE_DOC_FILEPATH);
 	exit(exit_status);
 }

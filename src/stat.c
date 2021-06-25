@@ -1,5 +1,9 @@
 #include <stdlib.h>
+#include <fcntl.h>
+#include <unistd.h>
 
+#include "minishell/stat.h"
+#include "minishell/minishell.h"
 #include "minishell/stat.h"
 
 t_stat	*stat_get(void)
@@ -26,6 +30,7 @@ void	stat_init(unsigned int opt, char **optargs, char **envp)
 
 void	stat_destroy(void)
 {
+	//unlink(HERE_DOC_FILEPATH);
 	ft_gc_destroy(stat_get()->tmp_gc);
 	ft_gc_destroy(stat_get()->global_gc);
 	argv_destroy(stat_get()->env, NULL);

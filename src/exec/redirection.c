@@ -70,7 +70,8 @@ int	make_file_redirections(t_vector redirv)
 	return (ret);
 }
 
-int	make_redirections(t_vector redirv, int pipefd[2], size_t index, size_t length)
+int	make_redirections(t_vector redirv, int pipefd[2], size_t index,
+		size_t length)
 {
 	size_t	i;
 
@@ -86,5 +87,18 @@ int	make_redirections(t_vector redirv, int pipefd[2], size_t index, size_t lengt
 		close_safe(pipefd + (i * 2) + 1);
 		i++;
 	}
+	return (make_file_redirections(redirv));
+}
+
+int	make_builtin_redirections(t_vector redirv, int pipefd[2], size_t index,
+		size_t length)
+{
+	if (index < length - 1)
+		dup2(pipefd[1], STDOUT_FILENO);
+	if (index > 0)
+		dup2(pipefd[-2],  STDIN_FILENO);
+	if (index > 0)
+		close_safe(&pipefd[-2]);
+	close_safe(&pipefd[1]);
 	return (make_file_redirections(redirv));
 }

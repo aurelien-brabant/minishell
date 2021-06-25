@@ -192,12 +192,12 @@ void	process_builtin(t_command *cmd, int *pipefd, int index, int length)
 	savefd[1] = dup(STDOUT_FILENO);
 	if (!pipe(pipefd))
 	{
-		make_redirections(cmd->redir, pipefd, index, length);	
-		stat_get()->last_status_code = (unsigned char)
-			builtin(cmd->argv->length, cmd->argv->args);
+		if (make_builtin_redirections(cmd->redir, pipefd, index, length) == 0)
+			stat_get()->last_status_code = (unsigned char)
+				builtin(cmd->argv->length, cmd->argv->args);
+		else
+			stat_get()->last_status_code = 2;
 	}
-	else
-		stat_get()->last_status_code = 1;
 	dup2(savefd[0], STDIN_FILENO);
 	dup2(savefd[1], STDOUT_FILENO);
 	close_safe(&savefd[0]);

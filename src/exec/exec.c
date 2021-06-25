@@ -152,7 +152,6 @@ void	process_command(t_command *cmd, int *pipefd,
 		size_t index, size_t length)
 {
 	pid_t	pid;
-	size_t	i;
 
 	pid = 0;
 	if (!pipe(pipefd))
@@ -160,18 +159,13 @@ void	process_command(t_command *cmd, int *pipefd,
 		pid = fork();
 		if (pid == 0)
 		{
-			i = index;
-			close_safe(&pipefd[0]);
-			while (i > 0)
-				close_safe(&pipefd[1 - (i-- * 2)]);
-			make_redirections(cmd->redir, pipefd, index, length);	
+			if (make_redirections(cmd->redir, pipefd, index, length) != 0)
+				exit(2);
 			if (cmd->argv->length > 0)
 				execute_command(cmd);
 			exit(0);
 		}
 	}
-	else
-		stat_get()->last_status_code = 1;
 	g_pids[index] = pid;
 }
 

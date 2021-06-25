@@ -24,7 +24,7 @@ EXEC				= $(addprefix src/exec/, exec.c redirection.c utils.c)
 SIGNAL				=$(addprefix src/signal/, signal.c)
 
 OTHER				= $(addprefix src/, main.c parse_clopt.c prompt.c error.c	\
-				  	minishell.c stat.c argv.c env.c)
+				  	minishell.c stat.c argv.c env.c heredoc.c)
 
 SRCS				= $(OTHER) $(LEXER) $(PARSER) $(EXEC) $(SIGNAL) $(BUILTIN)
 

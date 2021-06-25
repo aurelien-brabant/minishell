@@ -50,5 +50,6 @@ int	minishell_invoke(unsigned int opt, char **optargs, char **envp)
 void	minishell_exit(int exit_status)
 {
 	stat_destroy();
+	unlink(HERE_DOC_FILEPATH);
 	exit(exit_status);
 }

@@ -15,18 +15,32 @@ static void	update_pwd(char *old_pwd)
 {
 	char	new_pwd[PATH_MAX];
 
+	getcwd(new_pwd, PATH_MAX);
 	minishell_setenv("PWD", new_pwd);
 	minishell_setenv("OLDPWD", old_pwd);
+}
+
+static int	go_to_path(char *goto_path)
+{
+	int		ret;
+	char	old_pwd[PATH_MAX];
+
+	getcwd(old_pwd, PATH_MAX);
+	ret = chdir(goto_path);
+	if (!ret)
+		update_pwd(old_pwd);
+	else
+	{
+		ft_dprintf(2, "minishell: cd: %s: %s\n", goto_path, strerror(errno));
+		return (2);
+	}
+	return (0);
 }
 
 int	builtin_cd(int argc, char *argv[])
 {
 	char	*goto_path;
-	char	old_pwd[PATH_MAX];
-	int		ret;
 
-//	(void)argc;
-	getcwd(old_pwd, PATH_MAX);
 	if (argc > 1)
 	{
 		if (!ft_strcmp(argv[1], "-"))
@@ -45,13 +59,5 @@ int	builtin_cd(int argc, char *argv[])
 	}
 	if (!goto_path)
 		return (0);
-	ret = chdir(goto_path);
-	if (!ret)
-		update_pwd(old_pwd);
-	else
-	{
-		ft_dprintf(2, "minishell: cd: %s: %s\n", goto_path, strerror(errno));
-		return (2);
-	}
-	return (0);
+	return (go_to_path(goto_path));
 }

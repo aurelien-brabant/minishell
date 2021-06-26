@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "libft/io.h"
+#include "libft/cstring.h"
 
 #include "minishell/minishell.h"
 #include "minishell/builtin.h"
@@ -24,10 +25,15 @@ int	builtin_cd(int argc, char *argv[])
 	char	old_pwd[PATH_MAX];
 	int		ret;
 
-	(void)argc;
+//	(void)argc;
 	getcwd(old_pwd, PATH_MAX);
-	if (argv[1])
-		goto_path = argv[1];
+	if (argc > 1)
+	{
+		if (!ft_strcmp(argv[1], "-"))
+			goto_path = minishell_getenv("OLDPWD");
+		else
+			goto_path = argv[1];
+	}
 	else
 	{
 		goto_path = minishell_getenv("HOME");

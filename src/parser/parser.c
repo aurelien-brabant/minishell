@@ -25,7 +25,8 @@ static int	parse(t_lexer *lexer, t_vector pipeline)
 	while (ret == 0 && type != TOKEN_ERROR)
 	{
 		if (ft_vector_length(pipeline) == 0)
-			ft_vector_append(pipeline, assert_ptr(command_new()));
+			ft_vector_append(pipeline, 
+					assert_ptr(command_new(ft_vector_length(pipeline))));
 		if (type == TOKEN_WORD)
 			expand(pipeline, token);
 		else if (type == TOKEN_OR)

@@ -4,13 +4,14 @@
 
 #include "minishell/parser.h"
 
-t_command	*command_new(void)
+t_command	*command_new(size_t id)
 {
 	t_command	*cmd;
 
 	cmd = ft_calloc(1, sizeof (*cmd));
 	cmd->argv = argv_new(5);
 	cmd->redir = ft_vector_new(2);
+	cmd->id = id; 
 	return (cmd);
 }
 

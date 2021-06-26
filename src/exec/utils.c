@@ -10,12 +10,12 @@
 #include "libft/io.h"
 
 /*
-** A simple wrapper around close(2).
-** Does not attempt to close a file descriptor which value is -1.
-** If the address of a valid file descriptor is passed, it is closed
-** and then set to -1 to indicate it has been already closed.
-** The return value of close is returned.
-*/
+ ** A simple wrapper around close(2).
+ ** Does not attempt to close a file descriptor which value is -1.
+ ** If the address of a valid file descriptor is passed, it is closed
+ ** and then set to -1 to indicate it has been already closed.
+ ** The return value of close is returned.
+ */
 
 int	close_safe(int *fd)
 {
@@ -31,14 +31,14 @@ int	close_safe(int *fd)
 }
 
 /*
-** A simple wrapper around execve(2) to detect and output potential errors
-** The passed arguments are the exact arguments that will be passed down to
-** excecve, in the same order.
-** If execve fails an error message is outputed, describing the error,
-** using strerror(3).
-** The process which executed execve is exited with a status of 126, which
-** is reserved for execution failure.
-*/
+ ** A simple wrapper around execve(2) to detect and output potential errors
+ ** The passed arguments are the exact arguments that will be passed down to
+ ** excecve, in the same order.
+ ** If execve fails an error message is outputed, describing the error,
+ ** using strerror(3).
+ ** The process which executed execve is exited with a status of 126, which
+ ** is reserved for execution failure.
+ */
 
 void	safe_execve(char *path, char *argv[], char *envp[])
 {
@@ -57,12 +57,25 @@ bool	file_exists(const char *filepath)
 	return (stat(filepath, &st) == 0);
 }
 
+void	close_pipes(int *pipefd, size_t length)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < length)
+	{
+		close_safe(&(pipefd + (i * 2))[0]);
+		close_safe(&(pipefd + (i * 2))[1]);
+		++i;
+	}
+}
+
 /*
-** Returns whether or not filepath is a path pointing to a directory.
-** If it is the case, the errno variable is ensured to be set to EISDIR after
-** isdir has returned. It may seem kinda weird for a function such as isdir,
-** but it can become really handly while doing error handling.
-*/
+ ** Returns whether or not filepath is a path pointing to a directory.
+ ** If it is the case, the errno variable is ensured to be set to EISDIR after
+ ** isdir has returned. It may seem kinda weird for a function such as isdir,
+ ** but it can become really handly while doing error handling.
+ */
 
 bool	isdir(const char *filepath)
 {
@@ -82,3 +95,5 @@ bool	isdir(const char *filepath)
 	close_safe(&fd);
 	return (ret);
 }
+
+

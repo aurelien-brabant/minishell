@@ -1,34 +1,41 @@
 #include <unistd.h>
 #include <fcntl.h>
+#include <stdio.h>
+#include <readline/readline.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/errno.h>
 
 #include "minishell/minishell.h"
 #include "minishell/stat.h"
 
 #include "libft/cstring.h"
+#include "libft/io.h"
 
-static int	here_doc_getline(char *buf)
+static size_t	get_linecount(void)
 {
-	int		ret;
-	size_t	i;
+	int		fd;
+	size_t	lc;
+	char	buf;
 
-	i = 0;
-
-	write(STDOUT_FILENO, "> ", 2);
-	ret = read(STDIN_FILENO, &buf[i], 1);
-	while (ret > 0 && buf[i] != '\n')
+	lc = 0;
+	fd = open(HERE_DOC_FILEPATH, O_RDONLY);
+	if (fd == -1)
 	{
-		++i;
-		ret = read(STDIN_FILENO, &buf[i], 1);
+		ft_dprintf(STDERR_FILENO, "minishell: could not open here document" 
+				"file (%s)", strerror(errno));
+		return (0);
 	}
-	if (ret == 0)
-		write(STDOUT_FILENO, "\n", 1);
-	buf[i] = '\0';
-	return (ret);
+	while (read(fd, &buf, 1) > 0)
+		lc += (buf == '\n');
+	close(fd);
+	return (lc);
 }
 
 int	here_doc_prompt(const char *delim)
 {
 	char	buf[10000];
+	char	*line;
 	int		write_fd;
 	int		read_fd;
 
@@ -36,13 +43,20 @@ int	here_doc_prompt(const char *delim)
 	read_fd = open(HERE_DOC_FILEPATH, O_RDONLY);
 	while (read(read_fd, buf, 10000) > 0)
 		;
-	while (here_doc_getline(buf) > 0)
+	rl_replace_line("", 0);
+	line = readline("> ");
+	while (line != NULL && ft_strcmp(line, delim) != 0)
 	{
-		if (ft_strcmp(buf, delim) == 0)
-			break ;
-		write(write_fd, buf, ft_strlen(buf));
+		write(write_fd, line, ft_strlen(line));
 		write(write_fd, "\n", 1);
+		free(line);
+		rl_on_new_line();
+		line = readline("> ");
 	}
+	if (line == NULL)
+		ft_dprintf(STDERR_FILENO, "minishell: warning: here-document at line"
+			" %ld delimited by end-of-file (wanted `%s`)\n", get_linecount() + 1, delim);	
+	free(line);
 	close(write_fd);
 	return (read_fd);
 }

@@ -18,6 +18,16 @@
 ** Invoke a minishell instance.
 */
 
+static int	minishell_non_interactive(char **optargs)
+{
+	t_vector	parsed;
+
+	parsed = parser_invoke(optargs[OPTION_TYPE_COMMAND]);
+	if (parsed != NULL)
+		exec(parsed);
+	return (0);
+}
+
 int	minishell_invoke(unsigned int opt, char **optargs, char **envp)
 {
 	char		*cmd;
@@ -26,10 +36,7 @@ int	minishell_invoke(unsigned int opt, char **optargs, char **envp)
 	init_signal();
 	stat_init(opt, optargs, envp);
 	if (opt & (1 << OPTION_TYPE_COMMAND))
-	{
-		parser_invoke(optargs[OPTION_TYPE_COMMAND]);
-		return (0);
-	}
+		return (minishell_non_interactive(optargs));
 	init_signal();
 	cmd = prompt_present();
 	while (cmd != NULL)

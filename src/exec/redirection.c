@@ -24,8 +24,11 @@ static int	handle_in_redir(t_redirection *redir, int ttyfd[2])
 		save_out = dup(STDOUT_FILENO);
 		dup2(ttyfd[0], STDIN_FILENO);
 		dup2(ttyfd[1], STDOUT_FILENO);
-		dup2(here_doc_prompt(redir->arg), STDIN_FILENO);
+		tmp_fd = here_doc_prompt(redir->arg);
+		dup2(tmp_fd, STDIN_FILENO);
+		close(tmp_fd);
 		dup2(save_out, STDOUT_FILENO);
+		close(save_out);
 	}
 	else if (redir->type == REDIRECTION_IN)
 	{
@@ -84,42 +87,14 @@ int	make_file_redirections(t_vector redirv, int ttyfd[2])
 	return (ret);
 }
 
-int	make_redirections(t_vector redirv, int pipefd[2], size_t index,
-		size_t length)
+int	make_redirections(t_command *cmd, int pipefd[2], int ttyfd[2], size_t length)
 {
-	size_t	i;
-	int		ttyfd[2];
+	t_vector	redirv;
 
-	ttyfd[0] = dup(STDIN_FILENO);
-	ttyfd[1] = dup(STDOUT_FILENO);
-	if (index < length - 1)
+	redirv = cmd->redir;
+	if (cmd->id < length - 1)
 		dup2(pipefd[1], STDOUT_FILENO);
 	if (index > 0)
-		dup2(pipefd[-2],  STDIN_FILENO);
-	pipefd = pipefd - (index * 2);
-	i = 0;
-	while (i <= index)
-	{
-		close_safe(pipefd + (i * 2));
-		close_safe(pipefd + (i * 2) + 1);
-		i++;
-	}
-	return (make_file_redirections(redirv, ttyfd));
-}
-
-int	make_builtin_redirections(t_vector redirv, int pipefd[2], size_t index,
-		size_t length)
-{
-	int		ttyfd[2];
-
-	ttyfd[0] = dup(STDIN_FILENO);
-	ttyfd[1] = dup(STDOUT_FILENO);
-	if (index < length - 1)
-		dup2(pipefd[1], STDOUT_FILENO);
-	if (index > 0)
-		dup2(pipefd[-2],  STDIN_FILENO);
-	if (index > 0)
-		close_safe(&pipefd[-2]);
-	close_safe(&pipefd[1]);
+		dup2(pipefd[-2], STDIN_FILENO);
 	return (make_file_redirections(redirv, ttyfd));
 }

@@ -57,17 +57,25 @@ char	*word_strip_quotes(char *word)
 	return (stripped);
 }
 
+/*
+** Quotes are not stripped for here document (<< redirection) because they
+** are needed to determine if variable expansion will be done or not.
+*/
+
 int	parse_word(t_vector pipeline, char *token)
 {
 	t_command		*cmd;
 	t_redirection	*last_redir;
 
-	token = word_strip_quotes(token);
 	cmd = ft_vector_get(pipeline, ft_vector_length(pipeline) - 1);
 	last_redir = ft_vector_last(cmd->redir);
 	if (last_redir && last_redir->arg == NULL)
+	{
+		if (last_redir->type != REDIRECTION_DIN)
+			token = word_strip_quotes(token);
 		last_redir->arg = token;
+	}
 	else
-		argv_append(cmd->argv, token);
+		argv_append(cmd->argv, word_strip_quotes(token));
 	return (0);
 }

@@ -17,15 +17,6 @@ typedef enum e_option_type
 	OPTION_TYPE_MAX,
 }	t_option_type;
 
-/*
-typedef struct	s_heredoc
-{
-	int			fd;
-	size_t		line_nb;
-	t_vector	delimiters;
-}	t_heredoc;
-*/
-
 int		parse_clopt(int argc, char *argv[], unsigned int *options,
 			char **optargs);
 void	minishell_output_usage(void);

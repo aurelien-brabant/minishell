@@ -9,6 +9,7 @@ typedef struct s_stat
 {
 	t_gc			global_gc;
 	t_gc			tmp_gc;
+	t_gc			fd_gc;
 	unsigned int	opt;
 	char			**optargs;
 	bool			error;

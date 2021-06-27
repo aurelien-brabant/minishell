@@ -46,10 +46,11 @@ static int	echo_n(int argc, char *argv[])
 	return (1);
 }
 
-int	builtin_echo(int argc, char *argv[])
+int	builtin_echo(int argc, char *argv[], bool forked)
 {
 	int		i;
 
+	(void)forked;
 	if (!argv[1])
 	{
 		ft_putchar_fd('\n', STDOUT_FILENO);

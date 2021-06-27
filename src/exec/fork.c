@@ -122,7 +122,7 @@ void	minishell_fork_builtin(t_command *cmd, int *pipefd, int ttyfd[2],
 		if (redir_ret != 0)
 			exit(2);
 		builtin = builtin_get(cmd->argv->args[0]);
-		exit(builtin(cmd->argv->length, cmd->argv->args));
+		exit(builtin(cmd->argv->length, cmd->argv->args, true));
 	}
 	g_pids[cmd->id] = pid;
 }

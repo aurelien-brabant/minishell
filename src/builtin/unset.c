@@ -5,11 +5,12 @@
 
 #include "libft/cstring.h"
 
-int	builtin_unset(int argc, char *argv[])
+int	builtin_unset(int argc, char *argv[], bool forked)
 {
 	char	*s;
 	char	*sep;
 
+	(void)forked;
 	if (argc == 2)
 	{
 		s = ft_strdup(argv[1]);

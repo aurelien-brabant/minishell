@@ -29,8 +29,10 @@ int	check_digit(char *s)
 	return (neg);
 }
 
-int	builtin_exit(int argc, char *argv[])
+int	builtin_exit(int argc, char *argv[], bool forked)
 {
+	(void)forked;
+
 	ft_putstr_fd("exit\n", STDOUT_FILENO);
 	if (argc == 2)
 	{

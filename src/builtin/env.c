@@ -5,11 +5,12 @@
 #include "minishell/stat.h"
 #include "minishell/builtin.h"
 
-int	builtin_env(int argc, char *argv[])
+int	builtin_env(int argc, char *argv[], bool forked)
 {
 	t_argv	*env;
 	size_t	i;
 
+	(void)forked;
 	(void)argv;
 	(void)argc;
 	env = stat_get()->env;

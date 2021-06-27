@@ -8,11 +8,12 @@
 #include "libft/ctype.h"
 #include "libft/io.h"
 
-int	builtin_export(int argc, char *argv[])
+int	builtin_export(int argc, char *argv[], bool forked)
 {
 	char	*var_name;
 	char	*s;
 
+	(void)forked;
 	if (argc == 2)
 	{
 		s = ft_strdup(argv[1]);

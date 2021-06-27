@@ -70,7 +70,7 @@ void	process_builtin(t_command *cmd, int *pipefd, int length)
 		minishell_fork_builtin(cmd, pipefd, ttyfd, redir_ret);
 	else
 		stat_get()->last_status_code = builtin(cmd->argv->length,
-				cmd->argv->args);
+				cmd->argv->args, false);
 	dup2(ttyfd[0], STDIN_FILENO);
 	dup2(ttyfd[1], STDOUT_FILENO);
 	close_safe(&ttyfd[0]);

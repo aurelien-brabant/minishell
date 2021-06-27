@@ -37,10 +37,11 @@ static int	go_to_path(char *goto_path)
 	return (0);
 }
 
-int	builtin_cd(int argc, char *argv[])
+int	builtin_cd(int argc, char *argv[], bool forked)
 {
 	char	*goto_path;
 
+	(void)forked;
 	if (argc > 1)
 	{
 		if (!ft_strcmp(argv[1], "-"))

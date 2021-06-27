@@ -15,10 +15,11 @@ char	*get_pwd(void)
 	return (getcwd(buf, PATH_MAX));
 }
 
-int	builtin_pwd(int argc, char *argv[])
+int	builtin_pwd(int argc, char *argv[], bool forked)
 {
 	char	*pwd;
 
+	(void)forked;
 	(void)argv;
 	(void)argc;
 	pwd = ft_strdup(get_pwd());

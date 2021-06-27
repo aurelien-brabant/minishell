@@ -19,6 +19,8 @@ void	minishell_fork(t_command *cmd, int *pipefd, int ttyfd[2],
 void	minishell_fork_builtin(t_command *cmd, int *pipefd, int ttyfd[2],
 		int redir_ret);
 
+int		here_doc_prompt(char *delim);
+
 
 /* UTILS */
 

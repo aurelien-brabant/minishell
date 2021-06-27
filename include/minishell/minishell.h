@@ -26,6 +26,5 @@ char	*prompt_present(void);
 int		minishell_invoke(unsigned int opt, char **optargs, char **envp);
 void	minishell_exit(int exit_status);
 
-int		here_doc_prompt(const char *delim);
 
 #endif

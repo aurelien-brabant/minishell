@@ -2,7 +2,7 @@
 # define LEXER_H
 # include "libft/vector.h"
 
-typedef struct	t_lexer
+typedef struct s_lexer
 {
 	t_vector	tokenv;
 	size_t		current_token_index;

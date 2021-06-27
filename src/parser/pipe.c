@@ -19,6 +19,6 @@ int	parse_pipe(t_vector pipeline, t_lexer *lexer, char *token)
 		return (2);
 	}
 	ft_vector_append(pipeline,
-			assert_ptr(command_new(ft_vector_length(pipeline))));
+		assert_ptr(command_new(ft_vector_length(pipeline))));
 	return (0);
 }

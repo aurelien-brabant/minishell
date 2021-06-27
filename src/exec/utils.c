@@ -95,5 +95,3 @@ bool	isdir(const char *filepath)
 	close_safe(&fd);
 	return (ret);
 }
-
-

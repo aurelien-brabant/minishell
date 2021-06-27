@@ -26,8 +26,8 @@ static size_t	get_linecount(void)
 	fd = open(HERE_DOC_FILEPATH, O_RDONLY);
 	if (fd == -1)
 	{
-		ft_dprintf(STDERR_FILENO, "minishell: could not open here document" 
-				"file (%s)", strerror(errno));
+		ft_dprintf(STDERR_FILENO, "minishell: could not open here document"
+			"file (%s)", strerror(errno));
 		return (0);
 	}
 	while (read(fd, &buf, 1) > 0)
@@ -47,13 +47,13 @@ static void	expand_var(t_string *str, char **line_loc)
 	line = *line_loc;
 	var_val = NULL;
 	while (ft_isalnum(line[i]))
-		++i;	
+		++i;
 	var_name = ft_substr(line, 0, i);
 	if (var_name != NULL)
 		var_val = minishell_getenv(var_name);
 	if (var_val != NULL)
 		ft_string_append_cstr(*str, var_val);
-	*line_loc += i - 1; 
+	*line_loc += i - 1;
 }
 
 static char	*expand_line(char *line)
@@ -90,7 +90,7 @@ static int	prepare_here_doc(int fd[2], char **delim_loc,
 	if (fd[0] == -1 || fd[1] == -1)
 	{
 		ft_dprintf(STDERR_FILENO, "minishell: here_doc open failure: %s\n",
-				strerror(errno));
+			strerror(errno));
 		return (1);
 	}
 	write(fd[1], "\n", 1);
@@ -124,7 +124,7 @@ int	here_doc_prompt(char *delim)
 	}
 	if (line == NULL)
 		ft_dprintf(2, "minishell: warning: here-document at line %ld delimited"
-				"by end-of-file (wanted `%s`)\n", get_linecount(), delim);	
+			"by end-of-file (wanted `%s`)\n", get_linecount(), delim);
 	free(line);
 	close(fd[1]);
 	return (fd[0]);

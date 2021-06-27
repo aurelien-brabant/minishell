@@ -2,7 +2,7 @@
 # define SIGNAL_H
 # include <sys/unistd.h>
 
-extern	pid_t	*g_pids;
+extern pid_t	*g_pids;
 
 void	print_sig_msg(int sig);
 void	handle_prompt_sigint(int sig);

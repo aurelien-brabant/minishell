@@ -3,7 +3,7 @@
 # include <stdbool.h>
 # include <stddef.h>
 
-typedef int (*t_builtin)(int argc, char *argv[], bool forked);
+typedef int	(*t_builtin)(int argc, char *argv[], bool forked);
 
 t_builtin	builtin_get(const char *cmd_name);
 bool		builtin_exists(const char *name);

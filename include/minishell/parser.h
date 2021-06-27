@@ -31,7 +31,8 @@ t_vector	*parser_invoke(char *input);
 
 int			parse_output_redirection(t_vector pipeline, t_lexer *lexer,
 				char *token);
-int			parse_input_redirection(t_vector pipeline, t_lexer *lexer, char *token);
+int			parse_input_redirection(t_vector pipeline, t_lexer *lexer,
+				char *token);
 t_command	*command_new(size_t id);
 void		command_destroy(t_command *cmd);
 int			parse_pipe(t_vector pipeline, t_lexer *lexer, char *token);

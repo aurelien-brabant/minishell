@@ -9,6 +9,7 @@
 #include "minishell/signal.h"
 #include "minishell/env.h"
 #include "minishell/stat.h"
+#include "minishell/minishell.h"
 
 #include "libft/cstring.h"
 #include "libft/io.h"
@@ -40,12 +41,10 @@ static void	execute_from_path(t_command *cmd)
 
 	path = minishell_getenv("PATH");
 	if (path == NULL)
-	{
 		ft_dprintf(STDERR_FILENO, "PATH variable is not set!\n");
-		exit(127);
-	}
-	path = ft_strdup(path);
-	if (cmd->argv->args[0][0] != '\0')
+	else
+		path = ft_strdup(path);
+	if (path && cmd->argv->args[0][0] != '\0')
 	{
 		tok = ft_strtok(path, ":");
 		while (tok != NULL)
@@ -58,8 +57,9 @@ static void	execute_from_path(t_command *cmd)
 		}
 	}
 	free(path);
-	ft_dprintf(STDERR_FILENO, "minishell: %s: command not found\n", cmd->argv->args[0]);
-	exit(127);
+	ft_dprintf(STDERR_FILENO, "minishell: %s: command not found\n",
+		cmd->argv->args[0]);
+	minishell_exit(127);
 }
 
 static void	execute_command(t_command *cmd)
@@ -78,7 +78,6 @@ static void	execute_command(t_command *cmd)
 	}
 	execute_from_path(cmd);
 }
-
 
 void	minishell_fork(t_command *cmd, int *pipefd, int ttyfd[2], int redir_ret)
 {

@@ -56,14 +56,3 @@ void	*gc_add_tmp(void *el, void (*fn)(void *))
 	ft_gc_add(gc, el, fn);
 	return (el);
 }
-
-void	gc_add_fd(int *fd)
-{
-	ft_gc_add(stat_get()->fd_gc, fd, (void *)(int *)&close_safe);
-}
-
-void	gc_add_fd2(int fd[2])
-{
-	gc_add_fd(&fd[0]);
-	gc_add_fd(&fd[1]);
-}

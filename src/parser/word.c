@@ -46,9 +46,9 @@ char	*word_strip_quotes(char *word)
 	{
 		if (*word == quote)
 			quote = 0;
-		else if (!quote && (*word == '\'' || *word == '\"') 
-				&& ft_strchr(word + 1, *word))
-			quote = *word; 
+		else if (!quote && (*word == '\'' || *word == '\"')
+			&& ft_strchr(word + 1, *word))
+			quote = *word;
 		else
 			stripped[i++] = *word;
 		++word;

@@ -98,7 +98,7 @@ void	expand(t_vector pipeline, char *word)
 		if (*word == quote)
 			quote = 0;
 		else if (!quote && (*word == '\'' || *word == '"')
-				&& ft_strchr(word + 1, *word))
+			&& ft_strchr(word + 1, *word))
 			quote = *word;
 		if (quote != '\'' && word[0] == '$' && word[1] != '\0')
 			expand_env_variable(pipeline, &expanded, &word, quote);

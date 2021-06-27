@@ -10,7 +10,7 @@
 #include "minishell/constants.h"
 #include "minishell/minishell.h"
 
-static const char *g_sig_msg[] = {
+static const char	*g_sig_msg[] = {
 	[SIGINT] = "",
 	[SIGSEGV] = "Segmentation fault",
 	[SIGQUIT] = "Quit",

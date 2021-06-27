@@ -38,7 +38,6 @@ pid_t	*g_pids = NULL;
 ** redirections should have been already done.
 */
 
-
 void	process_command(t_command *cmd, int *pipefd, size_t length)
 {
 	int		redir_ret;
@@ -70,7 +69,7 @@ void	process_builtin(t_command *cmd, int *pipefd, int length)
 		minishell_fork_builtin(cmd, pipefd, ttyfd, redir_ret);
 	else
 		stat_get()->last_status_code = builtin(cmd->argv->length,
-				cmd->argv->args, false);
+			cmd->argv->args, false);
 	dup2(ttyfd[0], STDIN_FILENO);
 	dup2(ttyfd[1], STDOUT_FILENO);
 	close_safe(&ttyfd[0]);
@@ -79,9 +78,9 @@ void	process_builtin(t_command *cmd, int *pipefd, int length)
 
 void	wait_for_pids(int *pipefd, size_t length)
 {
-	size_t	i;
 	pid_t	pid;
 	int		status;
+	size_t	i;
 
 	while (1)
 	{
@@ -92,7 +91,7 @@ void	wait_for_pids(int *pipefd, size_t length)
 		i = 0;
 		while (g_pids[i] != pid)
 			++i;
-		if (i == length - 1)
+		if (pid == g_pids[i])
 		{
 			if (WIFSIGNALED(status))
 			{
@@ -104,7 +103,6 @@ void	wait_for_pids(int *pipefd, size_t length)
 		}
 		g_pids[i] = 0;
 	}
-	g_pids = NULL;
 }
 
 /*
@@ -146,8 +144,8 @@ void	exec(t_vector parsed)
 	int			*pipefd;
 	size_t		length;
 	bool		builtin_executed;
-	
-	builtin_executed = false; 
+
+	builtin_executed = false;
 	length = ft_vector_length(parsed);
 	if (length == 0)
 		return ;

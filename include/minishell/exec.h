@@ -11,16 +11,15 @@ int		open_in(t_command *cmd, int *fd_in);
 int		open_out(t_command *cmd, int *fd_out);
 
 int		make_redirections(t_command *cmd, int pipefd[2], int ttyfd[2],
-		size_t length);
+			size_t length);
 
 void	minishell_fork(t_command *cmd, int *pipefd, int ttyfd[2],
-		int redir_ret);
+			int redir_ret);
 
 void	minishell_fork_builtin(t_command *cmd, int *pipefd, int ttyfd[2],
-		int redir_ret);
+			int redir_ret);
 
 int		here_doc_prompt(char *delim);
-
 
 /* UTILS */
 

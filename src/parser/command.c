@@ -11,7 +11,7 @@ t_command	*command_new(size_t id)
 	cmd = ft_calloc(1, sizeof (*cmd));
 	cmd->argv = argv_new(5);
 	cmd->redir = ft_vector_new(2);
-	cmd->id = id; 
+	cmd->id = id;
 	return (cmd);
 }
 

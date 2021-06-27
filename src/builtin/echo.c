@@ -6,21 +6,36 @@
 
 #include <unistd.h>
 
-int	echo_n(int argc, char *argv[])
+static int	skip_options(int argc, char *argv[])
+{
+	int		i;
+	int		j;
+
+	i = 1;
+	while (i < argc)
+	{
+		if (ft_strncmp("-n", argv[i], 2))
+			return (i);
+		j = 1;
+		while (argv[i][j])
+		{
+			if (argv[i][j] == 'n')
+				j++;
+			else
+				return (i);
+		}
+		i++;
+	}
+	return (0);
+}
+
+static int	echo_n(int argc, char *argv[])
 {
 	int		i;
 
-	if (ft_strncmp("-n", argv[1], 2))
+	i = skip_options(argc, argv);
+	if (i < 2)
 		return (0);
-	i = 2;
-	while (argv[1][i])
-	{
-		if (argv[1][i] == 'n')
-			i++;
-		else
-			return (0);
-	}
-	i = 2;
 	while (i < argc)
 	{
 		ft_putstr_fd(argv[i], STDIN_FILENO);

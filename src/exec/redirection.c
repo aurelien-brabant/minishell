@@ -4,11 +4,13 @@
 #include <sys/errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <signal.h>
 
 #include "minishell/minishell.h"
 #include "minishell/parser.h"
 #include "minishell/exec.h"
 #include "minishell/constants.h"
+#include "minishell/signal.h"
 
 #include "libft/io.h"
 #include "libft/cstring.h"

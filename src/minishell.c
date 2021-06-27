@@ -33,11 +33,9 @@ int	minishell_invoke(unsigned int opt, char **optargs, char **envp)
 	char		*cmd;
 	t_vector	parsed;
 
-	init_signal();
 	stat_init(opt, optargs, envp);
 	if (opt & (1 << OPTION_TYPE_COMMAND))
 		return (minishell_non_interactive(optargs));
-	init_signal();
 	cmd = prompt_present();
 	while (cmd != NULL)
 	{

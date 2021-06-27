@@ -4,7 +4,8 @@
 
 extern	pid_t	*g_pids;
 
-void	init_signal(void);
 void	print_sig_msg(int sig);
+void	handle_prompt_sigint(int sig);
+void	sig_send_to_all_children(int sig);
 
 #endif

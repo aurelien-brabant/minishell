@@ -11,7 +11,7 @@
 #include "minishell/minishell.h"
 
 static const char *g_sig_msg[] = {
-	[SIGINT] = NULL,
+	[SIGINT] = "",
 	[SIGSEGV] = "Segmentation fault",
 	[SIGQUIT] = "Quit",
 	NULL,
@@ -32,48 +32,24 @@ void	print_sig_msg(int sig)
 ** If a pid of 0 is encountered, it is not signaled.
 */
 
-static void	signal_pids(int sig)
+void	sig_send_to_all_children(int sig)
 {
 	pid_t	*pid_loc;
 
-	if (g_pids != NULL)
+	pid_loc = g_pids;
+	while (*pid_loc != -1)
 	{
-		pid_loc = g_pids;
-		while (*pid_loc != -1)
-		{
-			if (*pid_loc != 0)
-				kill(*pid_loc, sig);
-			++pid_loc;
-		}
+		if (*pid_loc != 0)
+			kill(*pid_loc, sig);
+		++pid_loc;
 	}
 }
 
-static void	handle_sigint(int sig)
+void	handle_prompt_sigint(int sig)
 {
-	if (g_pids != NULL)
-		signal_pids(sig);
+	(void)sig;
 	write(STDOUT_FILENO, "\n", 1);
-	if (g_pids == NULL)
-	{
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
-}
-
-static void	handle_sigquit(int sig)
-{
-	if (g_pids != NULL)
-		signal_pids(sig);
-	if (g_pids == NULL)
-	{
-		rl_on_new_line();
-		rl_redisplay();
-	}
-}
-
-void	init_signal(void)
-{
-	signal(SIGINT, handle_sigint);
-	signal(SIGQUIT, handle_sigquit);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
 }

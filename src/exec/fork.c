@@ -90,7 +90,7 @@ void	minishell_fork(t_command *cmd, int *pipefd, int ttyfd[2], int redir_ret)
 	if (pid == 0)
 	{
 		signal(SIGINT, SIG_DFL);
-		signal(SIGSTOP, SIG_DFL);
+		signal(SIGQUIT, SIG_DFL);
 		close(ttyfd[0]);
 		close(ttyfd[1]);
 		close_pipes(pipefd - (cmd->id * 2), cmd->id + 1);

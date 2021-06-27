@@ -155,5 +155,7 @@ void	exec(t_vector parsed)
 	g_pids[length] = -1;
 	pipefd = gc_add_tmp(malloc(sizeof (int) * (length * 2)), &free);
 	exec_loop(parsed, pipefd);
+	signal(SIGINT, sig_send_to_all_children);
+	signal(SIGQUIT, sig_send_to_all_children);
 	wait_for_pids(pipefd, length);
 }

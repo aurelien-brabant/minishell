@@ -38,9 +38,9 @@ static int	echo_n(int argc, char *argv[])
 		return (0);
 	while (i < argc)
 	{
-		ft_putstr_fd(argv[i], STDIN_FILENO);
+		ft_putstr_fd(argv[i], STDOUT_FILENO);
 		if (i < argc - 1)
-			ft_putchar_fd(' ', 2);
+			ft_putchar_fd(' ', STDOUT_FILENO);
 		i++;
 	}
 	return (1);
@@ -52,7 +52,7 @@ int	builtin_echo(int argc, char *argv[])
 
 	if (!argv[1])
 	{
-		ft_putchar_fd('\n', 2);
+		ft_putchar_fd('\n', STDOUT_FILENO);
 		return (0);
 	}
 	if (echo_n(argc, argv))
@@ -60,11 +60,11 @@ int	builtin_echo(int argc, char *argv[])
 	i = 1;
 	while (i < argc)
 	{
-		ft_putstr_fd(argv[i], 2);
+		ft_putstr_fd(argv[i], STDOUT_FILENO);
 		if (i < argc - 1)
-			ft_putchar_fd(' ', 2);
+			ft_putchar_fd(' ', STDOUT_FILENO);
 		i++;
 	}
-	ft_putchar_fd('\n', STDIN_FILENO);
+	ft_putchar_fd('\n', STDOUT_FILENO);
 	return (0);
 }

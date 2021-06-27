@@ -41,14 +41,14 @@ int	builtin_exit(int argc, char *argv[])
 		else
 		{
 			ft_dprintf(STDERR_FILENO, "minishell: exit: %s : "
-				"argument numérique nécessaire\n", argv[1]);
+				"numeric argument required\n", argv[1]);
 			minishell_exit(2);
 			return (2);
 		}
 	}
 	else if (argc > 2)
 	{
-		ft_dprintf(STDERR_FILENO, "minishell: exit: trop d'arguments\n");
+		ft_dprintf(STDERR_FILENO, "minishell: exit: too many arguments\n");
 		return (1);
 	}
 	minishell_exit(0);

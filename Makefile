@@ -23,12 +23,14 @@ EXEC				= $(addprefix src/exec/, exec.c redirection.c utils.c fork.c)
 
 SIGNAL				=$(addprefix src/signal/, signal.c)
 
+DATASTRUCTURE		= $(addprefix src/datastructure/, redirv.c)
+
 OTHER				= $(addprefix src/, main.c parse_clopt.c prompt.c error.c	\
 				  	minishell.c stat.c argv.c env.c heredoc.c)
 
-SRCS				= $(OTHER) $(LEXER) $(PARSER) $(EXEC) $(SIGNAL) $(BUILTIN)
+SRCS				= $(OTHER) $(LEXER) $(PARSER) $(EXEC) $(SIGNAL) $(BUILTIN) $(DATASTRUCTURE)
 
-HEADERS				= $(addprefix include/minishell/, minishell.h constants.h stat.h error.h parser.h lexer.h exec.h signal.h)
+HEADERS				= $(addprefix include/minishell/, minishell.h constants.h stat.h error.h parser.h lexer.h exec.h signal.h datastructure.h)
 
 OBJS				= $(SRCS:%.c=%.o)
 

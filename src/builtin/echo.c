@@ -26,7 +26,7 @@ static int	skip_options(int argc, char *argv[])
 		}
 		i++;
 	}
-	return (0);
+	return (i);
 }
 
 static int	echo_n(int argc, char *argv[])

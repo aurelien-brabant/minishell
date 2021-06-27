@@ -56,8 +56,51 @@ t_redir		*redirv_add(t_redirv *redirv, t_redir_type type);
 void		redirv_destroy(t_redirv *redirv);	
 
 /*****************************************************************************/
+/*                             STRING VECTOR                                 */
+/*****************************************************************************/
+
+typedef struct s_stringv
+{
+	size_t	cap;
+	size_t	len;
+	char	**data;
+}	t_stringv;
+
+/*
+** Initialize a new string vector.
+** For convenience and to make it easy to work with execve, the internal
+** string array stored in a string vector is always NULL terminated while
+** that's not the case for the vectors implemented above.
+*/
+
+t_stringv	*stringv_new(size_t cap);
+
+/*
+** Add the string str to the string vector.
+**
+** The string which is passed as an argument is returned.
+*/
+
+char		*stringv_add(t_stringv *sv, char *str);
+
+/*
+** Delete string at index i in the string vector.
+** A delete function is required to work with minishell environment
+** easily, as the environment is represented using a string vector.
+*/
+
+void		stringv_del(t_stringv *sv, size_t i);
+
+void		stringv_destroy(t_stringv *sv);
+
+#endif
+
+/*****************************************************************************/
 /*                             COMMANDS                                      */
 /*****************************************************************************/
+
+# define REDIRV_DEFAULT_CAP 5
+# define STRINGV_DEFAULT_CAP 5
 
 /*
 ** For convenience only, each command keeps its own id, that is the index
@@ -67,16 +110,16 @@ void		redirv_destroy(t_redirv *redirv);
 typedef struct s_command
 {
 	size_t		id;
-	t_redirv	*redirv;
-	char		**argv;
+	t_redirv	*rv;
+	t_stringv	*sv;
 }	t_command;
 
-typedef struct s_commandv
+typedef struct s_pipeline
 {
 	size_t		cap;
 	size_t		len;
 	t_command	*data;
-}	t_commandv;
+}	t_pipeline;
 
 /*
 ** Initialize a new command vector, made to hold every command that the shell
@@ -86,7 +129,7 @@ typedef struct s_commandv
 ** command.
 **/
 
-t_commandv	commandv_new(size_t cap);
+t_pipeline	*pipeline_new(size_t cap);
 
 /*
 ** Add a new command to the command vector.
@@ -97,8 +140,7 @@ t_commandv	commandv_new(size_t cap);
 ** The address of the added command is returned.
 */
 
-t_commandv	commandv_add(t_commandv *cmdv);
+t_command	*pipeline_add(t_pipeline *pipeline, size_t id);
 
-void		commandv_destroy(t_commandv *cmdv);
+void		pipeline_destroy(t_pipeline *pipeline);
 
-#endif

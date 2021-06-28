@@ -8,24 +8,17 @@
 #include "libft/cstring.h"
 #include "libft/io.h"
 
-char	*get_pwd(void)
-{
-	char	buf[PATH_MAX];
-
-	return (getcwd(buf, PATH_MAX));
-}
-
 int	builtin_pwd(int argc, char *argv[], bool forked)
 {
 	char	*pwd;
+	char	buf[PATH_MAX];
 
 	(void)forked;
 	(void)argv;
 	(void)argc;
-	pwd = ft_strdup(get_pwd());
+	pwd = getcwd(buf, PATH_MAX);
 	if (!pwd)
 		return (1);
 	ft_printf("%s\n", pwd);
-	free(pwd);
 	return (0);
 }

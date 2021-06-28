@@ -4,22 +4,24 @@
 #include "libft/cstring.h"
 
 #include "minishell/datastructure.h"
+#include "minishell/error.h"
 
-static void	resize(t_pipeline *pipeline)
+static int	resize(t_pipeline *pipeline)
 {
 	t_command	*new_data;
 
 	new_data = ft_calloc(pipeline->cap * 2, sizeof (*new_data));
 	if (new_data == NULL)
-		return ;
+		return (1);
 	ft_memcpy(new_data, pipeline->data,
 			pipeline->cap * sizeof (*pipeline->data));
 	free(pipeline->data);
 	pipeline->data = new_data;
 	pipeline->cap *= 2;
+	return (0);
 }
 
-void		pipeline_destroy(t_pipeline *pipeline)
+void	pipeline_destroy(t_pipeline *pipeline)
 {
 	size_t	i;
 	
@@ -34,16 +36,24 @@ void		pipeline_destroy(t_pipeline *pipeline)
 	free(pipeline);
 }
 
+/*
+** If the redirection vector and/or the string vector is not allocated
+** properly, NULL is returned to indicate the error.
+** Same thing for the resize operation.
+*/
+
 t_command	*pipeline_add(t_pipeline *pipeline, size_t id)
 {
 	t_command	*cmd;
 
-	if (pipeline->len == pipeline->cap)
-		resize(pipeline);
+	if (pipeline->len == pipeline->cap && resize(pipeline) != 0)
+		return (NULL);
 	cmd = &pipeline->data[pipeline->len];
 	cmd->id = id;
 	cmd->rv = redirv_new(REDIRV_DEFAULT_CAP);
 	cmd->sv = stringv_new(STRINGV_DEFAULT_CAP);
+	if (cmd->rv == NULL || cmd->sv == NULL)
+		return (NULL);
 	pipeline->len++;
 	return (cmd);
 }

@@ -5,23 +5,24 @@
 
 #include "minishell/datastructure.h"
 
-static void	resize(t_stringv *sv)
+static int	resize(t_stringv *sv)
 {
 	char	**new_data;
 
 	new_data = ft_calloc(sv->cap * 2 + 1, sizeof (*new_data));
 	if (new_data == NULL)
-		return ;
+		return (1);
 	ft_memcpy(new_data, sv->data, sizeof (*sv->data) * sv->cap);
 	free(sv->data);
 	sv->data = new_data;
 	sv->cap *= 2;
+	return (0);
 }
 
 char		*stringv_add(t_stringv *sv, char *str)
 {
-	if (sv->len == sv->cap)
-		resize(sv);
+	if (sv->len == sv->cap && resize(sv) != 0)
+		return (NULL);
 	sv->data[sv->len++] = str;
 	sv->data[sv->len] = NULL;
 	return (str);

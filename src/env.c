@@ -87,10 +87,10 @@ char	*minishell_getenv(const char *name)
 void	minishell_setenv(const char *name, char *value)
 {
 	t_stringv	*env;
-	char	*entry;
-	size_t	i;
-	size_t	name_len;
-	size_t	value_len;
+	char		*entry;
+	size_t		i;
+	size_t		name_len;
+	size_t		value_len;
 
 	i = 0;
 	env = stat_get()->env;

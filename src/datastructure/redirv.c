@@ -5,17 +5,18 @@
 
 #include "minishell/datastructure.h"
 
-static void	redirv_resize(t_redirv *redirv)
+static int	resize(t_redirv *redirv)
 {
 	t_redir	*new_data;
 
 	new_data = ft_calloc(redirv->cap * 2, sizeof(*redirv->data));
 	if (new_data == NULL)
-		return ;
+		return (1);
 	ft_memcpy(new_data, redirv->data, sizeof (*new_data) * redirv->cap);
 	free(redirv->data);
 	redirv->cap *= 2;
 	redirv->data = new_data;
+	return (0);
 }
 
 t_redirv	*redirv_new(size_t cap)
@@ -38,8 +39,8 @@ t_redirv	*redirv_new(size_t cap)
 
 t_redir	*redirv_add(t_redirv *redirv, t_redir_type type)
 {
-	if (redirv->len == redirv->cap)
-		redirv_resize(redirv);
+	if (redirv->len == redirv->cap && resize(redirv) != 0)
+		return (NULL);
 	redirv->data[redirv->len].type = type;
 	return (&redirv->data[redirv->len++]);
 }

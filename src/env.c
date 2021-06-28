@@ -56,7 +56,7 @@ bool	is_valid_env_var_name(const char *name)
 
 char	*minishell_getenv(const char *name)
 {
-	t_argv	*env;
+	t_stringv	*env;
 	size_t	i;
 	size_t	name_len;
 
@@ -65,12 +65,12 @@ char	*minishell_getenv(const char *name)
 	env = stat_get()->env;
 	name_len = ft_strlen(name);
 	i = 0;
-	while (env->args[i] != NULL)
+	while (env->data[i] != NULL)
 	{
-		if (ft_strncmp(env->args[i], name, name_len) == 0
-			&& *(env->args[i] + name_len) == '=')
+		if (ft_strncmp(env->data[i], name, name_len) == 0
+			&& *(env->data[i] + name_len) == '=')
 		{
-			return (env->args[i] + name_len + 1);
+			return (env->data[i] + name_len + 1);
 		}
 		++i;
 	}
@@ -86,7 +86,7 @@ char	*minishell_getenv(const char *name)
 
 void	minishell_setenv(const char *name, char *value)
 {
-	t_argv	*env;
+	t_stringv	*env;
 	char	*entry;
 	size_t	i;
 	size_t	name_len;
@@ -101,16 +101,16 @@ void	minishell_setenv(const char *name, char *value)
 	ft_strlcat(entry, name, name_len + 1);
 	ft_strlcat(entry, "=", name_len + 2);
 	ft_strlcat(entry, value, name_len + value_len + 2);
-	while (env->args[i] != NULL)
+	while (env->data[i] != NULL)
 	{
-		if (ft_strncmp(env->args[i], name, name_len) == 0)
+		if (ft_strncmp(env->data[i], name, name_len) == 0)
 		{
-			env->args[i] = entry;
+			env->data[i] = entry;
 			return ;
 		}
 		++i;
 	}
-	argv_append(env, entry);
+	stringv_add(env, entry);
 }
 
 /*
@@ -122,18 +122,18 @@ void	minishell_setenv(const char *name, char *value)
 
 void	minishell_unsetenv(char *var_name)
 {
-	t_argv	*env;
+	t_stringv	*env;
 	size_t	i;
 	size_t	var_name_len;
 
 	env = stat_get()->env;
 	var_name_len = ft_strlen(var_name);
 	i = 0;
-	while (env->args[i] != NULL)
+	while (env->data[i] != NULL)
 	{
-		if (ft_strncmp(env->args[i], var_name, var_name_len) == 0)
+		if (ft_strncmp(env->data[i], var_name, var_name_len) == 0)
 		{
-			argv_remove(env, i);
+			stringv_del(env, i);
 			return ;
 		}
 		++i;
@@ -142,14 +142,14 @@ void	minishell_unsetenv(char *var_name)
 
 void	minishell_printenv(void)
 {
-	t_argv	*env;
+	t_stringv	*env;
 	size_t	i;
 
 	env = stat_get()->env;
 	i = 0;
-	while (env->args[i] != NULL)
+	while (env->data[i] != NULL)
 	{
-		ft_putstr_fd(env->args[i++], STDOUT_FILENO);
+		ft_putstr_fd(env->data[i++], STDOUT_FILENO);
 		ft_putchar_fd('\n', STDOUT_FILENO);
 	}
 }

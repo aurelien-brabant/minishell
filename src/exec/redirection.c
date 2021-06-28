@@ -16,7 +16,7 @@
 #include "libft/cstring.h"
 #include "minishell/stat.h"
 
-static int	handle_here_doc(t_redirection *redir, int ttyfd[2])
+static int	handle_here_doc(t_redir *redir, int ttyfd[2])
 {
 	int	save_out;
 	int	fd;
@@ -35,7 +35,7 @@ static int	handle_here_doc(t_redirection *redir, int ttyfd[2])
 	return (fd == -1);
 }
 
-static int	handle_in_redir(t_redirection *redir, int ttyfd[2])
+static int	handle_in_redir(t_redir *redir, int ttyfd[2])
 {
 	int	tmp_fd;
 
@@ -56,7 +56,7 @@ static int	handle_in_redir(t_redirection *redir, int ttyfd[2])
 	return (0);
 }
 
-static int	handle_out_redir(t_redirection *redir)
+static int	handle_out_redir(t_redir *redir)
 {
 	int	tmp_fd;
 
@@ -75,19 +75,17 @@ static int	handle_out_redir(t_redirection *redir)
 	return (0);
 }
 
-int	make_file_redirections(t_vector redirv, int ttyfd[2])
+int	make_file_redirections(t_redirv *rv, int ttyfd[2])
 {
-	size_t			i;
-	size_t			length;
-	t_redirection	*redir;
-	int				ret;
+	t_redir		*redir;
+	size_t		i;
+	int			ret;
 
 	i = 0;
 	ret = 0;
-	length = ft_vector_length(redirv);
-	while (ret == 0 && i < length)
+	while (ret == 0 && i < rv->len)
 	{
-		redir = ft_vector_get(redirv, i);
+		redir = &rv->data[i];
 		if (redir->type == REDIRECTION_IN || redir->type == REDIRECTION_DIN)
 			ret = handle_in_redir(redir, ttyfd);
 		else if (redir->type == REDIRECTION_OUT
@@ -101,12 +99,9 @@ int	make_file_redirections(t_vector redirv, int ttyfd[2])
 int	make_redirections(t_command *cmd, int pipefd[2], int ttyfd[2],
 		size_t length)
 {
-	t_vector	redirv;
-
-	redirv = cmd->redir;
 	if (cmd->id < length - 1)
 		dup2(pipefd[1], STDOUT_FILENO);
 	if (index > 0)
 		dup2(pipefd[-2], STDIN_FILENO);
-	return (make_file_redirections(redirv, ttyfd));
+	return (make_file_redirections(cmd->rv, ttyfd));
 }

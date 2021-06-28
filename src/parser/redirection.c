@@ -8,7 +8,12 @@
 #include "minishell/parser.h"
 #include "minishell/error.h"
 
-static t_redirection_type	redirection_get_type(char *token)
+/*
+** TODO: REFACTOR THIS FILE, OUT AND IN REDIRECTIONS CAN BE HANDLED BY
+** THE SAME FUNCTION TO AVOID DUPLICATING CODE
+*/
+
+static t_redir_type	redirection_get_type(char *token)
 {
 	static char	*strs[] = {
 		[REDIRECTION_IN] = "<",
@@ -28,29 +33,18 @@ static t_redirection_type	redirection_get_type(char *token)
 	return (REDIRECTION_NONE);
 }
 
-static t_redirection	*redirection_new(void)
+int	parse_output_redirection(t_pipeline *pipeline, t_lexer *lexer, char *token)
 {
-	t_redirection	*redirection;
+	t_command	*cmd;
 
-	redirection = ft_calloc(1, sizeof (*redirection));
-	return (redirection);
-}
-
-int	parse_output_redirection(t_vector pipeline, t_lexer *lexer, char *token)
-{
-	t_command		*cmd;
-	t_redirection	*redir;
-
-	cmd = ft_vector_get(pipeline, ft_vector_length(pipeline) - 1);
+	cmd = &pipeline->data[pipeline->len - 1];
 	if (ft_strcmp(token, ">") != 0 && ft_strcmp(token, ">>") != 0)
 	{
 		ft_dprintf(STDERR_FILENO,
 			"minishell: %s: invalid output redirection\n", token);
 		return (1);
 	}
-	redir = assert_ptr(redirection_new());
-	redir->type = redirection_get_type(token);
-	ft_vector_append(cmd->redir, redir);
+	redirv_add(cmd->rv, redirection_get_type(token));
 	if (token_get_next(lexer, &token) != TOKEN_WORD)
 	{
 		ft_dprintf(STDERR_FILENO, "minishell: %s: valid arg required\n", token);
@@ -59,21 +53,18 @@ int	parse_output_redirection(t_vector pipeline, t_lexer *lexer, char *token)
 	return (0);
 }
 
-int	parse_input_redirection(t_vector pipeline, t_lexer *lexer, char *token)
+int	parse_input_redirection(t_pipeline *pipeline, t_lexer *lexer, char *token)
 {
 	t_command		*cmd;
-	t_redirection	*redir;
 
-	cmd = ft_vector_get(pipeline, ft_vector_length(pipeline) - 1);
+	cmd = &pipeline->data[pipeline->len - 1];
 	if (ft_strcmp(token, "<") != 0 && ft_strcmp(token, "<<") != 0)
 	{
 		ft_dprintf(STDERR_FILENO,
 			"minishell: %s: invalid input redirection\n", token);
 		return (1);
 	}
-	redir = assert_ptr(redirection_new());
-	redir->type = redirection_get_type(token);
-	ft_vector_append(cmd->redir, redir);
+	redirv_add(cmd->rv, redirection_get_type(token));
 	if (token_get_next(lexer, &token) != TOKEN_WORD)
 	{
 		ft_dprintf(STDERR_FILENO, "minishell: %s: valid arg required\n", token);

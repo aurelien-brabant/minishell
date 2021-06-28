@@ -1,10 +1,10 @@
 #ifndef LEXER_H
 # define LEXER_H
-# include "libft/vector.h"
+# include "minishell/datastructure.h"
 
 typedef struct s_lexer
 {
-	t_vector	tokenv;
+	t_stringv	*tokenv;
 	size_t		current_token_index;
 }	t_lexer;
 

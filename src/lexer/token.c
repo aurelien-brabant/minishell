@@ -10,17 +10,17 @@
 
 t_token_type	token_get(t_lexer *lexer, char **token)
 {
-	if (lexer->current_token_index >= ft_vector_length(lexer->tokenv))
+	if (lexer->current_token_index >= lexer->tokenv->len)
 		return (TOKEN_ERROR);
-	*token = ft_vector_get(lexer->tokenv, lexer->current_token_index);
+	*token = lexer->tokenv->data[lexer->current_token_index];
 	return (token_get_type(*token));
 }
 
 t_token_type	token_get_next(t_lexer *lexer, char **token)
 {
-	if (lexer->current_token_index + 1 >= ft_vector_length(lexer->tokenv))
+	if (lexer->current_token_index + 1 >= lexer->tokenv->len)
 		return (TOKEN_ERROR);
-	*token = ft_vector_get(lexer->tokenv, lexer->current_token_index + 1);
+	*token = lexer->tokenv->data[lexer->current_token_index + 1];
 	return (token_get_type(*token));
 }
 

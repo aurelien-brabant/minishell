@@ -1,6 +1,6 @@
 #ifndef EXEC_H
 # define EXEC_H
-
+# include <stdbool.h>
 # include "parser.h"
 
 void	exec(t_pipeline *pipeline);

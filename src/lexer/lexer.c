@@ -298,8 +298,7 @@ t_lexer	*lexer_build(char *input)
 	char			*token;
 
 	i = 0;
-	lexer = ft_gc_add(stat_get()->tmp_gc,
-			assert_ptr(lexer_new()), &lexer_destroy);
+	lexer = gc_add_tmp(lexer_new(), (void *)(void *)&lexer_destroy);
 	quote = 0;
 	while (chr_get_class(input[i]) != CHR_CLASS_EOL)
 	{
@@ -309,8 +308,7 @@ t_lexer	*lexer_build(char *input)
 		if (i > 0)
 		{
 			token = assert_ptr(ft_substr(input, 0, i));
-			ft_vector_append(lexer->tokenv,
-				ft_gc_add(stat_get()->tmp_gc, token, &free));
+			assert_ptr(stringv_add(lexer->tokenv, token));
 		}
 		input += i;
 		i = 0;

@@ -1,12 +1,17 @@
 #include <stdlib.h>
 
 #include "minishell/lexer.h"
+#include "minishell/datastructure.h"
 
-#include "libft/vector.h"
 
 void	lexer_destroy(t_lexer *lexer)
 {
-	ft_vector_destroy(lexer->tokenv, NULL);
+	size_t	i;
+
+	i = 0;
+	while (i < lexer->tokenv->len)
+		free(lexer->tokenv->data[i++]);
+	stringv_destroy(lexer->tokenv);
 	free(lexer);
 }
 
@@ -17,7 +22,7 @@ t_lexer	*lexer_new(void)
 	lexer = malloc(sizeof (*lexer));
 	if (lexer == NULL)
 		return (NULL);
-	lexer->tokenv = ft_vector_new(10);
+	lexer->tokenv = stringv_new(10);
 	if (lexer->tokenv == NULL)
 	{
 		free(lexer);

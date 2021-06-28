@@ -38,6 +38,7 @@ void		stringv_del(t_stringv *sv, size_t index)
 		++i;
 	}
 	--sv->len;
+	sv->data[sv->len] = NULL;
 }
 
 void		stringv_destroy(t_stringv *sv)

@@ -3,7 +3,7 @@
 # include <stdbool.h>
 # include "libft/gc.h"
 
-# include "minishell/argv.h"
+# include "minishell/datastructure.h"
 
 typedef struct s_stat
 {
@@ -11,9 +11,8 @@ typedef struct s_stat
 	t_gc			tmp_gc;
 	unsigned int	opt;
 	char			**optargs;
-	bool			error;
 	unsigned char	last_status_code;
-	t_argv			*env;
+	t_stringv		*env;
 }	t_stat;
 
 t_stat	*stat_get(void);

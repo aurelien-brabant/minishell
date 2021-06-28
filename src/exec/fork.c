@@ -51,7 +51,7 @@ static void	execute_from_path(t_command *cmd)
 		{
 			cmd_path = get_cmd_path(cmd->sv->data[0], tok);
 			if (file_exists(cmd_path))
-				safe_execve(cmd_path, cmd->sv->data, stat_get()->env->args);
+				safe_execve(cmd_path, cmd->sv->data, stat_get()->env->data);
 			free(cmd_path);
 			tok = ft_strtok(NULL, ":");
 		}
@@ -73,7 +73,7 @@ static void	execute_command(t_command *cmd)
 		while (label[i] == '.')
 			++i;
 		if (i <= 2 && label[i] == '/')
-			safe_execve(label, cmd->sv->data, stat_get()->env->args);
+			safe_execve(label, cmd->sv->data, stat_get()->env->data);
 	}
 	execute_from_path(cmd);
 }

@@ -87,6 +87,7 @@ void	wait_for_pids(int *pipefd, size_t length)
 		pid = wait(&status);
 		if (pid == -1)
 			break ;
+		printf("Process terminated\n");
 		close_pipes(pipefd, length);
 		i = 0;
 		while (g_pids[i] != pid)

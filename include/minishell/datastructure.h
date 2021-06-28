@@ -93,8 +93,6 @@ void		stringv_del(t_stringv *sv, size_t i);
 
 void		stringv_destroy(t_stringv *sv);
 
-#endif
-
 /*****************************************************************************/
 /*                             COMMANDS                                      */
 /*****************************************************************************/
@@ -144,3 +142,4 @@ t_command	*pipeline_add(t_pipeline *pipeline, size_t id);
 
 void		pipeline_destroy(t_pipeline *pipeline);
 
+#endif

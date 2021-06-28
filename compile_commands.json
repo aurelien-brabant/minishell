@@ -10,79 +10,11 @@
             "-Wextra",
             "-Werror",
             "-o",
-            "src/parse_clopt.o",
-            "src/parse_clopt.c"
-        ],
-        "directory": "/home/abrabant/Prog/42/minishell",
-        "file": "src/parse_clopt.c"
-    },
-    {
-        "arguments": [
-            "clang",
-            "-c",
-            "-g",
-            "-Iinclude",
-            "-Ilibft/include",
-            "-Wall",
-            "-Wextra",
-            "-Werror",
-            "-o",
-            "src/signal/signal.o",
-            "src/signal/signal.c"
-        ],
-        "directory": "/home/abrabant/Prog/42/minishell",
-        "file": "src/signal/signal.c"
-    },
-    {
-        "arguments": [
-            "clang",
-            "-c",
-            "-g",
-            "-Iinclude",
-            "-Ilibft/include",
-            "-Wall",
-            "-Wextra",
-            "-Werror",
-            "-o",
             "src/builtin/builtin.o",
             "src/builtin/builtin.c"
         ],
         "directory": "/home/abrabant/Prog/42/minishell",
         "file": "src/builtin/builtin.c"
-    },
-    {
-        "arguments": [
-            "clang",
-            "-c",
-            "-g",
-            "-Iinclude",
-            "-Ilibft/include",
-            "-Wall",
-            "-Wextra",
-            "-Werror",
-            "-o",
-            "src/builtin/cd.o",
-            "src/builtin/cd.c"
-        ],
-        "directory": "/home/abrabant/Prog/42/minishell",
-        "file": "src/builtin/cd.c"
-    },
-    {
-        "arguments": [
-            "clang",
-            "-c",
-            "-g",
-            "-Iinclude",
-            "-Ilibft/include",
-            "-Wall",
-            "-Wextra",
-            "-Werror",
-            "-o",
-            "src/lexer/token.o",
-            "src/lexer/token.c"
-        ],
-        "directory": "/home/abrabant/Prog/42/minishell",
-        "file": "src/lexer/token.c"
     },
     {
         "arguments": [
@@ -112,57 +44,6 @@
             "-Wextra",
             "-Werror",
             "-o",
-            "src/datastructure/pipeline.o",
-            "src/datastructure/pipeline.c"
-        ],
-        "directory": "/home/abrabant/Prog/42/minishell",
-        "file": "src/datastructure/pipeline.c"
-    },
-    {
-        "arguments": [
-            "clang",
-            "-c",
-            "-g",
-            "-Iinclude",
-            "-Ilibft/include",
-            "-Wall",
-            "-Wextra",
-            "-Werror",
-            "-o",
-            "src/stat.o",
-            "src/stat.c"
-        ],
-        "directory": "/home/abrabant/Prog/42/minishell",
-        "file": "src/stat.c"
-    },
-    {
-        "arguments": [
-            "clang",
-            "-c",
-            "-g",
-            "-Iinclude",
-            "-Ilibft/include",
-            "-Wall",
-            "-Wextra",
-            "-Werror",
-            "-o",
-            "src/builtin/unset.o",
-            "src/builtin/unset.c"
-        ],
-        "directory": "/home/abrabant/Prog/42/minishell",
-        "file": "src/builtin/unset.c"
-    },
-    {
-        "arguments": [
-            "clang",
-            "-c",
-            "-g",
-            "-Iinclude",
-            "-Ilibft/include",
-            "-Wall",
-            "-Wextra",
-            "-Werror",
-            "-o",
             "src/builtin/env.o",
             "src/builtin/env.c"
         ],
@@ -180,62 +61,11 @@
             "-Wextra",
             "-Werror",
             "-o",
-            "src/parser/expand.o",
-            "src/parser/expand.c"
+            "src/datastructure/pipeline.o",
+            "src/datastructure/pipeline.c"
         ],
         "directory": "/home/abrabant/Prog/42/minishell",
-        "file": "src/parser/expand.c"
-    },
-    {
-        "arguments": [
-            "clang",
-            "-c",
-            "-g",
-            "-Iinclude",
-            "-Ilibft/include",
-            "-Wall",
-            "-Wextra",
-            "-Werror",
-            "-o",
-            "src/env.o",
-            "src/env.c"
-        ],
-        "directory": "/home/abrabant/Prog/42/minishell",
-        "file": "src/env.c"
-    },
-    {
-        "arguments": [
-            "clang",
-            "-c",
-            "-g",
-            "-Iinclude",
-            "-Ilibft/include",
-            "-Wall",
-            "-Wextra",
-            "-Werror",
-            "-o",
-            "src/datastructure/stringv.o",
-            "src/datastructure/stringv.c"
-        ],
-        "directory": "/home/abrabant/Prog/42/minishell",
-        "file": "src/datastructure/stringv.c"
-    },
-    {
-        "arguments": [
-            "clang",
-            "-c",
-            "-g",
-            "-Iinclude",
-            "-Ilibft/include",
-            "-Wall",
-            "-Wextra",
-            "-Werror",
-            "-o",
-            "src/main.o",
-            "src/main.c"
-        ],
-        "directory": "/home/abrabant/Prog/42/minishell",
-        "file": "src/main.c"
+        "file": "src/datastructure/pipeline.c"
     },
     {
         "arguments": [
@@ -265,11 +95,11 @@
             "-Wextra",
             "-Werror",
             "-o",
-            "src/parser/word.o",
-            "src/parser/word.c"
+            "src/exec/redirection.o",
+            "src/exec/redirection.c"
         ],
         "directory": "/home/abrabant/Prog/42/minishell",
-        "file": "src/parser/word.c"
+        "file": "src/exec/redirection.c"
     },
     {
         "arguments": [
@@ -299,11 +129,11 @@
             "-Wextra",
             "-Werror",
             "-o",
-            "src/datastructure/redirv.o",
-            "src/datastructure/redirv.c"
+            "src/lexer/token.o",
+            "src/lexer/token.c"
         ],
         "directory": "/home/abrabant/Prog/42/minishell",
-        "file": "src/datastructure/redirv.c"
+        "file": "src/lexer/token.c"
     },
     {
         "arguments": [
@@ -316,11 +146,11 @@
             "-Wextra",
             "-Werror",
             "-o",
-            "src/builtin/export.o",
-            "src/builtin/export.c"
+            "src/main.o",
+            "src/main.c"
         ],
         "directory": "/home/abrabant/Prog/42/minishell",
-        "file": "src/builtin/export.c"
+        "file": "src/main.c"
     },
     {
         "arguments": [
@@ -333,11 +163,11 @@
             "-Wextra",
             "-Werror",
             "-o",
-            "src/prompt.o",
-            "src/prompt.c"
+            "src/exec/utils.o",
+            "src/exec/utils.c"
         ],
         "directory": "/home/abrabant/Prog/42/minishell",
-        "file": "src/prompt.c"
+        "file": "src/exec/utils.c"
     },
     {
         "arguments": [
@@ -350,11 +180,11 @@
             "-Wextra",
             "-Werror",
             "-o",
-            "src/builtin/exit.o",
-            "src/builtin/exit.c"
+            "src/builtin/unset.o",
+            "src/builtin/unset.c"
         ],
         "directory": "/home/abrabant/Prog/42/minishell",
-        "file": "src/builtin/exit.c"
+        "file": "src/builtin/unset.c"
     },
     {
         "arguments": [
@@ -367,11 +197,11 @@
             "-Wextra",
             "-Werror",
             "-o",
-            "src/builtin/echo.o",
-            "src/builtin/echo.c"
+            "src/signal/signal.o",
+            "src/signal/signal.c"
         ],
         "directory": "/home/abrabant/Prog/42/minishell",
-        "file": "src/builtin/echo.c"
+        "file": "src/signal/signal.c"
     },
     {
         "arguments": [
@@ -384,11 +214,11 @@
             "-Wextra",
             "-Werror",
             "-o",
-            "src/parser/parser.o",
-            "src/parser/parser.c"
+            "src/datastructure/stringv.o",
+            "src/datastructure/stringv.c"
         ],
         "directory": "/home/abrabant/Prog/42/minishell",
-        "file": "src/parser/parser.c"
+        "file": "src/datastructure/stringv.c"
     },
     {
         "arguments": [
@@ -401,28 +231,11 @@
             "-Wextra",
             "-Werror",
             "-o",
-            "src/heredoc.o",
-            "src/heredoc.c"
+            "src/error.o",
+            "src/error.c"
         ],
         "directory": "/home/abrabant/Prog/42/minishell",
-        "file": "src/heredoc.c"
-    },
-    {
-        "arguments": [
-            "clang",
-            "-c",
-            "-g",
-            "-Iinclude",
-            "-Ilibft/include",
-            "-Wall",
-            "-Wextra",
-            "-Werror",
-            "-o",
-            "src/parser/redirection.o",
-            "src/parser/redirection.c"
-        ],
-        "directory": "/home/abrabant/Prog/42/minishell",
-        "file": "src/parser/redirection.c"
+        "file": "src/error.c"
     },
     {
         "arguments": [
@@ -452,11 +265,198 @@
             "-Wextra",
             "-Werror",
             "-o",
-            "src/builtin/pwd.o",
-            "src/builtin/pwd.c"
+            "src/parser/word.o",
+            "src/parser/word.c"
         ],
         "directory": "/home/abrabant/Prog/42/minishell",
-        "file": "src/builtin/pwd.c"
+        "file": "src/parser/word.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/env.o",
+            "src/env.c"
+        ],
+        "directory": "/home/abrabant/Prog/42/minishell",
+        "file": "src/env.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/parser/parser.o",
+            "src/parser/parser.c"
+        ],
+        "directory": "/home/abrabant/Prog/42/minishell",
+        "file": "src/parser/parser.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/parser/expand.o",
+            "src/parser/expand.c"
+        ],
+        "directory": "/home/abrabant/Prog/42/minishell",
+        "file": "src/parser/expand.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/builtin/echo.o",
+            "src/builtin/echo.c"
+        ],
+        "directory": "/home/abrabant/Prog/42/minishell",
+        "file": "src/builtin/echo.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/parser/redirection.o",
+            "src/parser/redirection.c"
+        ],
+        "directory": "/home/abrabant/Prog/42/minishell",
+        "file": "src/parser/redirection.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/builtin/cd.o",
+            "src/builtin/cd.c"
+        ],
+        "directory": "/home/abrabant/Prog/42/minishell",
+        "file": "src/builtin/cd.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/builtin/exit.o",
+            "src/builtin/exit.c"
+        ],
+        "directory": "/home/abrabant/Prog/42/minishell",
+        "file": "src/builtin/exit.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/builtin/export.o",
+            "src/builtin/export.c"
+        ],
+        "directory": "/home/abrabant/Prog/42/minishell",
+        "file": "src/builtin/export.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/datastructure/redirv.o",
+            "src/datastructure/redirv.c"
+        ],
+        "directory": "/home/abrabant/Prog/42/minishell",
+        "file": "src/datastructure/redirv.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/parse_clopt.o",
+            "src/parse_clopt.c"
+        ],
+        "directory": "/home/abrabant/Prog/42/minishell",
+        "file": "src/parse_clopt.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/heredoc.o",
+            "src/heredoc.c"
+        ],
+        "directory": "/home/abrabant/Prog/42/minishell",
+        "file": "src/heredoc.c"
     },
     {
         "arguments": [
@@ -486,10 +486,78 @@
             "-Wextra",
             "-Werror",
             "-o",
-            "src/error.o",
-            "src/error.c"
+            "src/prompt.o",
+            "src/prompt.c"
         ],
         "directory": "/home/abrabant/Prog/42/minishell",
-        "file": "src/error.c"
+        "file": "src/prompt.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/builtin/pwd.o",
+            "src/builtin/pwd.c"
+        ],
+        "directory": "/home/abrabant/Prog/42/minishell",
+        "file": "src/builtin/pwd.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/exec/exec.o",
+            "src/exec/exec.c"
+        ],
+        "directory": "/home/abrabant/Prog/42/minishell",
+        "file": "src/exec/exec.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/exec/fork.o",
+            "src/exec/fork.c"
+        ],
+        "directory": "/home/abrabant/Prog/42/minishell",
+        "file": "src/exec/fork.c"
+    },
+    {
+        "arguments": [
+            "clang",
+            "-c",
+            "-g",
+            "-Iinclude",
+            "-Ilibft/include",
+            "-Wall",
+            "-Wextra",
+            "-Werror",
+            "-o",
+            "src/stat.o",
+            "src/stat.c"
+        ],
+        "directory": "/home/abrabant/Prog/42/minishell",
+        "file": "src/stat.c"
     }
 ]

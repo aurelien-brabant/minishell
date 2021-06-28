@@ -48,7 +48,7 @@ int	minishell_invoke(unsigned int opt, char **optargs, char **envp)
 			exec(pipeline);
 		else
 			stat_get()->last_status_code = PARSING_ERROR;
-		//ft_gc_wipe(stat_get()->tmp_gc);
+		ft_gc_wipe(stat_get()->tmp_gc);
 		cmd = prompt_present();
 	}
 	write(STDOUT_FILENO, "exit\n", 5);

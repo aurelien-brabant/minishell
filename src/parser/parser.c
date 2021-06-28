@@ -60,7 +60,7 @@ t_pipeline	*parser_invoke(char *input)
 	t_pipeline			*pipeline;
 
 	lexer = lexer_build(input);
-	pipeline = assert_ptr(pipeline_new(10)); 
+	pipeline = gc_add_tmp(pipeline_new(10), (void *)(void *)&pipeline_destroy); 
 	if (parse(lexer, pipeline) != 0)
 		return (NULL);
 	return (pipeline);

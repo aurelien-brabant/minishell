@@ -101,7 +101,7 @@ int	make_redirections(t_command *cmd, int pipefd[2], int ttyfd[2],
 {
 	if (cmd->id < length - 1)
 		dup2(pipefd[1], STDOUT_FILENO);
-	if (index > 0)
+	if (cmd->id > 0)
 		dup2(pipefd[-2], STDIN_FILENO);
 	return (make_file_redirections(cmd->rv, ttyfd));
 }

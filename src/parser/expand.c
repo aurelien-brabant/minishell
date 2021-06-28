@@ -106,5 +106,5 @@ void	expand(t_pipeline *pipeline, char *word)
 			ft_string_append_char(expanded, *word++);
 	}
 	if (ft_string_length(expanded) > 0)
-		parse_word(pipeline, assert_ptr(ft_string_tocstring(expanded)));
+		parse_word(pipeline, gc_add_tmp(ft_string_tocstring(expanded), &free));
 }

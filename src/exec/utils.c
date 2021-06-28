@@ -5,6 +5,7 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
+#include "minishell/minishell.h"
 #include "minishell/exec.h"
 
 #include "libft/io.h"
@@ -45,8 +46,7 @@ void	safe_execve(char *path, char *argv[], char *envp[])
 	if (isdir(path) || execve(path, argv, envp) == -1)
 	{
 		ft_dprintf(STDERR_FILENO, "minishell: %s: %s\n", path, strerror(errno));
-		free(path);
-		exit(126);
+		minishell_exit(126);
 	}
 }
 

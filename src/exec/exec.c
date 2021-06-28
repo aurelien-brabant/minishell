@@ -87,14 +87,13 @@ void	wait_for_pids(int *pipefd, size_t length)
 		pid = wait(&status);
 		if (pid == -1)
 			break ;
-		printf("Process terminated\n");
 		close_pipes(pipefd, length);
 		i = 0;
 		while (g_pids[i] != pid)
 			++i;
-		if (pid == g_pids[i])
+		if (pid == g_pids[length - 1])
 		{
-			if (WIFSIGNALED(status))
+			if (WIFSIGNALED(status) && WTERMSIG(status) != SIGPIPE)
 			{
 				print_sig_msg(WTERMSIG(status));
 				stat_get()->last_status_code = 128 + WTERMSIG(status);

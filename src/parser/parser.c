@@ -29,10 +29,8 @@ static int	parse(t_lexer *lexer, t_pipeline *pipeline)
 			expand(pipeline, token);
 		else if (type == TOKEN_OR)
 			ret = parse_pipe(pipeline, lexer, token);
-		else if (type == TOKEN_REDIRECTION_OUT)
-			ret = parse_output_redirection(pipeline, lexer, token);
-		else if (type == TOKEN_REDIRECTION_IN)
-			ret = parse_input_redirection(pipeline, lexer, token);
+		else if (type == TOKEN_REDIRECTION_OUT || type == TOKEN_REDIRECTION_IN)
+			ret = parse_redirection(pipeline, lexer, token);
 		token_consume(lexer);
 		type = token_get(lexer, &token);
 	}

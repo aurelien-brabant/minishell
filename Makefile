@@ -14,7 +14,7 @@ TARGET				= minishell
 
 LEXER				= $(addprefix src/lexer/, lexer.c token.c utils.c)
 
-PARSER				= $(addprefix src/parser/, parser.c word.c redirection.c pipe.c expand.c)
+PARSER				= $(addprefix src/parser/, parser.c word.c operator.c expand.c)
 
 BUILTIN				= $(addprefix src/builtin/, builtin.c echo.c cd.c pwd.c export.c unset.c exit.c env.c)
 

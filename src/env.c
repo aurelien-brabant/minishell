@@ -1,14 +1,14 @@
 #include <unistd.h>
+#include <stdlib.h>
 
 #include "minishell/minishell.h"
 #include "minishell/stat.h"
 #include "minishell/error.h"
-//#include "minishell/stat.h"
+
 #include "libft/io.h"
 #include "libft/cstring.h"
 #include "libft/core.h"
 #include "libft/ctype.h"
-#include <stdlib.h>
 
 /*
 ** Check if name is a valid environment variable name. 
@@ -96,8 +96,8 @@ void	minishell_setenv(const char *name, char *value)
 	env = stat_get()->env;
 	name_len = ft_strlen(name);
 	value_len = ft_strlen(value);
-	entry = ft_gc_add(stat_get()->global_gc,
-			ft_calloc(name_len + value_len + 2, sizeof (*entry)), &free);
+	entry = gc_add_global(ft_calloc(name_len + value_len + 2,
+		sizeof (*entry)), &free);
 	ft_strlcat(entry, name, name_len + 1);
 	ft_strlcat(entry, "=", name_len + 2);
 	ft_strlcat(entry, value, name_len + value_len + 2);

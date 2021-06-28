@@ -60,9 +60,8 @@ t_pipeline	*parser_invoke(char *input)
 	t_pipeline			*pipeline;
 
 	lexer = lexer_build(input);
-	pipeline = pipeline_new(1); 
+	pipeline = assert_ptr(pipeline_new(10)); 
 	if (parse(lexer, pipeline) != 0)
 		return (NULL);
-	//print_pipeline(pipeline);
 	return (pipeline);
 }

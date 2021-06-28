@@ -13,7 +13,9 @@ char	*word_strip_quotes(char *word)
 	size_t	i;
 
 	quote = 0;
-	stripped = assert_ptr(ft_strdup(word));
+	stripped = ft_strdup(word);
+	if (stripped == NULL)
+		return (NULL);
 	i = 0;
 	while (*word != '\0')
 	{
@@ -37,8 +39,8 @@ char	*word_strip_quotes(char *word)
 
 int	parse_word(t_pipeline *pipeline, char *token)
 {
-	t_command		*cmd;
-	t_redir			*last_redir;
+	t_command	*cmd;
+	t_redir		*last_redir;
 
 	last_redir = NULL;
 	cmd = &pipeline->data[pipeline->len - 1];
@@ -47,10 +49,11 @@ int	parse_word(t_pipeline *pipeline, char *token)
 	if (last_redir != NULL && last_redir->arg == NULL)
 	{
 		if (last_redir->type != REDIRECTION_DIN)
-			token = word_strip_quotes(token);
+			token = gc_add_tmp(word_strip_quotes(token), &free);
 		last_redir->arg = token;
 	}
 	else
-		stringv_add(cmd->sv, word_strip_quotes(token));
+		assert_ptr(stringv_add(cmd->sv, 
+					gc_add_tmp(word_strip_quotes(token), &free)));
 	return (0);
 }

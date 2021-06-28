@@ -56,7 +56,7 @@ static void	tokenize_var(t_pipeline *pipeline, t_string *expanded, char *var)
 			parse_word(pipeline, assert_ptr(ft_string_tocstring(*expanded)));
 		}
 		else
-			parse_word(pipeline, assert_ptr(ft_strdup(token)));
+			parse_word(pipeline, token);
 		token = tmp;
 	}
 }
@@ -91,7 +91,8 @@ void	expand(t_pipeline *pipeline, char *word)
 	unsigned char	quote;
 
 	quote = 0;
-	expanded = ft_string_new(ft_strlen(word) * 2);
+	expanded = gc_add_tmp(ft_string_new(ft_strlen(word) * 2),
+			(void *)(void *)&ft_string_destroy);
 	while (*word != '\0')
 	{
 		if (*word == quote)

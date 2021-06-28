@@ -45,7 +45,7 @@ static void	execute_from_path(t_command *cmd)
 		ft_dprintf(STDERR_FILENO, "PATH variable is not set!\n");
 	else
 		path = gc_add_tmp(ft_strdup(path), &free);
-	if (path && cmd->sv->data[0][0] != '\0')
+	if (path && cmd->sv->data[0][0] != '\0' && cmd->sv->data[0][0] != '.')
 	{
 		tok = ft_strtok(path, ":");
 		while (tok != NULL)
@@ -95,6 +95,7 @@ void	minishell_fork(t_command *cmd, int *pipefd, int ttyfd[2], int redir_ret)
 			exit(2);
 		if (cmd->sv->len > 0)
 			execute_command(cmd);
+		minishell_exit(0);
 	}
 	g_pids[cmd->id] = pid;
 }

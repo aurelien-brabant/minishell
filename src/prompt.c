@@ -30,7 +30,7 @@ char	*prompt_present(void)
 	signal(SIGINT, handle_prompt_sigint);
 	signal(SIGQUIT, SIG_IGN);
 	line = ft_gc_add(stat_get()->tmp_gc, readline(prompt), &free);
-	if (line != NULL)
+	if (line != NULL && *line != '\0')
 		add_history(line);
 	return (line);
 }

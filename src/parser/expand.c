@@ -100,7 +100,7 @@ void	expand(t_pipeline *pipeline, char *word)
 		else if (!quote && (*word == '\'' || *word == '"')
 			&& ft_strchr(word + 1, *word))
 			quote = *word;
-		if (quote != '\'' && word[0] == '$' && word[1] != '\0')
+		if (quote != '\'' && word[0] == '$' && word[1] != quote)
 			expand_env_variable(pipeline, &expanded, &word, quote);
 		else if (*word != '\0')
 			ft_string_append_char(expanded, *word++);

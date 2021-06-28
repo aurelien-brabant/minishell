@@ -2,7 +2,7 @@
 # PROJECT CONFIG
 
 CC					= clang
-CFLAGS				= -g  -Iinclude -Ilibft/include -Wall -Wextra -Werror
+CFLAGS				= -g  -Iinclude -Ilibft/include 
 LD					= clang
 LD_FLAGS			= -g -Llibft -lft -lreadline
 

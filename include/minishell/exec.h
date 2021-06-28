@@ -3,7 +3,7 @@
 
 # include "parser.h"
 
-void	exec(t_vector parsed);
+void	exec(t_pipeline *pipeline);
 
 /* REDIRECTION */
 

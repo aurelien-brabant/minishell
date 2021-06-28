@@ -44,37 +44,36 @@ static void	execute_from_path(t_command *cmd)
 		ft_dprintf(STDERR_FILENO, "PATH variable is not set!\n");
 	else
 		path = ft_strdup(path);
-	if (path && cmd->argv->args[0][0] != '\0')
+	if (path && cmd->sv->data[0][0] != '\0')
 	{
 		tok = ft_strtok(path, ":");
 		while (tok != NULL)
 		{
-			cmd_path = get_cmd_path(cmd->argv->args[0], tok);
+			cmd_path = get_cmd_path(cmd->sv->data[0], tok);
 			if (file_exists(cmd_path))
-				safe_execve(cmd_path, cmd->argv->args, stat_get()->env->args);
+				safe_execve(cmd_path, cmd->sv->data, stat_get()->env->args);
 			free(cmd_path);
 			tok = ft_strtok(NULL, ":");
 		}
 	}
 	free(path);
-	ft_dprintf(STDERR_FILENO, "minishell: %s: command not found\n",
-		cmd->argv->args[0]);
+	ft_dprintf(2, "minishell: %s: command not found\n", cmd->sv->data[0]);
 	minishell_exit(127);
 }
 
 static void	execute_command(t_command *cmd)
 {
-	char	*label;
 	size_t	i;
+	char	*label;
 
-	label = cmd->argv->args[0];
+	label = cmd->sv->data[0];
 	if (file_exists(label))
 	{
 		i = 0;
 		while (label[i] == '.')
 			++i;
 		if (i <= 2 && label[i] == '/')
-			safe_execve(label, cmd->argv->args, stat_get()->env->args);
+			safe_execve(label, cmd->sv->data, stat_get()->env->args);
 	}
 	execute_from_path(cmd);
 }
@@ -95,7 +94,7 @@ void	minishell_fork(t_command *cmd, int *pipefd, int ttyfd[2], int redir_ret)
 		close_pipes(pipefd - (cmd->id * 2), cmd->id + 1);
 		if (redir_ret != 0)
 			exit(2);
-		if (cmd->argv->length > 0)
+		if (cmd->sv->len > 0)
 			execute_command(cmd);
 		exit(0);
 	}
@@ -120,8 +119,8 @@ void	minishell_fork_builtin(t_command *cmd, int *pipefd, int ttyfd[2],
 		close_pipes(pipefd - (cmd->id * 2), cmd->id + 1);
 		if (redir_ret != 0)
 			exit(2);
-		builtin = builtin_get(cmd->argv->args[0]);
-		exit(builtin(cmd->argv->length, cmd->argv->args, true));
+		builtin = builtin_get(cmd->sv->data[0]);
+		exit(builtin(cmd->sv->len, cmd->sv->data, true));
 	}
 	g_pids[cmd->id] = pid;
 }

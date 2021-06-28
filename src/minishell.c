@@ -18,33 +18,37 @@
 ** Invoke a minishell instance.
 */
 
+/*
 static int	minishell_non_interactive(char **optargs)
 {
-	t_vector	parsed;
+	t_vector	pipeline;
 
-	parsed = parser_invoke(optargs[OPTION_TYPE_COMMAND]);
-	if (parsed != NULL)
-		exec(parsed);
+	pipeline = parser_invoke(optargs[OPTION_TYPE_COMMAND]);
+	if (pipeline != NULL)
+		exec(pipeline);
 	return (0);
 }
+*/
 
 int	minishell_invoke(unsigned int opt, char **optargs, char **envp)
 {
 	char		*cmd;
-	t_vector	parsed;
+	t_pipeline	*pipeline;
 
 	stat_init(opt, optargs, envp);
+	/*
 	if (opt & (1 << OPTION_TYPE_COMMAND))
 		return (minishell_non_interactive(optargs));
+	*/
 	cmd = prompt_present();
 	while (cmd != NULL)
 	{
-		parsed = parser_invoke(cmd);
-		if (parsed != NULL)
-			exec(parsed);
+		pipeline = parser_invoke(cmd);
+		if (pipeline != NULL)
+			exec(pipeline);
 		else
 			stat_get()->last_status_code = PARSING_ERROR;
-		ft_gc_wipe(stat_get()->tmp_gc);
+		//ft_gc_wipe(stat_get()->tmp_gc);
 		cmd = prompt_present();
 	}
 	write(STDOUT_FILENO, "exit\n", 5);

@@ -99,8 +99,8 @@ void		stringv_destroy(t_stringv *sv);
 /*                             COMMANDS                                      */
 /*****************************************************************************/
 
-# define REDIRV_DEFAULT_CAP 5
-# define STRINGV_DEFAULT_CAP 5
+# define REDIRV_DEFAULT_CAP 1
+# define STRINGV_DEFAULT_CAP 1
 
 /*
 ** For convenience only, each command keeps its own id, that is the index

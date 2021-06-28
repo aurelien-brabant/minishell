@@ -16,6 +16,7 @@ static void	resize(t_pipeline *pipeline)
 			pipeline->cap * sizeof (*pipeline->data));
 	free(pipeline->data);
 	pipeline->data = new_data;
+	pipeline->cap *= 2;
 }
 
 void		pipeline_destroy(t_pipeline *pipeline)

@@ -60,7 +60,7 @@ void	process_builtin(t_command *cmd, int *pipefd, int length)
 	int			ttyfd[2];	
 	int			redir_ret;
 
-	builtin = builtin_get(cmd->argv->args[0]);
+	builtin = builtin_get(cmd->sv->data[0]);
 	ttyfd[0] = dup(STDIN_FILENO);
 	ttyfd[1] = dup(STDOUT_FILENO);
 	pipe(pipefd);
@@ -68,8 +68,8 @@ void	process_builtin(t_command *cmd, int *pipefd, int length)
 	if (length > 1)
 		minishell_fork_builtin(cmd, pipefd, ttyfd, redir_ret);
 	else
-		stat_get()->last_status_code = builtin(cmd->argv->length,
-			cmd->argv->args, false);
+		stat_get()->last_status_code = builtin(cmd->sv->len,
+				cmd->sv->data, false);
 	dup2(ttyfd[0], STDIN_FILENO);
 	dup2(ttyfd[1], STDOUT_FILENO);
 	close_safe(&ttyfd[0]);
@@ -120,40 +120,34 @@ void	wait_for_pids(int *pipefd, size_t length)
 ** commands.
 */
 
-static void	exec_loop(t_vector parsed, int *pipefd)
+static void	exec_loop(t_pipeline *pipeline, int *pipefd)
 {
 	t_command	*cmd;
 	size_t		i;
-	size_t		length;
 
 	i = 0;
-	length = ft_vector_length(parsed);
-	while (i < length)
+	while (i < pipeline->len)
 	{
-		cmd = ft_vector_get(parsed, i);
-		if (cmd->argv->length > 0 && builtin_get(cmd->argv->args[0]))
-			process_builtin(cmd, pipefd + (i * 2), length);
+		cmd = &pipeline->data[i];
+		if (cmd->sv->len > 0 && builtin_get(cmd->sv->data[0]))
+			process_builtin(cmd, pipefd + (i * 2), pipeline->len);
 		else
-			process_command(cmd, pipefd + (i * 2), length);
+			process_command(cmd, pipefd + (i * 2), pipeline->len);
 		++i;
 	}
 }
 
-void	exec(t_vector parsed)
+void	exec(t_pipeline *pipeline)
 {
 	int			*pipefd;
-	size_t		length;
-	bool		builtin_executed;
 
-	builtin_executed = false;
-	length = ft_vector_length(parsed);
-	if (length == 0)
+	if (pipeline->len == 0)
 		return ;
-	g_pids = gc_add_tmp(ft_calloc(sizeof (*g_pids), length + 1), &free);
-	g_pids[length] = -1;
-	pipefd = gc_add_tmp(malloc(sizeof (int) * (length * 2)), &free);
-	exec_loop(parsed, pipefd);
+	g_pids = gc_add_tmp(ft_calloc(sizeof (*g_pids), pipeline->len + 1), &free);
+	g_pids[pipeline->len] = -1;
+	pipefd = gc_add_tmp(malloc(sizeof (int) * (pipeline->len * 2)), &free);
+	exec_loop(pipeline, pipefd);
 	signal(SIGINT, sig_send_to_all_children);
 	signal(SIGQUIT, sig_send_to_all_children);
-	wait_for_pids(pipefd, length);
+	wait_for_pids(pipefd, pipeline->len);
 }

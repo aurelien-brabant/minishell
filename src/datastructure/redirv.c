@@ -1,6 +1,7 @@
 #include <stdlib.h>
 
 #include "libft/cstring.h"
+#include "libft/core.h"
 
 #include "minishell/datastructure.h"
 
@@ -8,7 +9,7 @@ static void	redirv_resize(t_redirv *redirv)
 {
 	t_redir	*new_data;
 
-	new_data = malloc(sizeof(*redirv->data) * redirv->cap * 2);
+	new_data = ft_calloc(redirv->cap * 2, sizeof(*redirv->data));
 	if (new_data == NULL)
 		return ;
 	ft_memcpy(new_data, redirv->data, sizeof (*new_data) * redirv->cap);
@@ -21,10 +22,10 @@ t_redirv	*redirv_new(size_t cap)
 {
 	t_redirv	*redirv;
 
-	redirv = malloc(sizeof (*redirv));
+	redirv = ft_calloc(1, sizeof (*redirv));
 	if (redirv == NULL)
 		return (NULL);
-	redirv->data = malloc(sizeof(*redirv->data) * cap);
+	redirv->data = ft_calloc(cap, sizeof(*redirv->data));
 	if (redirv->data == NULL)
 	{
 		free(redirv);

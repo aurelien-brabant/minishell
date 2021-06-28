@@ -3,7 +3,6 @@
 #include <stdbool.h>
 #include <unistd.h>
 
-#include "libft/vector.h"
 #include "libft/core.h"
 #include "libft/cstring.h"
 #include "libft/io.h"
@@ -14,7 +13,7 @@
 #include "minishell/stat.h"
 #include "minishell/error.h"
 
-static int	parse(t_lexer *lexer, t_vector pipeline)
+static int	parse(t_lexer *lexer, t_pipeline *pipeline)
 {
 	char				*token;
 	t_token_type		type;
@@ -24,9 +23,8 @@ static int	parse(t_lexer *lexer, t_vector pipeline)
 	ret = 0;
 	while (ret == 0 && type != TOKEN_ERROR)
 	{
-		if (ft_vector_length(pipeline) == 0)
-			ft_vector_append(pipeline,
-				assert_ptr(command_new(ft_vector_length(pipeline))));
+		if (pipeline->len == 0)
+			pipeline_add(pipeline, pipeline->len);
 		if (type == TOKEN_WORD)
 			expand(pipeline, token);
 		else if (type == TOKEN_OR)
@@ -42,38 +40,31 @@ static int	parse(t_lexer *lexer, t_vector pipeline)
 }
 
 /*
-static int	print_command(t_command *cmd, int index)
+static int	print_pipeline(t_pipeline *pipeline)
 {
-	printf("COMMAND %d\n", index);
-	for (size_t i = 0; i < cmd->argv->length; ++i) {
-		printf("ARG %s\n", cmd->argv->args[i]);
-	}
-	for (size_t i = 0; i < ft_vector_length(cmd->redir_out); ++i) {
-		t_redirection *redir = ft_vector_get(cmd->redir_out, i);
-		printf("Redirection OUT:\nType: %d\nARG=%s\n", redir->type, redir->arg);
-	}
-	for (size_t i = 0; i < ft_vector_length(cmd->redir_in); ++i) {
-		t_redirection *redir = ft_vector_get(cmd->redir_in, i);
-		printf("Redirection IN:\nType: %d\nARG=%s\n", redir->type, redir->arg);
+	for (size_t i = 0; i < pipeline->len; ++i) {
+		printf("COMMAND %ld\n", pipeline->data[i].id);
+		for (size_t j = 0; j < pipeline->data[i].sv->len; ++j) {
+			printf("ARG: \"%s\"\n", pipeline->data[i].sv->data[j]);
+		}
+		for (size_t j = 0; j < pipeline->data[i].rv->len; ++j) {
+			printf("REDIR_TYPE: \"%d\"\n", pipeline->data[i].rv->data[j].type);
+		}
+		printf("\n");
 	}
 	return (0);
 }
 */
 
-static void	destroy_pipeline(t_vector pipeline)
-{
-	ft_vector_destroy(pipeline, (void *)(void *)&command_destroy);
-}
-
-t_vector	*parser_invoke(char *input)
+t_pipeline	*parser_invoke(char *input)
 {
 	t_lexer				*lexer;
-	t_vector			pipeline;
+	t_pipeline			*pipeline;
 
 	lexer = lexer_build(input);
-	pipeline = ft_gc_add(stat_get()->tmp_gc,
-			assert_ptr(ft_vector_new(5)), &destroy_pipeline);
+	pipeline = pipeline_new(1); 
 	if (parse(lexer, pipeline) != 0)
 		return (NULL);
+	//print_pipeline(pipeline);
 	return (pipeline);
 }

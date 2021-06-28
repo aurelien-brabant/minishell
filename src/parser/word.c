@@ -6,33 +6,6 @@
 #include "minishell/parser.h"
 #include "minishell/error.h"
 
-/*
-char	*word_strip_quotes(char *word)
-{
-	unsigned char	quote;
-	char			*stripped;
-	size_t			i;
-	size_t			j;
-
-	i = 0;
-	j = 0;
-	stripped = ft_strdup(word);
-	quote = 0;
-	while (word[j] != '\0')
-	{
-		if (word[j] == quote)
-			quote = 0;
-		else if (!quote && (word[j] == '\'' || word[j] == '"'))
-			quote = word[j];
-		else if (word[j] != quote)
-			stripped[i++] = word[j];
-		++j;
-	}
-	stripped[i] = '\0';
-	return (stripped);
-}
-*/
-
 char	*word_strip_quotes(char *word)
 {
 	char	*stripped;
@@ -62,20 +35,22 @@ char	*word_strip_quotes(char *word)
 ** are needed to determine if variable expansion will be done or not.
 */
 
-int	parse_word(t_vector pipeline, char *token)
+int	parse_word(t_pipeline *pipeline, char *token)
 {
 	t_command		*cmd;
-	t_redirection	*last_redir;
+	t_redir			*last_redir;
 
-	cmd = ft_vector_get(pipeline, ft_vector_length(pipeline) - 1);
-	last_redir = ft_vector_last(cmd->redir);
-	if (last_redir && last_redir->arg == NULL)
+	last_redir = NULL;
+	cmd = &pipeline->data[pipeline->len - 1];
+	if (cmd->rv->len > 0)
+		last_redir = &cmd->rv->data[cmd->rv->len - 1];
+	if (last_redir != NULL && last_redir->arg == NULL)
 	{
 		if (last_redir->type != REDIRECTION_DIN)
 			token = word_strip_quotes(token);
 		last_redir->arg = token;
 	}
 	else
-		argv_append(cmd->argv, word_strip_quotes(token));
+		stringv_add(cmd->sv, word_strip_quotes(token));
 	return (0);
 }

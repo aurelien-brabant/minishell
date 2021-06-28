@@ -15,6 +15,7 @@ static void	resize(t_stringv *sv)
 	ft_memcpy(new_data, sv->data, sizeof (*sv->data) * sv->cap);
 	free(sv->data);
 	sv->data = new_data;
+	sv->cap *= 2;
 }
 
 char		*stringv_add(t_stringv *sv, char *str)

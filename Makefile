@@ -14,8 +14,7 @@ TARGET				= minishell
 
 LEXER				= $(addprefix src/lexer/, lexer.c token.c utils.c)
 
-PARSER				= $(addprefix src/parser/, parser.c word.c redirection.c	\
-					  command.c pipe.c expand.c)
+PARSER				= $(addprefix src/parser/, parser.c word.c redirection.c pipe.c expand.c)
 
 BUILTIN				= $(addprefix src/builtin/, builtin.c echo.c cd.c pwd.c export.c unset.c exit.c env.c)
 
@@ -28,7 +27,7 @@ DATASTRUCTURE		= $(addprefix src/datastructure/, redirv.c pipeline.c stringv.c)
 OTHER				= $(addprefix src/, main.c parse_clopt.c prompt.c error.c	\
 				  	minishell.c stat.c argv.c env.c heredoc.c)
 
-SRCS				= $(OTHER) $(LEXER) $(PARSER) $(EXEC) $(SIGNAL) $(BUILTIN) $(DATASTRUCTURE)
+SRCS				= $(OTHER) $(LEXER) $(PARSER) $(SIGNAL) $(BUILTIN) $(DATASTRUCTURE) $(EXEC)
 
 HEADERS				= $(addprefix include/minishell/, minishell.h constants.h stat.h error.h parser.h lexer.h exec.h signal.h datastructure.h)
 

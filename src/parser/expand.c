@@ -33,7 +33,7 @@ static char	*parse_var(char **word_loc)
 	return (var);
 }
 
-static void	tokenize_var(t_vector pipeline, t_string *expanded, char *var)
+static void	tokenize_var(t_pipeline *pipeline, t_string *expanded, char *var)
 {
 	char	*token;
 	char	*tmp;
@@ -61,7 +61,7 @@ static void	tokenize_var(t_vector pipeline, t_string *expanded, char *var)
 	}
 }
 
-static void	expand_env_variable(t_vector pipeline, t_string *expanded,
+static void	expand_env_variable(t_pipeline *pipeline, t_string *expanded,
 		char **word_loc, unsigned char quote)
 {
 	char		status[4];
@@ -85,14 +85,13 @@ static void	expand_env_variable(t_vector pipeline, t_string *expanded,
 		tokenize_var(pipeline, expanded, var);
 }
 
-void	expand(t_vector pipeline, char *word)
+void	expand(t_pipeline *pipeline, char *word)
 {
 	t_string		expanded;
 	unsigned char	quote;
 
 	quote = 0;
-	expanded = ft_gc_add(stat_get()->tmp_gc, assert_ptr(ft_string_new
-				(ft_strlen(word) * 2)), (void *)(void *)&ft_string_destroy);
+	expanded = ft_string_new(ft_strlen(word) * 2);
 	while (*word != '\0')
 	{
 		if (*word == quote)

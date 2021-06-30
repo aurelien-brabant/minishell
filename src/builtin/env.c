@@ -2,7 +2,6 @@
 
 #include "libft/cstring.h"
 
-#include "minishell/stat.h"
 #include "minishell/builtin.h"
 #include "minishell/env.h"
 

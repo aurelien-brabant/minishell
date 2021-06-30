@@ -3,7 +3,6 @@
 
 #include "minishell/minishell.h"
 #include "minishell/error.h"
-#include "minishell/stat.h"
 #include "minishell/builtin.h"
 #include "minishell/signal.h"
 
@@ -61,6 +60,8 @@ void	process_builtin(t_command *cmd, int *pipefd, int length)
 	dup2(ttyfd[1], STDOUT_FILENO);
 	close_safe(&ttyfd[0]);
 	close_safe(&ttyfd[1]);
+	if (length == 1)
+		close_pipes(pipefd - (cmd->id * 2), cmd->id + 1);
 }
 
 void	wait_for_pids(int *pipefd, size_t length)

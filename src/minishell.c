@@ -10,62 +10,63 @@
 
 #include "minishell/minishell.h"
 #include "minishell/constants.h"
-#include "minishell/stat.h"
-#include "minishell/parser.h"
-#include "minishell/signal.h"
-#include "minishell/env.h"
-
-/*
-** Invoke a minishell instance.
-*/
-
-/*
-static int	minishell_non_interactive(char **optargs)
-{
-	t_vector	pipeline;
-
-	pipeline = parser_invoke(optargs[OPTION_TYPE_COMMAND]);
-	if (pipeline != NULL)
-		exec(pipeline);
-	return (0);
-}
-*/
 
 t_minishell_data	g_msh = {
 	.pids = NULL,
 	.status = 0,
 };
 
+static void	msh_data_init(char **envp)
+{
+	g_msh.gc_glob = ft_gc_new();
+	g_msh.gc_tmp = ft_gc_new();
+	g_msh.env = stringv_new(70);
+	while (*envp != NULL)
+		stringv_add(g_msh.env, *envp++);
+}
+
+static int	minishell_non_interactive(char **optargs)
+{
+	t_pipeline	*pipeline;
+
+	pipeline = parser_invoke(optargs[OPTION_TYPE_COMMAND]);
+	if (pipeline != NULL)
+		exec(pipeline);
+	return (0);
+}
+
 int	minishell_invoke(unsigned int opt, char **optargs, char **envp)
 {
 	char		*cmd;
 	t_pipeline	*pipeline;
 
-	stat_init(opt, optargs, envp);
-	/*
+	msh_data_init(envp);
 	if (opt & (1 << OPTION_TYPE_COMMAND))
 		return (minishell_non_interactive(optargs));
-	*/
-	cmd = prompt_present();
-	while (cmd != NULL)
+	while (1)
 	{
+		cmd = prompt_present();
+		if (cmd == NULL)
+			break ;
 		pipeline = parser_invoke(cmd);
 		if (pipeline != NULL)
 			exec(pipeline);
 		else
 			g_msh.status = PARSING_ERROR;
-		ft_gc_wipe(stat_get()->tmp_gc);
-		cmd = prompt_present();
+		ft_gc_wipe(g_msh.gc_tmp);
 	}
 	write(STDOUT_FILENO, "exit\n", 5);
+	unlink(HERE_DOC_FILEPATH);
 	minishell_exit(EXIT_SUCCESS);
 	return (0);
 }
 
 void	minishell_exit(int exit_status)
 {
+	// NOTE: this is not an authorized function atm!
 	rl_clear_history();
-	stat_destroy();
-	unlink(HERE_DOC_FILEPATH);
+	ft_gc_destroy(g_msh.gc_tmp);
+	ft_gc_destroy(g_msh.gc_glob);
+	stringv_destroy(g_msh.env);
 	exit(exit_status);
 }

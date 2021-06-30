@@ -5,7 +5,6 @@
 #include "minishell/minishell.h"
 #include "minishell/parser.h"
 #include "minishell/env.h"
-#include "minishell/stat.h"
 #include "minishell/error.h"
 
 #include "libft/cstring.h"

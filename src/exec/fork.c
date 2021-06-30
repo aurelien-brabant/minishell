@@ -8,7 +8,6 @@
 #include "minishell/exec.h"
 #include "minishell/signal.h"
 #include "minishell/env.h"
-#include "minishell/stat.h"
 #include "minishell/minishell.h"
 #include "minishell/error.h"
 
@@ -52,7 +51,7 @@ static void	execute_from_path(t_command *cmd)
 		{
 			cmd_path = gc_add_tmp(get_cmd_path(cmd->sv->data[0], tok), &free);
 			if (file_exists(cmd_path))
-				safe_execve(cmd_path, cmd->sv->data, stat_get()->env->data);
+				safe_execve(cmd_path, cmd->sv->data, g_msh.env->data);
 			tok = ft_strtok(NULL, ":");
 		}
 	}
@@ -72,7 +71,7 @@ static void	execute_command(t_command *cmd)
 		while (label[i] == '.')
 			++i;
 		if (i <= 2 && label[i] == '/')
-			safe_execve(label, cmd->sv->data, stat_get()->env->data);
+			safe_execve(label, cmd->sv->data, g_msh.env->data);
 	}
 	execute_from_path(cmd);
 }

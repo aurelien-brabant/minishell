@@ -1,12 +1,13 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
-# define HERE_DOC_FILEPATH "./.here_doc.txt"
 # include <sys/types.h>
+# include <stdint.h>
 
-# include "minishell/lexer.h"
+# include "libft/gc.h"
+
 # include "minishell/exec.h"
 
-# include "libft/string.h"
+# define HERE_DOC_FILEPATH "./.here_doc.txt"
 
 typedef enum e_option_type
 {
@@ -19,8 +20,11 @@ typedef enum e_option_type
 
 typedef struct s_minishell_data
 {
-	pid_t	*pids;
-	uint8_t	status;
+	pid_t		*pids;
+	uint8_t		status;
+	t_gc		*gc_tmp;
+	t_gc		*gc_glob;
+	t_stringv	*env;
 }	t_minishell_data;
 
 extern t_minishell_data	g_msh;

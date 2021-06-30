@@ -3,7 +3,6 @@
 #include <stdio.h>
 
 #include "minishell/lexer.h"
-#include "minishell/stat.h"
 #include "minishell/error.h"
 
 #include "libft/cstring.h"

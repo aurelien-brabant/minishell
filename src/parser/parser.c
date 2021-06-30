@@ -10,7 +10,6 @@
 #include "minishell/parser.h"
 #include "minishell/minishell.h"
 #include "minishell/lexer.h"
-#include "minishell/stat.h"
 #include "minishell/error.h"
 
 static int	parse(t_lexer *lexer, t_pipeline *pipeline)

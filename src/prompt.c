@@ -11,7 +11,6 @@
 
 #include "minishell/minishell.h"
 #include "minishell/constants.h"
-#include "minishell/stat.h"
 #include "minishell/signal.h"
 
 /*
@@ -29,7 +28,7 @@ char	*prompt_present(void)
 	prompt = "\033[0;34mminishell \033[0;36m» \033[0m";
 	signal(SIGINT, handle_prompt_sigint);
 	signal(SIGQUIT, SIG_IGN);
-	line = ft_gc_add(stat_get()->tmp_gc, readline(prompt), &free);
+	line = ft_gc_add(g_msh.gc_tmp, readline(prompt), &free);
 	if (line != NULL && *line != '\0')
 		add_history(line);
 	return (line);

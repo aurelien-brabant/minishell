@@ -6,7 +6,6 @@
 #include "libft/cstring.h"
 
 #include "minishell/signal.h"
-#include "minishell/stat.h"
 #include "minishell/constants.h"
 #include "minishell/minishell.h"
 

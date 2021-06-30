@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include <unistd.h>
 #include <sys/errno.h>
 #include <string.h>
@@ -7,7 +6,6 @@
 
 #include "minishell/minishell.h"
 #include "minishell/error.h"
-#include "minishell/stat.h"
 
 static const char	*g_error_messages[ERROR_MAX] = {
 	"Dynamic memory allocation failed",
@@ -49,7 +47,7 @@ void	*gc_add_tmp(void *el, void (*fn)(void *))
 {
 	t_gc	gc;
 
-	gc = stat_get()->tmp_gc;
+	gc = g_msh.gc_tmp;
 	assert_ptr(el);
 	ft_gc_add(gc, el, fn);
 	return (el);
@@ -59,7 +57,7 @@ void	*gc_add_global(void *el, void (*fn)(void *))
 {
 	t_gc	gc;
 
-	gc = stat_get()->global_gc;
+	gc = g_msh.gc_glob;
 	assert_ptr(el);
 	ft_gc_add(gc, el, fn);
 	return (el);

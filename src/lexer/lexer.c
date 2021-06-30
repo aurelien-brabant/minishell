@@ -9,7 +9,6 @@
 #include "libft/io.h"
 
 #include "minishell/lexer.h"
-#include "minishell/stat.h"
 #include "minishell/error.h"
 
 /*

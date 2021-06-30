@@ -2,13 +2,12 @@
 #include <stdlib.h>
 
 #include "minishell/minishell.h"
-#include "minishell/stat.h"
 #include "minishell/error.h"
 
-#include "libft/io.h"
-#include "libft/cstring.h"
-#include "libft/core.h"
 #include "libft/ctype.h"
+#include "libft/cstring.h"
+#include "libft/io.h"
+#include "libft/core.h"
 
 /*
 ** Check if name is a valid environment variable name. 
@@ -62,7 +61,7 @@ char	*minishell_getenv(const char *name)
 
 	if (!is_valid_env_var_name(name))
 		return (NULL);
-	env = stat_get()->env;
+	env = g_msh.env;
 	name_len = ft_strlen(name);
 	i = 0;
 	while (env->data[i] != NULL)
@@ -93,7 +92,7 @@ void	minishell_setenv(const char *name, char *value)
 	size_t		value_len;
 
 	i = 0;
-	env = stat_get()->env;
+	env = g_msh.env;
 	name_len = ft_strlen(name);
 	value_len = ft_strlen(value);
 	entry = gc_add_global(ft_calloc(name_len + value_len + 2,
@@ -126,7 +125,7 @@ void	minishell_unsetenv(char *var_name)
 	size_t	i;
 	size_t	var_name_len;
 
-	env = stat_get()->env;
+	env = g_msh.env;
 	var_name_len = ft_strlen(var_name);
 	i = 0;
 	while (env->data[i] != NULL)
@@ -145,7 +144,7 @@ void	minishell_printenv(void)
 	t_stringv	*env;
 	size_t	i;
 
-	env = stat_get()->env;
+	env = g_msh.env;
 	i = 0;
 	while (env->data[i] != NULL)
 	{

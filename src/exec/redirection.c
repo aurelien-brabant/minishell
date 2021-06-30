@@ -14,7 +14,6 @@
 
 #include "libft/io.h"
 #include "libft/cstring.h"
-#include "minishell/stat.h"
 
 static int	handle_here_doc(t_redir *redir, int ttyfd[2])
 {

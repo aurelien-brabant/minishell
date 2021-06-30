@@ -42,9 +42,9 @@ libft:
 
 $(TARGET): libft $(HEADERS) $(OBJS) 
 	@. ./configure.sh
-	make -C libft
+	@make --silent -C libft
 	@$(LD) -o $(TARGET) $(OBJS) $(LD_FLAGS)
-	@printf "LD\t$(TARGET)\n"
+	@printf "\033[1;38mLD\t\033[1;32m$(TARGET)\n"
 
 norm:
 	@norminette src
@@ -64,4 +64,4 @@ re: fclean all
 
 %.o:%.c $(HEADERS)
 	@$(CC) $(CFLAGS) -o $@ -c $<
-	@printf "CC\t$<\n"
+	@printf "\033[1;38mCC\t\033[0m$<\n"

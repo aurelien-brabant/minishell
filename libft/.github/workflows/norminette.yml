@@ -1,0 +1,12 @@
+name: norminette
+on: [push]
+jobs:
+  norminette-linter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v2
+      - run: python3 -m pip install --upgrade pip setuptools
+      - run: python3 -m pip install norminette
+      - run: $HOME/.local/bin/norminette src
+      - run: $HOME/.local/bin/norminette include

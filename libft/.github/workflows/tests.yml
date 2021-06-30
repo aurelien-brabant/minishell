@@ -1,0 +1,10 @@
+name: tests
+on: [push]
+jobs:
+  docker-criterion-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v2
+      - run: docker build -t abrabant/libft-test test
+      - run: docker run -v $PWD:/libft abrabant/libft-test

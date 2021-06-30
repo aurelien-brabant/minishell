@@ -23,11 +23,11 @@ int	builtin_export(int argc, char *argv[], bool forked)
 			s = "";
 		else
 			*s++ = '\0';
-		if (is_valid_env_var_name(var_name))
+		if (is_valid_env_var_name(var_name) && argv[1][0] != '=')
 			minishell_setenv(var_name, s);
 		else
 		{
-			ft_dprintf(2, "minishell: export \"%s\": not a valid variable"
+			ft_dprintf(2, "minishell: export \"%s\": not a valid"
 				" identifier\n", var_name);
 			return (1);
 		}

@@ -4,6 +4,7 @@
 #include "minishell/builtin.h"
 
 #include "libft/cstring.h"
+#include "libft/io.h"
 
 int	builtin_unset(int argc, char *argv[], bool forked)
 {
@@ -17,7 +18,14 @@ int	builtin_unset(int argc, char *argv[], bool forked)
 		sep = ft_strchr(s, '=');
 		if (sep != NULL)
 			*sep = '\0';
-		minishell_unsetenv(s);
+		if (argv[1][0] == '=' || !is_valid_env_var_name(argv[1]))
+		{
+			ft_dprintf(2, "minishell: unset \"%s\": not a valid"
+				" identifier\n", argv[1]);
+			return (1);
+		}
+		else
+			minishell_unsetenv(s);
 		free(s);
 	}
 	return (0);

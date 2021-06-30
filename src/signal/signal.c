@@ -36,7 +36,7 @@ void	sig_send_to_all_children(int sig)
 {
 	pid_t	*pid_loc;
 
-	pid_loc = g_pids;
+	pid_loc = g_msh.pids;
 	while (*pid_loc != -1)
 	{
 		if (*pid_loc != 0)
@@ -52,4 +52,5 @@ void	handle_prompt_sigint(int sig)
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
+	g_msh.status = 128 + sig;
 }

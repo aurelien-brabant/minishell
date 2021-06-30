@@ -97,7 +97,7 @@ void	minishell_fork(t_command *cmd, int *pipefd, int ttyfd[2], int redir_ret)
 			execute_command(cmd);
 		minishell_exit(0);
 	}
-	g_pids[cmd->id] = pid;
+	g_msh.pids[cmd->id] = pid;
 }
 
 void	minishell_fork_builtin(t_command *cmd, int *pipefd, int ttyfd[2],
@@ -121,5 +121,5 @@ void	minishell_fork_builtin(t_command *cmd, int *pipefd, int ttyfd[2],
 		builtin = builtin_get(cmd->sv->data[0]);
 		minishell_exit(builtin(cmd->sv->len, cmd->sv->data, true));
 	}
-	g_pids[cmd->id] = pid;
+	g_msh.pids[cmd->id] = pid;
 }

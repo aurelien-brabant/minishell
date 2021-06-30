@@ -1,26 +1,13 @@
 #include <stdlib.h>
-#include <sys/stat.h>
 #include <sys/wait.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <string.h>
-#include <sys/errno.h>
-#include <stdio.h>
 
-#include "minishell/exec.h"
-#include "minishell/env.h"
+#include "minishell/minishell.h"
 #include "minishell/error.h"
 #include "minishell/stat.h"
 #include "minishell/builtin.h"
 #include "minishell/signal.h"
-#include "minishell/parser.h"
 
 #include "libft/core.h"
-#include "libft/cstring.h"
-#include "libft/vector.h"
-#include "libft/io.h"
-
-pid_t	*g_pids = NULL;
 
 /*
 ** If a command has been provided (and not only redirections) execute it.
@@ -68,7 +55,7 @@ void	process_builtin(t_command *cmd, int *pipefd, int length)
 	if (length > 1)
 		minishell_fork_builtin(cmd, pipefd, ttyfd, redir_ret);
 	else
-		stat_get()->last_status_code = builtin(cmd->sv->len,
+		g_msh.status = builtin(cmd->sv->len,
 				cmd->sv->data, false);
 	dup2(ttyfd[0], STDIN_FILENO);
 	dup2(ttyfd[1], STDOUT_FILENO);
@@ -89,19 +76,19 @@ void	wait_for_pids(int *pipefd, size_t length)
 			break ;
 		close_pipes(pipefd, length);
 		i = 0;
-		while (g_pids[i] != pid)
+		while (g_msh.pids[i] != pid)
 			++i;
-		if (pid == g_pids[length - 1])
+		if (pid == g_msh.pids[length - 1])
 		{
 			if (WIFSIGNALED(status) && WTERMSIG(status) != SIGPIPE)
 			{
 				print_sig_msg(WTERMSIG(status));
-				stat_get()->last_status_code = 128 + WTERMSIG(status);
+				g_msh.status = 128 + WTERMSIG(status);
 			}
 			else
-				stat_get()->last_status_code = WEXITSTATUS(status);
+				g_msh.status = WEXITSTATUS(status);
 		}
-		g_pids[i] = 0;
+		g_msh.pids[i] = 0;
 	}
 }
 
@@ -143,8 +130,8 @@ void	exec(t_pipeline *pipeline)
 
 	if (pipeline->len == 0)
 		return ;
-	g_pids = gc_add_tmp(ft_calloc(sizeof (*g_pids), pipeline->len + 1), &free);
-	g_pids[pipeline->len] = -1;
+	g_msh.pids = gc_add_tmp(ft_calloc(sizeof (*g_msh.pids), pipeline->len + 1), &free);
+	g_msh.pids[pipeline->len] = -1;
 	pipefd = gc_add_tmp(malloc(sizeof (int) * (pipeline->len * 2)), &free);
 	exec_loop(pipeline, pipefd);
 	signal(SIGINT, sig_send_to_all_children);

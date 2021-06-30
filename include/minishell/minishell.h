@@ -17,6 +17,14 @@ typedef enum e_option_type
 	OPTION_TYPE_MAX,
 }	t_option_type;
 
+typedef struct s_minishell_data
+{
+	pid_t	*pids;
+	uint8_t	status;
+}	t_minishell_data;
+
+extern t_minishell_data	g_msh;
+
 int		parse_clopt(int argc, char *argv[], unsigned int *options,
 			char **optargs);
 void	minishell_output_usage(void);

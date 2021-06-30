@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include "minishell/minishell.h"
 #include "minishell/parser.h"
 #include "minishell/env.h"
 #include "minishell/stat.h"
@@ -71,7 +72,7 @@ static void	expand_env_variable(t_pipeline *pipeline, t_string *expanded,
 	if (**word_loc == '?')
 	{
 		ft_snprintf(status, sizeof (status), "%hhu",
-			stat_get()->last_status_code);
+			g_msh.status);
 		ft_string_append_cstr(*expanded, status);
 		(*word_loc)++;
 		return ;

@@ -11,7 +11,6 @@ typedef struct s_stat
 	t_gc			tmp_gc;
 	unsigned int	opt;
 	char			**optargs;
-	unsigned char	last_status_code;
 	t_stringv		*env;
 }	t_stat;
 

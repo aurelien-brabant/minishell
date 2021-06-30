@@ -31,6 +31,11 @@ static int	minishell_non_interactive(char **optargs)
 }
 */
 
+t_minishell_data	g_msh = {
+	.pids = NULL,
+	.status = 0,
+};
+
 int	minishell_invoke(unsigned int opt, char **optargs, char **envp)
 {
 	char		*cmd;
@@ -48,7 +53,7 @@ int	minishell_invoke(unsigned int opt, char **optargs, char **envp)
 		if (pipeline != NULL)
 			exec(pipeline);
 		else
-			stat_get()->last_status_code = PARSING_ERROR;
+			g_msh.status = PARSING_ERROR;
 		ft_gc_wipe(stat_get()->tmp_gc);
 		cmd = prompt_present();
 	}

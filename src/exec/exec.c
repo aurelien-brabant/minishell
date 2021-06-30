@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <sys/wait.h>
+#include <unistd.h>
 
 #include "minishell/minishell.h"
 #include "minishell/error.h"

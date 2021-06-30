@@ -6,6 +6,7 @@
 #include <sys/errno.h>
 
 #include "minishell/minishell.h"
+#include "minishell/constants.h"
 #include "minishell/error.h"
 #include "minishell/env.h"
 

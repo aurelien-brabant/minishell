@@ -7,8 +7,6 @@
 
 # include "minishell/exec.h"
 
-# define HERE_DOC_FILEPATH "./.here_doc.txt"
-
 typedef enum e_option_type
 {
 	OPTION_TYPE_VERSION = 0,

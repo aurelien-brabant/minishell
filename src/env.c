@@ -56,8 +56,8 @@ bool	is_valid_env_var_name(const char *name)
 char	*minishell_getenv(const char *name)
 {
 	t_stringv	*env;
-	size_t	i;
-	size_t	name_len;
+	size_t		i;
+	size_t		name_len;
 
 	if (!is_valid_env_var_name(name))
 		return (NULL);
@@ -96,7 +96,7 @@ void	minishell_setenv(const char *name, char *value)
 	name_len = ft_strlen(name);
 	value_len = ft_strlen(value);
 	entry = gc_add_global(ft_calloc(name_len + value_len + 2,
-		sizeof (*entry)), &free);
+				sizeof (*entry)), &free);
 	ft_strlcat(entry, name, name_len + 1);
 	ft_strlcat(entry, "=", name_len + 2);
 	ft_strlcat(entry, value, name_len + value_len + 2);
@@ -122,8 +122,8 @@ void	minishell_setenv(const char *name, char *value)
 void	minishell_unsetenv(char *var_name)
 {
 	t_stringv	*env;
-	size_t	i;
-	size_t	var_name_len;
+	size_t		i;
+	size_t		var_name_len;
 
 	env = g_msh.env;
 	var_name_len = ft_strlen(var_name);
@@ -142,7 +142,7 @@ void	minishell_unsetenv(char *var_name)
 void	minishell_printenv(void)
 {
 	t_stringv	*env;
-	size_t	i;
+	size_t		i;
 
 	env = g_msh.env;
 	i = 0;

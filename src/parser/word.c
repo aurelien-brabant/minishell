@@ -53,7 +53,7 @@ int	parse_word(t_pipeline *pipeline, char *token)
 		last_redir->arg = token;
 	}
 	else
-		assert_ptr(stringv_add(cmd->sv, 
-					gc_add_tmp(word_strip_quotes(token), &free)));
+		assert_ptr(stringv_add(cmd->sv,
+				gc_add_tmp(word_strip_quotes(token), &free)));
 	return (0);
 }

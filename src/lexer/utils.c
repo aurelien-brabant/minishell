@@ -3,7 +3,6 @@
 #include "minishell/lexer.h"
 #include "minishell/datastructure.h"
 
-
 void	lexer_destroy(t_lexer *lexer)
 {
 	size_t	i;

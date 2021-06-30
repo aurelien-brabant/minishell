@@ -61,10 +61,10 @@ int	minishell_invoke(unsigned int opt, char **optargs, char **envp)
 	return (0);
 }
 
+/* rl_clear_history(); ? */
+
 void	minishell_exit(int exit_status)
 {
-	// NOTE: this is not an authorized function atm!
-	rl_clear_history();
 	ft_gc_destroy(g_msh.gc_tmp);
 	ft_gc_destroy(g_msh.gc_glob);
 	stringv_destroy(g_msh.env);

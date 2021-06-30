@@ -40,8 +40,8 @@ int	parse_redirection(t_pipeline *pipeline, t_lexer *lexer, char *token)
 	tmp = token;
 	if (token_get_next(lexer, &token) != TOKEN_WORD)
 	{
-		ft_dprintf(2, "Redirection operator \"%s\"" 
-				" requires a valid argument\n", tmp);
+		ft_dprintf(2, "Redirection operator \"%s\""
+			" requires a valid argument\n", tmp);
 		return (1);
 	}
 	redirv_add(cmd->rv, rtype);

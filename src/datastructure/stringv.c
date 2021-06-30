@@ -19,7 +19,7 @@ static int	resize(t_stringv *sv)
 	return (0);
 }
 
-char		*stringv_add(t_stringv *sv, char *str)
+char	*stringv_add(t_stringv *sv, char *str)
 {
 	if (sv->len == sv->cap && resize(sv) != 0)
 		return (NULL);
@@ -28,7 +28,7 @@ char		*stringv_add(t_stringv *sv, char *str)
 	return (str);
 }
 
-void		stringv_del(t_stringv *sv, size_t index)
+void	stringv_del(t_stringv *sv, size_t index)
 {
 	size_t	i;
 
@@ -42,7 +42,7 @@ void		stringv_del(t_stringv *sv, size_t index)
 	sv->data[sv->len] = NULL;
 }
 
-void		stringv_destroy(t_stringv *sv)
+void	stringv_destroy(t_stringv *sv)
 {
 	free(sv->data);
 	free(sv);

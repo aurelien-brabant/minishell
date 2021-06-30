@@ -14,7 +14,7 @@ static int	resize(t_pipeline *pipeline)
 	if (new_data == NULL)
 		return (1);
 	ft_memcpy(new_data, pipeline->data,
-			pipeline->cap * sizeof (*pipeline->data));
+		pipeline->cap * sizeof (*pipeline->data));
 	free(pipeline->data);
 	pipeline->data = new_data;
 	pipeline->cap *= 2;
@@ -24,7 +24,7 @@ static int	resize(t_pipeline *pipeline)
 void	pipeline_destroy(t_pipeline *pipeline)
 {
 	size_t	i;
-	
+
 	i = 0;
 	while (i < pipeline->len)
 	{

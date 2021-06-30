@@ -131,7 +131,8 @@ void	exec(t_pipeline *pipeline)
 
 	if (pipeline->len == 0)
 		return ;
-	g_msh.pids = gc_add_tmp(ft_calloc(sizeof (*g_msh.pids), pipeline->len + 1), &free);
+	g_msh.pids = gc_add_tmp(ft_calloc(sizeof (*g_msh.pids),
+				pipeline->len + 1), &free);
 	g_msh.pids[pipeline->len] = -1;
 	pipefd = gc_add_tmp(malloc(sizeof (int) * (pipeline->len * 2)), &free);
 	exec_loop(pipeline, pipefd);

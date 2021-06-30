@@ -59,6 +59,7 @@ static void	tokenize_var(t_pipeline *pipeline, t_string *expanded, char *var)
 			parse_word(pipeline, token);
 		token = tmp;
 	}
+	free(var);
 }
 
 static void	expand_env_variable(t_pipeline *pipeline, t_string *expanded,

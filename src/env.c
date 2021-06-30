@@ -27,7 +27,7 @@ bool	is_valid_env_var_name(const char *name)
 		return (false);
 	while (*name != '\0')
 	{
-		if (*name != '_' && !ft_isalnum(*name++))
+		if (*name != '_' && !ft_isalnum(*name))
 			return (false);
 		++name;
 	}

@@ -45,7 +45,10 @@ static int	handle_in_redir(t_redir *redir, int ttyfd[2])
 	{
 		tmp_fd = open(redir->arg, O_RDONLY | O_CLOEXEC);
 		if (tmp_fd != -1)
+		{
 			dup2(tmp_fd, STDIN_FILENO);
+			close(tmp_fd);
+		}
 		else
 		{
 			ft_dprintf(STDERR_FILENO, "minishell: %s: %s\n", redir->arg,
@@ -65,7 +68,10 @@ static int	handle_out_redir(t_redir *redir)
 	else
 		tmp_fd = open(redir->arg, O_WRONLY | O_CREAT | O_APPEND, 0664);
 	if (tmp_fd != -1)
+	{
 		dup2(tmp_fd, STDOUT_FILENO);
+		close(tmp_fd);
+	}
 	else
 	{
 		ft_dprintf(STDERR_FILENO, "minishell: %s: %s\n", redir->arg,

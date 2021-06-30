@@ -51,6 +51,7 @@ static void	expand_var(t_string *str, char **line_loc)
 	var_name = ft_substr(line, 0, i);
 	if (var_name != NULL)
 		var_val = minishell_getenv(var_name);
+	free(var_name);
 	if (var_val != NULL)
 		ft_string_append_cstr(*str, var_val);
 	*line_loc += i - 1;
@@ -60,7 +61,9 @@ static char	*expand_line(char *line)
 {
 	t_string	str;
 	char		*expanded;
+	char		*tmp;
 
+	tmp = line;
 	str = ft_string_new(ft_strlen(line));
 	while (*line != '\0')
 	{
@@ -74,6 +77,7 @@ static char	*expand_line(char *line)
 		++line;
 	}
 	expanded = ft_string_tocstring(str);
+	free(tmp);
 	ft_string_destroy(str);
 	return (expanded);
 }
@@ -124,7 +128,7 @@ int	here_doc_prompt(char *delim)
 	}
 	if (line == NULL)
 		ft_dprintf(2, "minishell: warning: here-document at line %ld delimited"
-			"by end-of-file (wanted `%s`)\n", get_linecount(), delim);
+			" by end-of-file (wanted `%s`)\n", get_linecount(), delim);
 	free(line);
 	close(fd[1]);
 	return (fd[0]);

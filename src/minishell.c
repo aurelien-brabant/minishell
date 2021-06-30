@@ -1,5 +1,6 @@
-#include <stdlib.h>
 #include <stdio.h>
+#include <readline/readline.h>
+#include <stdlib.h>
 #include <sys/wait.h>
 #include <unistd.h>
 #include <limits.h>
@@ -58,6 +59,7 @@ int	minishell_invoke(unsigned int opt, char **optargs, char **envp)
 
 void	minishell_exit(int exit_status)
 {
+	rl_clear_history();
 	stat_destroy();
 	unlink(HERE_DOC_FILEPATH);
 	exit(exit_status);

@@ -92,7 +92,7 @@ void	minishell_fork(t_command *cmd, int *pipefd, int ttyfd[2], int redir_ret)
 		close(ttyfd[1]);
 		close_pipes(pipefd - (cmd->id * 2), cmd->id + 1);
 		if (redir_ret != 0)
-			exit(2);
+			minishell_exit(2);
 		if (cmd->sv->len > 0)
 			execute_command(cmd);
 		minishell_exit(0);
@@ -117,9 +117,9 @@ void	minishell_fork_builtin(t_command *cmd, int *pipefd, int ttyfd[2],
 		close(ttyfd[1]);
 		close_pipes(pipefd - (cmd->id * 2), cmd->id + 1);
 		if (redir_ret != 0)
-			exit(2);
+			minishell_exit(2);
 		builtin = builtin_get(cmd->sv->data[0]);
-		exit(builtin(cmd->sv->len, cmd->sv->data, true));
+		minishell_exit(builtin(cmd->sv->len, cmd->sv->data, true));
 	}
 	g_pids[cmd->id] = pid;
 }

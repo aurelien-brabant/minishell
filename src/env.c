@@ -102,7 +102,8 @@ void	minishell_setenv(const char *name, char *value)
 	ft_strlcat(entry, value, name_len + value_len + 2);
 	while (env->data[i] != NULL)
 	{
-		if (ft_strncmp(env->data[i], name, name_len) == 0)
+		if (ft_strncmp(env->data[i], name, name_len) == 0
+			&& *(env->data[i] + name_len) == '=')
 		{
 			env->data[i] = entry;
 			return ;
@@ -130,7 +131,8 @@ void	minishell_unsetenv(char *var_name)
 	i = 0;
 	while (env->data[i] != NULL)
 	{
-		if (ft_strncmp(env->data[i], var_name, var_name_len) == 0)
+		if (ft_strncmp(env->data[i], var_name, var_name_len) == 0
+			&& *(env->data[i] + var_name_len) == '=')
 		{
 			stringv_del(env, i);
 			return ;

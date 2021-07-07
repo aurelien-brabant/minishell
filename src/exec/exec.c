@@ -67,7 +67,7 @@ void	process_builtin(t_command *cmd, int *pipefd, int length)
 		close_pipes(pipefd - (cmd->id * 2), cmd->id + 1);
 }
 
-void	wait_for_pids(int *pipefd, size_t length)
+void	wait_for_pids(size_t length)
 {
 	pid_t	pid;
 	int		status;
@@ -78,7 +78,6 @@ void	wait_for_pids(int *pipefd, size_t length)
 		pid = wait(&status);
 		if (pid == -1)
 			break ;
-		close_pipes(pipefd, length);
 		i = 0;
 		while (g_msh.pids[i] != pid)
 			++i;
@@ -141,5 +140,5 @@ void	exec(t_pipeline *pipeline)
 	exec_loop(pipeline, pipefd);
 	signal(SIGINT, sig_send_to_all_children);
 	signal(SIGQUIT, sig_send_to_all_children);
-	wait_for_pids(pipefd, pipeline->len);
+	wait_for_pids(pipeline->len);
 }
